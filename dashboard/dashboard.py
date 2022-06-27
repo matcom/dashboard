@@ -1,3 +1,4 @@
+from curses.ascii import alt
 from typing import Dict
 
 import altair
@@ -23,7 +24,7 @@ def convert_to_csv(sheet: str):
     return data[sheet].to_csv().encode("utf8")
 
 
-st.markdown("### Publicaciones")
+st.markdown(f"### Publicaciones: {len(data['Publicaciones'])}")
 
 pub_data = data["Publicaciones"]
 pub_data_by_type = (
@@ -48,48 +49,53 @@ with st.expander(f"Ver datos: {sheet}", False):
         mime="text/csv",
     )
 
-with st.sidebar:
-    aggregation = st.selectbox("Modo de agregación", ["Año", "Mes/Año", "Ninguno"])
+agg_method = lambda s: f"year({s})"
 
-    if aggregation == "Año":
-        agg_method = lambda s: f"year({s})"
-    if aggregation == "Mes/Año":
-        agg_method = lambda s: f"yearmonth({s})"
-    if aggregation == "Ninguno":
-        agg_method = lambda s: f"{s}"
+# with st.sidebar:
+#     aggregation = st.selectbox("Modo de agregación", ["Año", "Mes/Año", "Ninguno"])
 
-left, right = st.columns(2)
+#     if aggregation == "Año":
+#         agg_method = lambda s: f"year({s})"
+#     if aggregation == "Mes/Año":
+#         agg_method = lambda s: f"yearmonth({s})"
+#     if aggregation == "Ninguno":
+#         agg_method = lambda s: f"{s}"
 
-with left:
-    pub_chart_dates = (
-        altair.Chart(pub_data)
-        .mark_bar()
-        .encode(
-            x=agg_method("Fecha de publicación"),
-            y="count(Título)",
-            color="Tipo de publicación",
-        )
+
+pub_chart_dates = (
+    altair.Chart(pub_data)
+    .mark_bar()
+    .encode(
+        column=altair.Column(
+            agg_method("Fecha de publicación"), type="nominal", title="Período"
+        ),
+        y=altair.Y("count(Título)", title="Cantidad"),
+        color=altair.Color("Tipo de publicación"),
+        x=altair.X("Tipo de publicación", title=None, axis=None),
+        tooltip=[
+            altair.Tooltip("count(Título)", title="Total"),
+            altair.Tooltip("Tipo de publicación", title="Tipo"),
+            altair.Tooltip(agg_method("Fecha de publicación"), title="Fecha"),
+        ],
     )
+)
 
-    st.altair_chart(pub_chart_dates, use_container_width=False)
-
-with right:
-    pub_chart_types = (
-        altair.Chart(pub_data)
-        .mark_arc()
-        .encode(
-            theta="count(Título)",
-            tooltip=[
-                altair.Tooltip("count(Título)", title="Total"),
-                altair.Tooltip("Tipo de publicación", title="Tipo"),
-            ],
-            color="Tipo de publicación",
-        )
+pub_chart_types = (
+    altair.Chart(pub_data, title="Publicaciones por tipo")
+    .mark_arc()
+    .encode(
+        theta="count(Título)",
+        tooltip=[
+            altair.Tooltip("count(Título)", title="Total"),
+            altair.Tooltip("Tipo de publicación", title="Tipo"),
+        ],
+        color="Tipo de publicación",
     )
+)
 
-    st.altair_chart(pub_chart_types, use_container_width=False)
+st.altair_chart(pub_chart_dates | pub_chart_types, use_container_width=False)
 
-st.markdown("### Tesis")
+st.markdown(f"### Tesis: {len(data['Tesis'])}")
 
 tesis_data = data["Tesis"]
 tesis_data_by_type = (

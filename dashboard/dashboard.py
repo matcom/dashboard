@@ -119,3 +119,29 @@ with st.expander(f"Ver datos: {sheet}", False):
         file_name=f"{sheet}.csv",
         mime="text/csv",
     )
+
+
+st.markdown(f"### Proyectos: {len(data['Proyectos'])}")
+
+project = data["Proyectos"]
+project_by_type = (
+    project.groupby("Tipo de proyecto").agg({"Título": "count"}).to_dict()["Título"]
+)
+
+cols = st.columns(len(project_by_type))
+
+for (label, count), col in zip(project_by_type.items(), cols):
+    with col:
+        st.metric(label=label, value=count)
+
+sheet = "Proyectos"
+
+with st.expander(f"Ver datos: {sheet}", False):
+    st.dataframe(data[sheet])
+
+    st.download_button(
+        "Descargar",
+        data=convert_to_csv(sheet),
+        file_name=f"{sheet}.csv",
+        mime="text/csv",
+    )

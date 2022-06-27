@@ -95,6 +95,38 @@ pub_chart_types = (
 
 st.altair_chart(pub_chart_dates | pub_chart_types, use_container_width=False)
 
+venues = (
+    pub_data[
+        pub_data["Tipo de publicación"].isin(
+            [
+                "Artículo publicado en journal",
+                "Artículo publicado en proceeding de congreso",
+                "Presentación en congreso (sin artículo)",
+            ]
+        )
+    ]
+    .groupby(["Tipo de publicación", "Nombre de la Publicación / Evento"])
+    .count()
+    .reset_index()
+)
+
+st.altair_chart(
+    altair.Chart(venues, width=200, title="Top de publicaciones")
+    .mark_bar()
+    .encode(
+        x=altair.X("Título", title="Publicaciones"),
+        y=altair.Y("Nombre de la Publicación / Evento"),
+        column="Tipo de publicación",
+        color="Tipo de publicación",
+        tooltip=[
+            altair.Tooltip("Nombre de la Publicación / Evento", title="Nombre"),
+            altair.Tooltip("Tipo de publicación", title="Tipo"),
+            altair.Tooltip("count(Título)", title="Totalr"),
+        ],
+    )
+)
+
+
 st.markdown(f"### Tesis: {len(data['Tesis'])}")
 
 tesis_data = data["Tesis"]

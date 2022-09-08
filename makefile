@@ -12,7 +12,7 @@ update-reqs:
 	python3 -m pip freeze > requirements.txt
 
 docker:
-	docker build -t matcom/dashboard:latest .
+	docker build -t apiad/matcom-dashboard:latest .
 
 shell:
 	docker-compose run app bash

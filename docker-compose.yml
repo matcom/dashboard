@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    image: matcom/dashboard:latest
+    image: apiad/matcom-dashboard:latest
     build: .
     ports:
       - "8501:8501"

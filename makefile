@@ -4,9 +4,6 @@ app:
 dev:
 	streamlit run dashboard/dashboard.py
 
-env:
-	python3 -m venv .venv
-
 install:
 	python -m pip install -r requirements.txt
 

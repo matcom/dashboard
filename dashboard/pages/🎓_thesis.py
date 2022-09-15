@@ -1,4 +1,6 @@
+from typing import List
 import pandas as pd
+import json
 from pathlib import Path
 from models import Thesis
 import streamlit as st
@@ -10,15 +12,38 @@ listing, create = st.tabs(["📃 Listado", "➕ Crear nueva Tesis"])
 
 
 with listing:
-    theses = []
+    theses: List[Thesis] = []
 
     for path in Path("/src/data/Thesis/").rglob("*.yaml"):
         with open(path) as fp:
             theses.append(Thesis.load(fp))
 
-    st.write("##### 📃 Listado de Tesis")
-    data = pd.DataFrame([thesis.encode() for thesis in theses])
-    st.dataframe(data)
+    st.write("##### 🏷️ Filtros")
+
+    advisors = set()
+
+    for thesis in theses:
+        for advisor in thesis.advisors:
+            advisors.add(advisor)
+
+    selected_advisors = st.multiselect(f"Tutores ({len(advisors)})", list(advisors), default=list(advisors))
+    data = []
+
+    for thesis in theses:
+        for advisor in thesis.advisors:
+            if advisor in selected_advisors:
+                d = thesis.encode()
+                d.pop("uuid")
+                data.append(d)
+                break
+
+    st.write(f"##### 📃 Listado de Tesis ({len(data)})")
+
+    df = pd.DataFrame(data)
+    st.dataframe(df)
+
+    st.download_button("💾 Descargar como CSV", df.to_csv())
+    st.download_button("💾 Descargar como JSON", json.dumps(data, indent=2))
 
 
 def save_thesis(thesis):

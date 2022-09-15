@@ -1,18 +1,23 @@
-from curses.ascii import alt
 from typing import Dict
-
-import altair
-import pandas as pd
 import streamlit as st
+import pandas as pd
+import altair
 
-st.set_page_config(page_title="MatCom Dashboard", page_icon=":star", layout="wide")
+
+st.set_page_config(
+    page_title="MatCom Dashboard - Investigación", page_icon="📚", layout="wide"
+)
 
 
 @st.experimental_memo
-def load_data() -> Dict[str, pd.DataFrame]:
-    return pd.read_excel(
-        "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1njbIUsTc9nN-TIC9QpDUY0L7Az0aRZ88NznYajzpUBaKA5vf5iaRg98HkOQHU3x9Kpqm7VLLpGp0/pub?output=xlsx",
-        sheet_name=None,
+def load_data() -> pd.DataFrame:
+    return dict(
+        Publicaciones=pd.read_csv(
+            "/src/data/publications.csv",
+        ),
+        Tesis=pd.read_csv(
+            "/src/data/publications.csv",
+        ),
     )
 
 
@@ -125,55 +130,3 @@ st.altair_chart(
         ],
     )
 )
-
-
-st.markdown(f"### Tesis: {len(data['Tesis'])}")
-
-tesis_data = data["Tesis"]
-tesis_data_by_type = (
-    tesis_data.groupby("Tipo de tesis").agg({"Título": "count"}).to_dict()["Título"]
-)
-
-cols = st.columns(len(tesis_data_by_type))
-
-for (label, count), col in zip(tesis_data_by_type.items(), cols):
-    with col:
-        st.metric(label=label, value=count)
-
-sheet = "Tesis"
-
-with st.expander(f"Ver datos: {sheet}", False):
-    st.dataframe(data[sheet])
-
-    st.download_button(
-        "Descargar",
-        data=convert_to_csv(sheet),
-        file_name=f"{sheet}.csv",
-        mime="text/csv",
-    )
-
-
-st.markdown(f"### Proyectos: {len(data['Proyectos'])}")
-
-project = data["Proyectos"]
-project_by_type = (
-    project.groupby("Tipo de proyecto").agg({"Título": "count"}).to_dict()["Título"]
-)
-
-cols = st.columns(len(project_by_type))
-
-for (label, count), col in zip(project_by_type.items(), cols):
-    with col:
-        st.metric(label=label, value=count)
-
-sheet = "Proyectos"
-
-with st.expander(f"Ver datos: {sheet}", False):
-    st.dataframe(data[sheet])
-
-    st.download_button(
-        "Descargar",
-        data=convert_to_csv(sheet),
-        file_name=f"{sheet}.csv",
-        mime="text/csv",
-    )

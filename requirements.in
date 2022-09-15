@@ -2,3 +2,4 @@ streamlit
 fastapi
 uvicorn
 pyyaml
+openpyxl

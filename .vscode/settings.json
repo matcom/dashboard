@@ -1,4 +1,4 @@
 {
     "python.formatting.provider": "black",
-    "python.pythonPath": "/home/apiad/.cache/pypoetry/virtualenvs/matcom-dashboard-vDyA0Sm2-py3.8/bin/python3.8"
+    "python.pythonPath": "/usr/bin/python3"
 }

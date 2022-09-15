@@ -1,8 +1,8 @@
-app:
+dev:
 	docker-compose up
 
-dev:
-	streamlit run dashboard/dashboard.py
+app:
+	docker-compose up --force-recreate -d
 
 install:
 	python -m pip install -r requirements.txt

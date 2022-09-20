@@ -1,11 +1,11 @@
 advisors:
-- "Damian Vald\xE9s Santiago"
+- Damian Valdés Santiago
 authors:
 - Miguel
 keywords:
-- "dise\xF1o de filtros wavelet"
+- diseño de filtros wavelet
 - transformada shapelet discreta
-- "imágenes digitales"
-title: "Construcci\xF3n de una base wavelet bidimensional, biortogonal y discreta\
-  \ para detectar patrones en imágenes naturales"
+- imágenes digitales
+title: Construcción de una base wavelet bidimensional, biortogonal y discreta para
+  detectar patrones en imágenes naturales
 uuid: dce7ddfc-1664-46f0-b371-654d03e6fe36

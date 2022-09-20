@@ -12,10 +12,20 @@ class CustomModel(BaseModel):
         return True
 
     def yaml(self) -> str:
-        return yaml.dump(self.encode())
+        return yaml.dump(self.encode(), allow_unicode=True)
 
     def encode(self) -> dict:
         return jsonable_encoder(self.dict())
+
+    def _encode(self, v):
+        if isinstance(v, (int, float, str)):
+            return v
+        if isinstance(v, list):
+            return [self._encode(vi) for vi in v]
+        if isinstance(v, dict):
+            return { ki: self._encode(vi) for ki,vi in v.items() }
+
+        return str(v)
 
     def save(self):
         path:Path = Path("/src/data") / self.__class__.__name__ / (str(self.uuid) + ".yaml")

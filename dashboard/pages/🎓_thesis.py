@@ -10,14 +10,13 @@ st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layo
 
 listing, create = st.tabs(["📃 Listado", "➕ Crear nueva Tesis"])
 
+theses: List[Thesis] = []
+
+for path in Path("/src/data/Thesis/").rglob("*.yaml"):
+    with open(path) as fp:
+        theses.append(Thesis.load(fp))
 
 with listing:
-    theses: List[Thesis] = []
-
-    for path in Path("/src/data/Thesis/").rglob("*.yaml"):
-        with open(path) as fp:
-            theses.append(Thesis.load(fp))
-
     st.write("##### 🏷️ Filtros")
 
     advisors = set()
@@ -48,51 +47,47 @@ with listing:
     st.download_button("💾 Descargar como JSON", json.dumps(data, indent=2))
 
 
-def save_thesis(thesis):
-    thesis.save()
-    st.session_state.thesis_title = ""
-    st.session_state.thesis_authors = ""
-    st.session_state.thesis_advisors = ""
-    st.session_state.thesis_keywords = ""
-
-    st.success(f"¡Tesis _{thesis.title}_ creada con éxito!")
-
-
 with create:
+    if st.radio("", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True) == "📝 Editar":
+        thesis = st.selectbox(
+            "Seleccione una tesis a modificar",
+            sorted(theses, key=lambda t: t.title),
+            format_func=lambda t: f"{t.title} - {t.authors[0]}",
+        )
+    else:
+        thesis = Thesis(title="", authors=[], advisors=[], keywords=[])
+
     left, right = st.columns([2, 1])
 
     with left:
-        title = st.text_input("Título", key="thesis_title")
-        authors = [
+        thesis.title = st.text_input("Título", key="thesis_title", value=thesis.title).strip()
+        thesis.authors = [
             s.strip()
             for s in st.text_area(
-                "Autores (uno por línea)", key="thesis_authors"
+                "Autores (uno por línea)", key="thesis_authors", value="\n".join(thesis.authors)
             ).split("\n")
         ]
-        advisors = [
+        thesis.advisors = [
             s.strip()
             for s in st.text_area(
-                "Tutores (uno por línea)", key="thesis_advisors"
+                "Tutores (uno por línea)", key="thesis_advisors", value="\n".join(thesis.advisors)
             ).split("\n")
         ]
-        keywords = [
+        thesis.keywords = [
             s.strip()
             for s in st.text_input(
-                "Palabras clave (separadas por ;)", key="thesis_keywords"
+                "Palabras clave (separadas por ;)", key="thesis_keywords", value=";".join(thesis.keywords)
             ).split(";")
         ]
 
     with right:
-        thesis = Thesis(
-            title=title,
-            authors=[a for a in authors if a],
-            advisors=[a for a in advisors if a],
-            keywords=[k for k in keywords if k],
-        )
-
         try:
             thesis.validate()
-            st.button("➕ Crear nueva Tesis", on_click=save_thesis, args=(thesis,))
+
+            if st.button("💾 Salvar Tesis"):
+                thesis.save()
+                st.success(f"¡Tesis _{thesis.title}_ creada con éxito!")
+
         except ValueError as e:
             st.error(e)
 

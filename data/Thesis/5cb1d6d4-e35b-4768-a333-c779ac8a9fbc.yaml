@@ -1,11 +1,11 @@
 advisors:
-- "Damian Vald\xE9s Santiago"
+- Damian Valdés Santiago
 authors:
-- "Richard Garc\xEDa De la Osa"
+- Richard García De la Osa
 keywords:
-- "dise\xF1o de filtros wavelet"
+- diseño de filtros wavelet
 - transformada wavelet discreta
 - transformada shapelet discreta
-title: "Construcci\xF3n de una base wavelet biortogonal y discreta que permita la\
-  \ detecci\xF3n de patrones en se\xF1ales biom\xE9dicas unidimensionales"
+title: Construcción de una base wavelet biortogonal y discreta que permita la detección
+  de patrones en señales biomédicas unidimensionales
 uuid: 5cb1d6d4-e35b-4768-a333-c779ac8a9fbc

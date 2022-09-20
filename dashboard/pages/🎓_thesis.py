@@ -85,6 +85,9 @@ with listing:
     for thesis in theses:
         for advisor_i in thesis.advisors:
             for advisor_j in thesis.advisors:
+                if advisor_i == advisor_j:
+                    continue
+
                 coauthor_df.append(
                     dict(thesis=thesis.title, advisor_i=advisor_i, advisor_j=advisor_j)
                 )
@@ -96,10 +99,14 @@ with listing:
         .mark_point(filled=True)
         .encode(
             x=altair.X("advisor_i", title="Tutor"),
-            y=altair.X("advisor_j", title="Tutor"),
+            y=altair.Y("advisor_j", title="Tutor"),
             color=altair.Color("advisor_i", legend=None),
             size=altair.Size("count(thesis)", legend=None),
-            tooltip=[altair.Tooltip("count(thesis)", title="No. Tesis")],
+            tooltip=[
+                altair.Tooltip("count(thesis)", title="No. Tesis"),
+                altair.Tooltip("advisor_i", title="Tutor (1)"),
+                altair.Tooltip("advisor_j", title="Tutor (2)"),
+            ],
         )
         .properties(width=600, height=600)
     )

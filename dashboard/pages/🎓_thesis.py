@@ -48,7 +48,7 @@ with listing:
 
 
 with create:
-    if st.radio("", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True) == "📝 Editar":
+    if st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True) == "📝 Editar":
         thesis = st.selectbox(
             "Seleccione una tesis a modificar",
             sorted(theses, key=lambda t: t.title),

@@ -26,12 +26,14 @@ with listing:
         for advisor in thesis.advisors:
             advisors.add(advisor)
 
-    selected_advisors = st.multiselect(f"Tutores ({len(advisors)})", list(advisors), default=list(advisors))
+    advisors = list(sorted(advisors))
+
+    selected_advisors = st.multiselect(f"Tutores ({len(advisors)})", advisors)
     data = []
 
     for thesis in theses:
         for advisor in thesis.advisors:
-            if advisor in selected_advisors:
+            if advisor in selected_advisors or not selected_advisors:
                 d = thesis.encode()
                 d.pop("uuid")
                 data.append(d)

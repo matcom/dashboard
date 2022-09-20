@@ -2,11 +2,11 @@ advisors:
 - Yudivián Almeida Cruz
 - "Carlos Berm\xFAdez Porto"
 authors:
-- "Javier E. Dom\xEDnguez Hern\xE1ndez"
+- "Javier E. Dom\xEDnguez Hernández"
 - David Orlando De Quesada Oliva
 keywords:
 - Machine Learning
-- "Matem\xE1tica Aplicada"
+- "Matemática Aplicada"
 - "Procesamiento de se\xF1ales digitales."
 title: "Modelo de Machine Learning para detectar y clasificar anomal\xEDas en la carretera"
 uuid: f352cd77-d0b0-4470-b92c-7a57fda9ad8b

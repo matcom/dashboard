@@ -3,9 +3,9 @@ advisors:
 authors:
 - Carlos Toledo
 keywords:
-- "modelos no lineales del procesamiento de im\xE1genes"
-- "procesamiento de im\xE1genes"
+- "modelos no lineales del procesamiento de imágenes"
+- "procesamiento de imágenes"
 - "optimizaci\xF3n"
-title: "Paquete de Python para el procesamiento de im\xE1genes usando varios modelos\
+title: "Paquete de Python para el procesamiento de imágenes usando varios modelos\
   \ logar\xEDtmicos parametrizados"
 uuid: 6d6968cd-4e02-4b73-9722-17e06b62979e

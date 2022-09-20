@@ -44,7 +44,7 @@ with listing:
     st.dataframe(df)
 
     st.download_button("💾 Descargar como CSV", df.to_csv())
-    st.download_button("💾 Descargar como JSON", json.dumps(data, indent=2))
+    st.download_button("💾 Descargar como JSON", json.dumps(data, ensure_ascii=False, indent=2))
 
 
 with create:

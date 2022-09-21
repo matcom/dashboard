@@ -22,3 +22,4 @@ sync:
 	git commit -m "Update data"
 	git pull --no-edit
 	git push
+	make app

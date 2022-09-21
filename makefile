@@ -16,3 +16,9 @@ docker:
 
 shell:
 	docker-compose run app bash
+
+sync:
+	git add data/*.yaml
+	git commit -m "Update data"
+	git pull --no-edit
+	git push

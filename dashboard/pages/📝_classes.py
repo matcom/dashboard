@@ -1,8 +1,7 @@
-import streamlit as st
-import pandas as pd
 import altair
-from models import Classes, Subject, Person
-
+import pandas as pd
+import streamlit as st
+from models import Classes, Person, Subject
 
 st.set_page_config(
     page_title="MatCom Dashboard - Docencia", page_icon="📝", layout="wide"

@@ -1,11 +1,12 @@
 import collections
-from typing import List
-import pandas as pd
 import json
 from pathlib import Path
-from models import Thesis
-import streamlit as st
+from typing import List
+
 import altair
+import pandas as pd
+import streamlit as st
+from models import Thesis
 
 st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide")
 

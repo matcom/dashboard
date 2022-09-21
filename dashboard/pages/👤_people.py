@@ -1,7 +1,6 @@
 import streamlit as st
 from models import Person
 
-
 st.set_page_config(
     page_title="MatCom Dashboard - Personal", page_icon="👤", layout="wide"
 )

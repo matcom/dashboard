@@ -2,11 +2,12 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import List
-from typing_extensions import Self
 from uuid import UUID, uuid4
-from pydantic import BaseModel, Field
+
 import yaml
 from fastapi.encoders import jsonable_encoder
+from pydantic import BaseModel, Field
+from typing_extensions import Self
 
 
 class CustomModel(BaseModel):

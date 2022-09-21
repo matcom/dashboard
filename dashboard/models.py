@@ -24,8 +24,8 @@ class CustomModel(BaseModel):
         result = {}
 
         for key, value in data.items():
-            if isinstance(value, dict) and 'uuid' in value:
-                result[key] = value['uuid']
+            if isinstance(value, dict) and "uuid" in value:
+                result[key] = value["uuid"]
             else:
                 result[key] = value
 
@@ -37,12 +37,14 @@ class CustomModel(BaseModel):
         if isinstance(v, list):
             return [self._encode(vi) for vi in v]
         if isinstance(v, dict):
-            return { ki: self._encode(vi) for ki,vi in v.items() }
+            return {ki: self._encode(vi) for ki, vi in v.items()}
 
         return str(v)
 
     def save(self):
-        path:Path = Path("/src/data") / self.__class__.__name__ / (str(self.uuid) + ".yaml")
+        path: Path = (
+            Path("/src/data") / self.__class__.__name__ / (str(self.uuid) + ".yaml")
+        )
         path.parent.mkdir(exist_ok=True, parents=True)
 
         with path.open("w") as fp:
@@ -50,7 +52,7 @@ class CustomModel(BaseModel):
 
     @classmethod
     def all(cls) -> List[Self]:
-        path:Path = Path("/src/data") / cls.__name__
+        path: Path = Path("/src/data") / cls.__name__
         items = []
 
         for fname in path.glob("*.yaml"):
@@ -60,8 +62,8 @@ class CustomModel(BaseModel):
         return items
 
     @classmethod
-    def get(cls, uuid:str) -> Self:
-        path:Path = Path("/src/data") / cls.__name__ / (str(uuid) + ".yaml")
+    def get(cls, uuid: str) -> Self:
+        path: Path = Path("/src/data") / cls.__name__ / (str(uuid) + ".yaml")
 
         with path.open() as fp:
             return cls.load(fp)
@@ -71,7 +73,7 @@ class CustomModel(BaseModel):
         data = yaml.safe_load(fp)
         values = {}
 
-        for key,value in data.items():
+        for key, value in data.items():
             field = cls.__fields__[key]
 
             if issubclass(field.type_, CustomModel):

@@ -10,7 +10,7 @@ with st.expander("👤 Crear nueva entrada"):
     name = st.text_input("Nombre")
     institution = st.selectbox("Institución", ["Universidad de La Habana", "Externo"])
 
-    if institution == 'Externo':
+    if institution == "Externo":
         institution = st.text_input("Nombre de la institución")
         faculty = None
         department = None
@@ -21,9 +21,13 @@ with st.expander("👤 Crear nueva entrada"):
             faculty = st.text_input("Nombre de la facultad")
             department = st.text_input("Departamento")
         else:
-            department = st.selectbox("Departamento", ["Computación", "Matemática", "Matemática Aplicada"])
+            department = st.selectbox(
+                "Departamento", ["Computación", "Matemática", "Matemática Aplicada"]
+            )
 
-    person = Person(name=name, institution=institution, faculty=faculty, department=department)
+    person = Person(
+        name=name, institution=institution, faculty=faculty, department=department
+    )
 
     if person.name in [p.name for p in Person.all()]:
         st.error("Ya existe una persona con ese nombre.")

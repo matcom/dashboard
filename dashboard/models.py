@@ -73,7 +73,6 @@ class CustomModel(BaseModel):
         for key,value in data.items():
             field = cls.__fields__[key]
 
-            print(dir(field), flush=True)
             if issubclass(field.type_, CustomModel):
                 value = field.type_.get(value)
 

@@ -71,13 +71,11 @@ with listing:
         altair.Chart(thesis_df)
         .mark_bar()
         .encode(
-            x=altair.X("advisor", title="Tutor"),
-            y=altair.Y("distinct(thesis)", title="No. Tesis"),
+            y=altair.X("advisor", title="Tutor"),
+            x=altair.Y("distinct(thesis)", title="No. Tesis"),
             color=altair.Color("advisor", legend=None),
             tooltip=[altair.Tooltip("distinct(thesis)", title="No. Tesis")],
         )
-        .properties(height=400),
-        use_container_width=True,
     )
 
     coauthor_df = []
@@ -158,7 +156,7 @@ with create:
 
     with right:
         try:
-            thesis.validate()
+            thesis.check()
 
             if st.button("💾 Salvar Tesis"):
                 thesis.save()

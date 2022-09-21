@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 from typing import List
 from typing_extensions import Self
@@ -8,14 +10,25 @@ from fastapi.encoders import jsonable_encoder
 
 
 class CustomModel(BaseModel):
-    def validate(self):
+    uuid: UUID = Field(default_factory=uuid4)
+
+    def check(self):
         return True
 
     def yaml(self) -> str:
         return yaml.dump(self.encode(), allow_unicode=True)
 
     def encode(self) -> dict:
-        return jsonable_encoder(self.dict())
+        data = jsonable_encoder(self.dict())
+        result = {}
+
+        for key, value in data.items():
+            if isinstance(value, dict) and 'uuid' in value:
+                result[key] = value['uuid']
+            else:
+                result[key] = value
+
+        return result
 
     def _encode(self, v):
         if isinstance(v, (int, float, str)):
@@ -35,18 +48,47 @@ class CustomModel(BaseModel):
             fp.write(self.yaml())
 
     @classmethod
+    def all(cls) -> List[Self]:
+        path:Path = Path("/src/data") / cls.__name__
+        items = []
+
+        for fname in path.glob("*.yaml"):
+            with open(fname) as fp:
+                items.append(cls.load(fp))
+
+        return items
+
+    @classmethod
+    def get(cls, uuid:str) -> Self:
+        path:Path = Path("/src/data") / cls.__name__ / (str(uuid) + ".yaml")
+
+        with path.open() as fp:
+            return cls.load(fp)
+
+    @classmethod
     def load(cls, fp) -> Self:
-        return cls(**yaml.safe_load(fp))
+        data = yaml.safe_load(fp)
+        values = {}
+
+        for key,value in data.items():
+            field = cls.__fields__[key]
+
+            print(dir(field), flush=True)
+            if issubclass(field.type_, CustomModel):
+                value = field.type_.get(value)
+
+            values[key] = value
+
+        return cls(**values)
 
 
 class Thesis(CustomModel):
-    uuid: UUID = Field(default_factory=uuid4)
     title: str
     authors: List[str]
     advisors: List[str]
     keywords: List[str]
 
-    def validate(self):
+    def check(self):
         if not self.title:
             raise ValueError("El título no puede ser vacío.")
 
@@ -60,3 +102,30 @@ class Thesis(CustomModel):
             raise ValueError("Debe tener al menos 3 palabras clave.")
 
         return True
+
+
+class Subject(CustomModel):
+    subject: str
+    career: str
+    semester: int
+    year: int
+
+    def __str__(self) -> str:
+        return self.subject
+
+
+class Person(CustomModel):
+    name: str
+    institution: str
+    faculty: str = None
+    department: str = None
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Classes(CustomModel):
+    subject: Subject
+    professor: Person
+    lecture_hours: int
+    practice_hours: int

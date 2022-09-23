@@ -82,7 +82,7 @@ with classes_tab:
 
     data = pd.DataFrame(data)
 
-    st.write(
+    st.altair_chart(
         altair.Chart(data)
         .mark_bar()
         .encode(
@@ -90,5 +90,6 @@ with classes_tab:
             y=altair.Y("professor", title="Profesor"),
             color=altair.Color("subject", title="Asignatura"),
             tooltip=["subject", "hours"],
-        )
+        ),
+        use_container_width=True
     )

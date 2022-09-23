@@ -69,9 +69,14 @@ with classes_tab:
 
     st.write("#### ⏳ Carga docente")
 
+    semester = st.selectbox("Semestre a mostrar", [1,2], format_func=lambda s: f"Semestre {s}")
+
     data = []
 
     for entry in Classes.all():
+        if entry.subject.semester != semester:
+            continue
+
         data.append(
             dict(
                 subject=entry.subject.subject,

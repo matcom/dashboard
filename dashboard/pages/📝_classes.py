@@ -77,6 +77,7 @@ with classes_tab:
                 subject=entry.subject.subject,
                 professor=entry.professor.name,
                 hours=entry.practice_hours + entry.lecture_hours,
+                uuid=str(entry.uuid),
             )
         )
 
@@ -89,7 +90,7 @@ with classes_tab:
             x=altair.X("sum(hours)", title="Horas semanales"),
             y=altair.Y("professor", title="Profesor"),
             color=altair.Color("subject", title="Asignatura"),
-            tooltip=["subject", "hours"],
+            tooltip=["subject", "hours", "uuid"],
         ),
         use_container_width=True
     )

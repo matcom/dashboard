@@ -134,7 +134,7 @@ class Classes(CustomModel):
 
     def save(self):
         func_check_same_data = lambda c: self.subject == c.subject and self.professor == c.professor
-        class_with_same_data =  next(filter(func_check_same_data, Classes.all()), None)
+        class_with_same_data = next(filter(func_check_same_data, Classes.all()), None)
         if class_with_same_data:
             self.uuid = class_with_same_data.uuid
         CustomModel.save(self)

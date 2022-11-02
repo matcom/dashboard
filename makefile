@@ -1,8 +1,8 @@
 dev:
-	docker-compose up
+	docker compose up
 
 app:
-	docker-compose up --force-recreate -d
+	docker compose up --force-recreate -d
 
 install:
 	python -m pip install -r requirements.txt
@@ -15,7 +15,7 @@ docker:
 	docker build -t apiad/matcom-dashboard:latest .
 
 shell:
-	docker-compose run app bash
+	docker compose run app bash
 
 sync:
 	git add data/*.yaml

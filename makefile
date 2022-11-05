@@ -20,7 +20,7 @@ shell:
 update:
 	USER=0 docker compose run app make update-reqs
 	make docker
-	docker push
+	docker push apiad/matcom-dashboard
 
 sync:
 	git add data/*.yaml

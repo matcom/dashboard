@@ -11,3 +11,15 @@ services:
       - ".:/src"
     working_dir: "/src"
     command: [ "streamlit", "run", "dashboard/⭐_dashboard.py" ]
+
+  caddy:
+    image: caddy:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./data/caddy:/data
+      - caddy_config:/config
+    depends_on:
+      - app

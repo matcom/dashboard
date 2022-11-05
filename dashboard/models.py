@@ -138,3 +138,9 @@ class Classes(CustomModel):
         if class_with_same_data:
             self.uuid = class_with_same_data.uuid
         CustomModel.save(self)
+
+
+class Paper(CustomModel):
+    title: str
+    authors: List[str]
+    external_authors: List[str]

@@ -4,7 +4,7 @@ services:
   app:
     image: matcom/dashboard:latest
     build: .
-    user: "1000"
+    user: ${USER}
     ports:
       - "8501:8501"
     volumes:

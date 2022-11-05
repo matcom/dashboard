@@ -1,8 +1,8 @@
 dev:
-	docker compose up
+	USER=`id -u` docker compose up
 
 app:
-	docker compose up --force-recreate -d
+	USER=`id -u` docker compose up --force-recreate -d
 
 install:
 	python -m pip install -r requirements.txt
@@ -15,10 +15,10 @@ docker:
 	docker build -t apiad/matcom-dashboard:latest .
 
 shell:
-	docker compose run app bash
+	USER=`id -u` docker compose run app bash
 
 update:
-	docker compose run app bash make update-reqs
+	USER=0 docker compose run app bash make update-reqs
 	make docker
 	docker push
 

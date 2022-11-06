@@ -159,16 +159,14 @@ with create:
             type="pdf",
             key='thesis_pdf',
         )
-        if pdf and thesis.title:
-            thesis.thesis_pdf = '_'.join(thesis.title.split(' ')) + '_v1.pdf'
-            
+
     with right:
         try:
             thesis.check()
 
             if st.button("💾 Salvar Tesis"):
+                if pdf: thesis.save_thesis_pdf(pdf)
                 thesis.save()
-                thesis.save_thesis_pdf(pdf)
                 st.success(f"¡Tesis _{thesis.title}_ creada con éxito!")
 
         except ValueError as e:

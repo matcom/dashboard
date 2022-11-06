@@ -159,7 +159,7 @@ with create:
         pdf = st.file_uploader(
             "📤 Subir Tesis", 
             type="pdf",
-            key= st.session_state.file_uploader_key
+            key= st.session_state["file_uploader_key"]
         )
 
     with right:

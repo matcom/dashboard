@@ -17,6 +17,9 @@ docker:
 shell:
 	USER=`id -u` docker compose run app bash
 
+root:
+	USER=0 docker compose run app bash
+
 update:
 	USER=0 docker compose run app make update-reqs
 	make docker

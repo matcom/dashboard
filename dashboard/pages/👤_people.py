@@ -25,8 +25,11 @@ with st.expander("👤 Crear nueva entrada"):
                 "Departamento", ["Computación", "Matemática", "Matemática Aplicada"]
             )
 
+    scientific_grade = st.selectbox("Grado científico", ["Licenciado", "Ingeniero", "Máster en Ciencias", "Doctor en Ciencias"])
+    academic_grade = st.selectbox("Grado académico", ["Adiestrado", "Instructor", "Asistente", "Auxiliar", "Titular"])
+
     person = Person(
-        name=name, institution=institution, faculty=faculty, department=department
+        name=name, institution=institution, faculty=faculty, department=department, scientific_grade=scientific_grade, academic_grade=academic_grade
     )
 
     if person.name in [p.name for p in Person.all()]:

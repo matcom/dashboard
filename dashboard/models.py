@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 
 import yaml
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, HttpUrl
 from typing_extensions import Self
 
 
@@ -121,6 +121,8 @@ class Person(CustomModel):
     institution: str
     faculty: str = None
     department: str = None
+    scientific_grade: str = "Licenciado"
+    academic_grade: str = "Instructor"
 
     def __str__(self) -> str:
         return self.name
@@ -140,7 +142,9 @@ class Classes(CustomModel):
         CustomModel.save(self)
 
 
-class Paper(CustomModel):
+class JournalPaper(CustomModel):
     title: str
-    authors: List[str]
-    external_authors: List[str]
+    authors: List[Person]
+    corresponding_author: Person = None
+    year: int
+    url: HttpUrl = None

@@ -3,11 +3,15 @@ import streamlit as st
 import pandas as pd
 import altair
 
+from models import JournalPaper
+
 
 st.set_page_config(
     page_title="MatCom Dashboard - Investigación", page_icon="📚", layout="wide"
 )
 
+
+st.stop()
 
 @st.experimental_memo
 def load_data() -> pd.DataFrame:

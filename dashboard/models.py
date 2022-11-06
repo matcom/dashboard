@@ -122,7 +122,7 @@ class Person(CustomModel):
     faculty: str = None
     department: str = None
     scientific_grade: str = "Licenciado"
-    academic_grade: str = "Instructor"
+    academic_grade: str = "Ninguno"
 
     def __str__(self) -> str:
         return self.name

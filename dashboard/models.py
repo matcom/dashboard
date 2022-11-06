@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import List
 from uuid import UUID, uuid4
 
-import os
 import yaml
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field
@@ -52,16 +51,7 @@ class CustomModel(BaseModel):
 
         with path.open("w") as fp:
             fp.write(self.yaml())
-        
-    def save_thesis_pdf(self, pdf):
-        self.version += 1
-        name_pdf = str(self.uuid) + f"_v{self.version}.pdf"
-        path: Path = (  Path("/src/data/Thesis/files") / name_pdf)
-        path.parent.mkdir(exist_ok=True, parents=True)
-        
-        with path.open("wb") as f:
-            f.write(pdf.getbuffer())
-
+    
     @classmethod
     def all(cls) -> List[Self]:
         path: Path = Path("/src/data") / cls.__name__
@@ -118,6 +108,14 @@ class Thesis(CustomModel):
 
         return True
 
+    def save_thesis_pdf(self, pdf):
+        self.version += 1
+        name_pdf =  f"{self.uuid}_v{self.version}.pdf"
+        path: Path = Path(f"/src/data/Thesis/files/{name_pdf}") 
+        path.parent.mkdir(exist_ok=True, parents=True)
+        
+        with path.open("wb") as f:
+            f.write(pdf.getbuffer())
 
 class Subject(CustomModel):
     subject: str

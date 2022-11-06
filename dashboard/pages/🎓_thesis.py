@@ -161,15 +161,15 @@ with create:
             type="pdf",
             key= st.session_state.file_uploader_key
         )
-
+if pdf:
     with right:
         try:
             thesis.check()
 
             if st.button("💾 Salvar Tesis"):
-                thesis.save_thesis_pdf(pdf)
                 if pdf:
-                    thesis.save()
+                    thesis.save_thesis_pdf(pdf)
+                thesis.save()
                 st.success(f"¡Tesis _{thesis.title}_ creada con éxito!")
                 st.session_state["file_uploader_key"] = generate_widget_key()
 

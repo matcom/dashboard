@@ -7,7 +7,6 @@ import altair
 import pandas as pd
 import streamlit as st
 from models import Thesis
-
 from utils import generate_widget_key
 
 st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide")

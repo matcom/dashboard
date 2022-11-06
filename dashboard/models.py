@@ -4,9 +4,10 @@ from pathlib import Path
 from typing import List
 from uuid import UUID, uuid4
 
+import os
 import yaml
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field
 from typing_extensions import Self
 
 
@@ -49,6 +50,10 @@ class CustomModel(BaseModel):
 
         with path.open("w") as fp:
             fp.write(self.yaml())
+        
+    def save_thesis_pdf(self, pdf):
+        with open(os.path.join("/src/data/Thesis/files/", self.thesis_pdf),"wb") as f:
+            f.write(pdf.getbuffer())
 
     @classmethod
     def all(cls) -> List[Self]:
@@ -89,7 +94,8 @@ class Thesis(CustomModel):
     authors: List[str]
     advisors: List[str]
     keywords: List[str]
-
+    thesis_pdf: str = ''
+ 
     def check(self):
         if not self.title:
             raise ValueError("El título no puede ser vacío.")
@@ -102,6 +108,9 @@ class Thesis(CustomModel):
 
         if len(self.keywords) < 3:
             raise ValueError("Debe tener al menos 3 palabras clave.")
+
+        if len(self.thesis_pdf) == 0:
+            raise ValueError("Debe tener una tesis en un archivo PDF.")
 
         return True
 
@@ -118,11 +127,9 @@ class Subject(CustomModel):
 
 class Person(CustomModel):
     name: str
-    institution: str = None
+    institution: str
     faculty: str = None
     department: str = None
-    scientific_grade: str = "Licenciado"
-    academic_grade: str = "Instructor"
 
     def __str__(self) -> str:
         return self.name
@@ -140,11 +147,3 @@ class Classes(CustomModel):
         if class_with_same_data:
             self.uuid = class_with_same_data.uuid
         CustomModel.save(self)
-
-
-class JournalPaper(CustomModel):
-    title: str
-    authors: List[Person]
-    corresponding_author: Person = None
-    year: int
-    url: HttpUrl = None

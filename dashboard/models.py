@@ -51,7 +51,7 @@ class CustomModel(BaseModel):
 
         with path.open("w") as fp:
             fp.write(self.yaml())
-    
+
     @classmethod
     def all(cls) -> List[Self]:
         path: Path = Path("/src/data") / cls.__name__
@@ -116,6 +116,7 @@ class Thesis(CustomModel):
         
         with path.open("wb") as f:
             f.write(pdf.getbuffer())
+
 
 class Subject(CustomModel):
     subject: str

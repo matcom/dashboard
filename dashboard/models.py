@@ -129,7 +129,7 @@ class Subject(CustomModel):
 
 class Person(CustomModel):
     name: str
-    institution: str
+    institution: str = None
     faculty: str = None
     department: str = None
     scientific_grade: str = "Licenciado"

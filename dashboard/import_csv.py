@@ -11,6 +11,7 @@ for i, row in df.iterrows():
 
         for p2 in Person.all():
             if p2.name == person.name:
-                continue
-
-        person.save()
+                break
+        else:
+            print(person)
+            person.save()

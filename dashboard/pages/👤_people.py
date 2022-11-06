@@ -7,43 +7,91 @@ st.set_page_config(
 
 
 with st.expander("👤 Crear nueva entrada"):
-    name = st.text_input("Nombre")
-    institution = st.selectbox("Institución", ["Universidad de La Habana", "Externo"])
-
-    if institution == "Externo":
-        institution = st.text_input("Nombre de la institución")
-        faculty = None
-        department = None
+    if (
+        st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True)
+        == "📝 Editar"
+    ):
+        person = st.selectbox(
+            "Seleccione una entrada a modificar",
+            sorted(Person.all(), key=lambda p: p.name),
+            format_func=lambda p: f"{p.name} ({p.institution})"
+        )
     else:
-        faculty = st.selectbox("Facultad", ["Matemática y Computación", "Otra"])
+        person = Person(
+            name="",
+            institution="Universidad de La Habana",
+            faculty="Facultad de Matemática y Computación",
+            department="",
+        )
 
-        if faculty == "Otra":
-            faculty = st.text_input("Nombre de la facultad")
-            department = st.text_input("Departamento")
-        else:
-            department = st.selectbox(
-                "Departamento", ["Computación", "Matemática", "Matemática Aplicada"]
-            )
-
-    scientific_grade = st.selectbox("Grado científico", ["Licenciado", "Ingeniero", "Máster en Ciencias", "Doctor en Ciencias"])
-    academic_grade = st.selectbox("Grado académico", ["Adiestrado", "Instructor", "Asistente", "Auxiliar", "Titular"])
-
-    person = Person(
-        name=name, institution=institution, faculty=faculty, department=department, scientific_grade=scientific_grade, academic_grade=academic_grade
+    person.name = st.text_input("Nombre", key="person_name", value=person.name)
+    person.institution = st.text_input(
+        "Institución", key="person_institution", value=person.institution
+    )
+    person.faculty = st.text_input(
+        "Facultad", key="person_faculty", value=person.faculty
+    )
+    person.department = st.text_input(
+        "Departamento", key="person_department", value=person.department
+    )
+    grades = ["Licenciado", "Ingeniero", "Máster en Ciencias", "Doctor en Ciencias"]
+    person.scientific_grade = st.selectbox(
+        "Grado científico",
+        grades,
+        key="person_scientific_grade",
+        index=grades.index(person.scientific_grade),
+    )
+    grades = ["Ninguno", "Instructor", "Asistente", "Auxiliar", "Titular"]
+    person.academic_grade = st.selectbox(
+        "Grado académico",
+        grades,
+        key="person_academic_grade",
+        index=grades.index(person.academic_grade),
     )
 
-    if person.name in [p.name for p in Person.all()]:
-        st.error("Ya existe una persona con ese nombre.")
-
-    elif st.button("💾 Salvar entrada"):
+    if st.button("💾 Salvar entrada"):
         person.save()
         st.success("Entrada salvada con éxito.")
 
 
-people = []
+people_comp = []
+people_appl = []
+people_math = []
+people_uh = []
+people_extra = []
 
 st.write("#### Listado")
 for person in sorted(Person.all(), key=lambda s: s.name):
-    people.append(person.encode())
+    if person.institution != "Universidad de La Habana":
+        people_extra.append(person)
+        continue
 
-st.dataframe(people)
+    if person.faculty != "Matemática y Computación":
+        people_uh.append(person)
+        continue
+
+    if person.department == "Computación":
+        people_comp.append(person)
+    elif person.department == "Matemática Aplicada":
+        people_appl.append(person)
+    else:
+        people_math.append(person)
+
+st.write("##### Facultad de Matemática y Computación")
+
+with st.expander(f"MatCom - Computación ({len(people_comp)})"):
+    st.table([p.encode() for p in people_comp])
+
+with st.expander(f"MatCom - Matemática Aplicada ({len(people_appl)})"):
+    st.table([p.encode() for p in people_appl])
+
+with st.expander(f"MatCom - Matemática ({len(people_math)})"):
+    st.table([p.encode() for p in people_math])
+
+st.write("##### Resto")
+
+with st.expander(f"Universidad de La Habana ({len(people_uh)})"):
+    st.table([p.encode() for p in people_uh])
+
+with st.expander(f"Externos ({len(people_extra)})"):
+    st.table([p.encode() for p in people_extra])

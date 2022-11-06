@@ -2,12 +2,13 @@ import collections
 import json
 from pathlib import Path
 from typing import List
-from random import randint
 
 import altair
 import pandas as pd
 import streamlit as st
 from models import Thesis
+
+from utils import generate_widget_key
 
 st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide")
 
@@ -154,13 +155,12 @@ with create:
                 value=";".join(thesis.keywords),
             ).split(";")
         ]
-        if  "widget_key" not in st.session_state: 
-            st.session_state["widget_key"] = str(randint(0, 1000000))
-            
+        if "file_uploader_key" not in st.session_state: 
+            st.session_state["file_uploader_key"] = generate_widget_key();            
         pdf = st.file_uploader(
             "📤 Subir Tesis", 
             type="pdf",
-            key= st.session_state.widget_key
+            key= st.session_state.file_uploader_key
         )
 
     with right:
@@ -168,10 +168,11 @@ with create:
             thesis.check()
 
             if st.button("💾 Salvar Tesis"):
-                if pdf: thesis.save_thesis_pdf(pdf)
-                thesis.save()
+                thesis.save_thesis_pdf(pdf)
+                if pdf:
+                    thesis.save()
                 st.success(f"¡Tesis _{thesis.title}_ creada con éxito!")
-                st.session_state["widget_key"] = str(randint(0, 1000000))
+                st.session_state["file_uploader_key"] = generate_widget_key()
 
         except ValueError as e:
             st.error(e)

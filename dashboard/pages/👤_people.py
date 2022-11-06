@@ -26,13 +26,13 @@ with st.expander("👤 Crear nueva entrada"):
 
     person.name = st.text_input("Nombre", key="person_name", value=person.name)
     person.institution = st.text_input(
-        "Institución", key="person_institution", value=person.institution
+        "Institución", key="person_institution", value=person.institution or ""
     )
     person.faculty = st.text_input(
-        "Facultad", key="person_faculty", value=person.faculty
+        "Facultad", key="person_faculty", value=person.faculty or ""
     )
     person.department = st.text_input(
-        "Departamento", key="person_department", value=person.department
+        "Departamento", key="person_department", value=person.department or ""
     )
     grades = ["Licenciado", "Ingeniero", "Máster en Ciencias", "Doctor en Ciencias"]
     person.scientific_grade = st.selectbox(
@@ -64,10 +64,14 @@ st.write("#### Listado")
 for person in sorted(Person.all(), key=lambda s: s.name):
     if person.institution != "Universidad de La Habana":
         people_extra.append(person)
+        if not person.institution:
+            person.academic_grade = "Ninguno"
+
         continue
 
     if person.faculty != "Matemática y Computación":
         people_uh.append(person)
+
         continue
 
     if person.department == "Computación":

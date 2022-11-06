@@ -27,6 +27,8 @@ class CustomModel(BaseModel):
         for key, value in data.items():
             if isinstance(value, dict) and "uuid" in value:
                 result[key] = value["uuid"]
+            elif isinstance(value, list) and all([isinstance(v, dict) and "uuid" in v for v in value]):
+                result[key] = [v["uuid"] for v in value]
             else:
                 result[key] = value
 
@@ -132,6 +134,8 @@ class Person(CustomModel):
     institution: str
     faculty: str = None
     department: str = None
+    scientific_grade: str = "Licenciado"
+    academic_grade: str = "Ninguno"
 
     def __str__(self) -> str:
         return self.name
@@ -149,3 +153,26 @@ class Classes(CustomModel):
         if class_with_same_data:
             self.uuid = class_with_same_data.uuid
         CustomModel.save(self)
+
+
+class Journal(CustomModel):
+    title: str
+    publisher: str
+    issn: str = ''
+
+    def save(self):
+        func_check_same_data = lambda c: self.title == c.title and self.publisher == c.publisher
+        class_with_same_data = next(filter(func_check_same_data, Journal.all()), None)
+        if class_with_same_data:
+            self.uuid = class_with_same_data.uuid
+        CustomModel.save(self)
+
+
+class JournalPaper(CustomModel):
+    title: str
+    authors: List[Person]
+    corresponding_author: Person = None
+    url: HttpUrl = None
+    journal: Journal
+    issue: int
+    year: int

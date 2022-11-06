@@ -52,7 +52,12 @@ class CustomModel(BaseModel):
             fp.write(self.yaml())
         
     def save_thesis_pdf(self, pdf):
-        with open(os.path.join("/src/data/Thesis/files/", self.thesis_pdf),"wb") as f:
+        self.version += 1
+        name_pdf = str(self.uuid) + f"_v{self.version}.pdf"
+        path: Path = (  Path("/src/data/Thesis/files") / name_pdf)
+        path.parent.mkdir(exist_ok=True, parents=True)
+        
+        with path.open("wb") as f:
             f.write(pdf.getbuffer())
 
     @classmethod
@@ -94,8 +99,8 @@ class Thesis(CustomModel):
     authors: List[str]
     advisors: List[str]
     keywords: List[str]
-    thesis_pdf: str = ''
- 
+    version: int = 0 
+        
     def check(self):
         if not self.title:
             raise ValueError("El título no puede ser vacío.")
@@ -108,9 +113,6 @@ class Thesis(CustomModel):
 
         if len(self.keywords) < 3:
             raise ValueError("Debe tener al menos 3 palabras clave.")
-
-        if len(self.thesis_pdf) == 0:
-            raise ValueError("Debe tener una tesis en un archivo PDF.")
 
         return True
 

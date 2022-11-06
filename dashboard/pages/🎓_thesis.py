@@ -161,7 +161,7 @@ with create:
             type="pdf",
             key= st.session_state.file_uploader_key
         )
-if pdf:
+
     with right:
         try:
             thesis.check()

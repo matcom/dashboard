@@ -154,13 +154,21 @@ with create:
                 value=";".join(thesis.keywords),
             ).split(";")
         ]
-
+        pdf = st.file_uploader(
+            "📤 Subir Tesis", 
+            type="pdf",
+            key='thesis_pdf',
+        )
+        if pdf and thesis.title:
+            thesis.thesis_pdf = '_'.join(thesis.title.split(' ')) + '_v1.pdf'
+            
     with right:
         try:
             thesis.check()
 
             if st.button("💾 Salvar Tesis"):
                 thesis.save()
+                thesis.save_thesis_pdf(pdf)
                 st.success(f"¡Tesis _{thesis.title}_ creada con éxito!")
 
         except ValueError as e:

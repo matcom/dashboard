@@ -1,0 +1,14 @@
+advisors:
+- Daniel Mena Frias
+- Miguel Katrib Mora
+authors:
+- Amalia Nilda Ibarra Rodríguez
+keywords:
+- contrato inteligente
+- fabric-contract-api
+- hyperledger fabric
+- chaincode
+title: Módulo fabric-contract-api para implementar contratos inteligentes empleando
+  C#
+uuid: 8977cff7-aa13-4bd1-9e0e-a83fdef13c28
+version: 0

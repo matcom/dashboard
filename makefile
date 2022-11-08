@@ -2,7 +2,7 @@ dev:
 	USER=`id -u` docker compose up app
 
 app:
-	USER=`id -u` docker compose up --force-recreate -d
+	USER=`id -u` docker-compose up --force-recreate -d
 
 install:
 	python -m pip install -r requirements.txt

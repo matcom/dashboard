@@ -28,5 +28,5 @@ update:
 sync:
 	git add data/*.yaml
 	git commit -m "Update data" || echo "Nothing to commit"
-	git pull --no-edit
+	git pull --no-edit && make app
 	git push

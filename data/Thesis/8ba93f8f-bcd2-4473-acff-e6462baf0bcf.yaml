@@ -5,7 +5,7 @@ authors:
 - Samuel David Suárez Rodríguez
 keywords:
 - AutoGOAL
-- unsupervised
-- autoencoders
+- unsupervised-learning
+- autoencoder
 title: AutoGOAL unsupervised
 uuid: 8ba93f8f-bcd2-4473-acff-e6462baf0bcf

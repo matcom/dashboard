@@ -1,10 +1,11 @@
 advisors:
-- Pedro Quintero Rodríguez
+- Pedro Quintero Rojas
 authors:
 - José Carlos Hernández Piñera
 keywords:
 - horario
-- Matcom
 - restricciones
+- sistema web
+- DDD
 title: Sistema de gestión de horarios.
 uuid: 75813d3c-d7da-4766-ac1f-da7795bedfaa

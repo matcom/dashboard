@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 
 import yaml
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field
 from typing_extensions import Self
 
 
@@ -96,7 +96,8 @@ class Thesis(CustomModel):
     authors: List[str]
     advisors: List[str]
     keywords: List[str]
-
+    version: int = 0 
+        
     def check(self):
         if not self.title:
             raise ValueError("El título no puede ser vacío.")
@@ -111,6 +112,15 @@ class Thesis(CustomModel):
             raise ValueError("Debe tener al menos 3 palabras clave.")
 
         return True
+
+    def save_thesis_pdf(self, pdf):
+        self.version += 1
+        name_pdf =  f"{self.uuid}_v{self.version}.pdf"
+        path: Path = Path(f"/src/data/Thesis/files/{name_pdf}") 
+        path.parent.mkdir(exist_ok=True, parents=True)
+        
+        with path.open("wb") as f:
+            f.write(pdf.getbuffer())
 
 
 class Subject(CustomModel):

@@ -26,7 +26,7 @@ with st.expander("⚗️ Nueva entrada / Editar"):
         paper = st.selectbox(
             "Seleccione un artículo a modificar",
             papers,
-            format_func=lambda p: f"e{p.title} - {p.authors[0]}",
+            format_func=lambda p: f"{p.title} - {p.authors[0]}",
         )
     else:
         paper = JournalPaper(title="", authors=[], journal=None)

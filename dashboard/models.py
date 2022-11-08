@@ -90,6 +90,12 @@ class CustomModel(BaseModel):
 
         return cls(**values)
 
+    def __hash__(self):
+        return hash(str(self.uuid))
+
+    def __eq__(self, other):
+        return isinstance(other, CustomModel) and self.uuid == other.uuid
+
 
 class Thesis(CustomModel):
     title: str
@@ -171,6 +177,9 @@ class Journal(CustomModel):
         if class_with_same_data:
             self.uuid = class_with_same_data.uuid
         CustomModel.save(self)
+
+    def __str__(self):
+        return f"{self.title} ({self.publisher})"
 
 
 class JournalPaper(CustomModel):

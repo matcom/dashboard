@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import altair
 
-from models import JournalPaper
+from models import JournalPaper, Person, Journal
 
 
 st.set_page_config(
@@ -11,6 +11,12 @@ st.set_page_config(
 )
 
 year = st.sidebar.selectbox("Año", [2020, 2021, 2022], index=2)
+
+people = Person.all()
+people.sort(key=lambda p: p.name)
+
+journals = Journal.all()
+journals.sort(key=lambda j: j.title)
 
 papers = [p for p in JournalPaper.all() if p.year == year]
 papers.sort(key=lambda p: p.title)
@@ -20,7 +26,7 @@ st.write(f"#### Artículos en Journal - {year} ({len(papers)})")
 
 with st.expander("⚗️ Nueva entrada / Editar"):
     if (
-        st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True)
+        st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True, label_visibility="collapsed")
         == "📝 Editar"
     ):
         paper = st.selectbox(
@@ -29,11 +35,28 @@ with st.expander("⚗️ Nueva entrada / Editar"):
             format_func=lambda p: f"{p.title} - {p.authors[0]}",
         )
     else:
-        paper = JournalPaper(title="", authors=[], journal=None)
+        paper = JournalPaper(title="", authors=[], journal=journals[0])
 
     paper.title = st.text_input("Título", key="paper_title", value=paper.title)
+    paper.authors = st.multiselect("Autores", key="paper_authors", options=people, default=paper.authors)
+
+    if paper.authors:
+        paper.corresponding_author = st.selectbox("Autor por correspondencia", options=paper.authors, index=paper.authors.index(paper.corresponding_author) if paper.corresponding_author else 0)
+
+    paper.journal = st.selectbox("Journal", options=journals + ["➕ Nueva entrada"], index=journals.index(paper.journal))
+
+    if paper.journal == "➕ Nueva entrada":
+        journal_title = st.text_input("Título del Journal", key="journal_title")
+        journal_publisher = st.text_input("Editorial", key="journal_publisher")
+        journal_issn = st.text_input("ISSN", key="journal_issn")
+
+        paper.journal = Journal(title=journal_title, publisher=journal_publisher, issn=journal_issn)
+
+    paper.issue = st.number_input("Número", key="paper_issue", min_value=1, value=paper.issue)
+    paper.year = st.number_input("Número", key="paper_year", min_value=2020, value=paper.year)
 
     if st.button("💾 Guardar cambios"):
+        paper.journal.save()
         paper.save()
         st.success("Entrada salvada con éxito.")
 
@@ -42,16 +65,22 @@ with st.expander("📚 Listado"):
     data = []
 
     for paper in papers:
-        data.append(
-            dict(
-                Titulo=paper.title,
-                Journal=f"{paper.journal.title} ({paper.journal.publisher})",
-                Autores=[p.name for p in paper.authors],
-            )
-        )
+        text = [f"_{paper.title}_."]
 
-    st.dataframe(data)
+        for author in paper.authors:
+            fmt = author.name
 
+            if author.orcid:
+                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
+
+            if author.institution == "Universidad de La Habana":
+                fmt = f"**{fmt}**"
+
+            text.append(fmt.format(author.name) + ", ")
+
+        text.append(f"En _{paper.journal.title}_, {paper.journal.publisher}. ISSN: {paper.journal.issn}.")
+        text.append(f"Número {paper.issue}, {paper.year}.")
+        st.write(" ".join(text))
 
 st.stop()
 

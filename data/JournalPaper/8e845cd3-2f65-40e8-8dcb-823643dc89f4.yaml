@@ -1,12 +1,12 @@
 authors:
 - 6df2e2a7-6182-487f-8983-797e4775ebb3
 - 289b9629-808b-4983-8793-e88a6effaca5
-- 17fd36bc-98da-46cc-83d4-801a553f5529
 - 68d03c09-408e-477e-a203-a71055bf151d
-corresponding_author: 6df2e2a7-6182-487f-8983-797e4775ebb3
+- 17fd36bc-98da-46cc-83d4-801a553f5529
+corresponding_author: 289b9629-808b-4983-8793-e88a6effaca5
 issue: 1
 journal: 446bb52f-1f7c-4943-98a9-52c8894c764c
-title: Intelligent ensembling of auto-ML system outputs for solving classification
+title: Intelligent ensembling of Auto-ML system outputs for solving classification
   problems
 url: https://doi.org/10.1016/j.ins.2022.07.061
 uuid: 8e845cd3-2f65-40e8-8dcb-823643dc89f4

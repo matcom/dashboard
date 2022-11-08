@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 
 import yaml
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, EmailStr
 from typing_extensions import Self
 
 
@@ -147,6 +147,7 @@ class Person(CustomModel):
     scientific_grade: str = "Licenciado"
     academic_grade: str = "Ninguno"
     orcid: str = None
+    emails: List[str] = Field(default_factory=list)
 
     def __str__(self) -> str:
         return self.name

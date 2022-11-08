@@ -49,6 +49,7 @@ with st.expander("👤 Nueva entrada / Editar"):
         index=grades.index(person.academic_grade),
     )
 
+    person.emails = [s.strip() for s in st.text_input("Email(s) -- Separados por punto y coma (;)", key="person_email", value="; ".join(person.emails)).split(";")]
     person.orcid = st.text_input("ORCID", key="person_orcid", value=person.orcid or "")
 
     if st.button("💾 Salvar entrada"):

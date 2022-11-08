@@ -1,7 +1,10 @@
 academic_grade: Instructor
 department: ''
+emails:
+- menciopadron@gmail.com
 faculty: ''
 institution: Université Paris Dauphine-PSL
-name: 'Daniel Menció Padrón (ORCID: https://orcid.org/0000-0002-1887-6962, menciopadron@gmail.com)'
+name: Daniel Menció Padrón
+orcid: 0000-0002-1887-6962
 scientific_grade: Máster en Ciencias
 uuid: 461f984d-f624-4394-a6d7-386645c9a10d

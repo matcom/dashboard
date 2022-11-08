@@ -6,7 +6,7 @@ st.set_page_config(
 )
 
 
-with st.expander("👤 Crear nueva entrada"):
+with st.expander("👤 Nueva entrada / Editar"):
     if (
         st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True)
         == "📝 Editar"

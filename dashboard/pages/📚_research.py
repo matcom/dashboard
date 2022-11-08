@@ -10,8 +10,51 @@ st.set_page_config(
     page_title="MatCom Dashboard - Investigación", page_icon="📚", layout="wide"
 )
 
+year = st.sidebar.selectbox("Año", [2020, 2021, 2022], index=2)
+
+papers = [p for p in JournalPaper.all() if p.year == year]
+papers.sort(key=lambda p: p.title)
+
+st.write(f"#### Artículos en Journal - {year} ({len(papers)})")
+
+
+with st.expander("⚗️ Nueva entrada / Editar"):
+    if (
+        st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True)
+        == "📝 Editar"
+    ):
+        paper = st.selectbox(
+            "Seleccione un artículo a modificar",
+            papers,
+            format_func=lambda p: f"e{p.title} - {p.authors[0]}",
+        )
+    else:
+        paper = JournalPaper(title="", authors=[], journal=None)
+
+    paper.title = st.text_input("Título", key="paper_title", value=paper.title)
+
+    if st.button("💾 Guardar cambios"):
+        paper.save()
+        st.success("Entrada salvada con éxito.")
+
+
+with st.expander("📚 Listado"):
+    data = []
+
+    for paper in papers:
+        data.append(
+            dict(
+                Titulo=paper.title,
+                Journal=f"{paper.journal.title} ({paper.journal.publisher})",
+                Autores=[p.name for p in paper.authors],
+            )
+        )
+
+    st.dataframe(data)
+
 
 st.stop()
+
 
 @st.experimental_memo
 def load_data() -> pd.DataFrame:

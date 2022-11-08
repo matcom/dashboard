@@ -28,6 +28,8 @@ class CustomModel(BaseModel):
                 result[key] = value["uuid"]
             elif isinstance(value, list) and all([isinstance(v, dict) and "uuid" in v for v in value]):
                 result[key] = [v["uuid"] for v in value]
+            elif isinstance(value, HttpUrl):
+                result[key] = str(value)
             else:
                 result[key] = value
 
@@ -79,7 +81,10 @@ class CustomModel(BaseModel):
             field = cls.__fields__[key]
 
             if issubclass(field.type_, CustomModel):
-                value = field.type_.get(value)
+                if isinstance(value, list):
+                    value = [field.type_.get(v) for v in value]
+                else:
+                    value = field.type_.get(value)
 
             values[key] = value
 
@@ -162,6 +167,6 @@ class JournalPaper(CustomModel):
     authors: List[Person]
     corresponding_author: Person = None
     url: HttpUrl = None
-    journal: Journal
-    issue: int
-    year: int
+    journal: Journal = None
+    issue: int = 1
+    year: int = 2022

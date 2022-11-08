@@ -49,6 +49,8 @@ with st.expander("👤 Nueva entrada / Editar"):
         index=grades.index(person.academic_grade),
     )
 
+    person.orcid = st.text_input("ORCID", key="person_orcid", value=person.orcid or "")
+
     if st.button("💾 Salvar entrada"):
         person.save()
         st.success("Entrada salvada con éxito.")

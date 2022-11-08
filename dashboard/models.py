@@ -140,6 +140,7 @@ class Person(CustomModel):
     department: str = None
     scientific_grade: str = "Licenciado"
     academic_grade: str = "Ninguno"
+    orcid: str = None
 
     def __str__(self) -> str:
         return self.name

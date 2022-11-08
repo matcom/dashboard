@@ -1,9 +1,11 @@
 academic_grade: Instructor
 department: ''
+emails:
+- erickdelgadomoya@gmail.com
 faculty: ''
 institution: 'Institute of Collective Health, Federal University of Bahia, Salvador,
   Brazil '
-name: Erick Delgado Moya (erickdelgadomoya@gmail.com)
+name: Erick Delgado Moya
 orcid: 0000-0001-5937-5374
 scientific_grade: Doctor en Ciencias
 uuid: f9ef5b99-9671-41c5-8830-14564382b904

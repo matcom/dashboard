@@ -1,7 +1,10 @@
 academic_grade: Instructor
-department: ''
-faculty: ''
-institution: ''
+department: Matemática Aplicada
+emails:
+- mesejo@matcom.uh.cu
+faculty: Matemática y Computación
+institution: Universidad de La Habana
 name: Jose A. Mesejo Chiong
-scientific_grade: Licenciado
+orcid: ''
+scientific_grade: Doctor en Ciencias
 uuid: 214f09c9-a770-4fd7-905f-c34a179fe18d

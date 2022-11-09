@@ -103,6 +103,7 @@ class Thesis(CustomModel):
     advisors: List[str]
     keywords: List[str]
     version: int = 0
+    balance: int = 2022
 
     def check(self):
         if not self.title:
@@ -191,3 +192,15 @@ class JournalPaper(CustomModel):
     journal: Journal = None
     issue: int = 1
     year: int = 2022
+    balance: int = 2022
+
+
+class ConferencePresentation(CustomModel):
+    title: str
+    authors: List[Person]
+    url: HttpUrl = None
+    venue: str = None
+    location: str = None
+    year: int = 2022
+    paper: bool = False
+    balance: int = 2022

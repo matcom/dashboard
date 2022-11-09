@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import altair
 
-from models import JournalPaper, Person, Journal
+from models import JournalPaper, Person, Journal, ConferencePresentation
 
 
 st.set_page_config(
@@ -21,8 +21,10 @@ journals.sort(key=lambda j: j.title)
 papers = [p for p in JournalPaper.all() if p.year == year]
 papers.sort(key=lambda p: p.title)
 
-st.write(f"#### Artículos en Journal - {year} ({len(papers)})")
+presentations = [p for p in ConferencePresentation.all() if p.year == year]
+presentations.sort(key=lambda p: p.title)
 
+st.write(f"#### Artículos - {year} ({len(papers)})")
 
 with st.expander("⚗️ Nueva entrada / Editar"):
     if (
@@ -61,7 +63,7 @@ with st.expander("⚗️ Nueva entrada / Editar"):
         st.success("Entrada salvada con éxito.")
 
 
-with st.expander("📚 Listado"):
+with st.expander("📚 Listado de artículos"):
     data = []
 
     for paper in papers:
@@ -82,127 +84,31 @@ with st.expander("📚 Listado"):
         text.append(f"Número {paper.issue}, {paper.year}.")
         st.write(" ".join(text))
 
-st.stop()
 
+st.write(f"#### Presentaciones - {year} ({len(presentations)})")
 
-@st.experimental_memo
-def load_data() -> pd.DataFrame:
-    return dict(
-        Publicaciones=pd.read_csv(
-            "/src/data/publications.csv",
-        ),
-        Tesis=pd.read_csv(
-            "/src/data/publications.csv",
-        ),
-    )
+with st.expander("📚 Listado de presentaciones"):
+    data = []
 
+    for presentation in presentations:
+        if presentation.paper:
+            text = ["📃"]
+        else:
+            text = ["📢"]
 
-data = load_data()
+        text.append(f"_{presentation.title}_.")
 
+        for author in presentation.authors:
+            fmt = author.name
 
-@st.experimental_memo
-def convert_to_csv(sheet: str):
-    return data[sheet].to_csv().encode("utf8")
+            if author.orcid:
+                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
 
+            if author.institution == "Universidad de La Habana":
+                fmt = f"**{fmt}**"
 
-st.markdown(f"### Publicaciones: {len(data['Publicaciones'])}")
+            text.append(fmt.format(author.name) + ", ")
 
-pub_data = data["Publicaciones"]
-pub_data_by_type = (
-    pub_data.groupby("Tipo de publicación").agg({"Título": "count"}).to_dict()["Título"]
-)
+        text.append(f"En _{presentation.venue}_, {presentation.location}, {presentation.year}")
 
-cols = st.columns(len(pub_data_by_type))
-
-for (label, count), col in zip(pub_data_by_type.items(), cols):
-    with col:
-        st.metric(label=label, value=count)
-
-sheet = "Publicaciones"
-
-with st.expander(f"Ver datos: {sheet}", False):
-    st.dataframe(data[sheet])
-
-    st.download_button(
-        "Descargar",
-        data=convert_to_csv(sheet),
-        file_name=f"{sheet}.csv",
-        mime="text/csv",
-    )
-
-agg_method = lambda s: f"year({s})"
-
-# with st.sidebar:
-#     aggregation = st.selectbox("Modo de agregación", ["Año", "Mes/Año", "Ninguno"])
-
-#     if aggregation == "Año":
-#         agg_method = lambda s: f"year({s})"
-#     if aggregation == "Mes/Año":
-#         agg_method = lambda s: f"yearmonth({s})"
-#     if aggregation == "Ninguno":
-#         agg_method = lambda s: f"{s}"
-
-
-pub_chart_dates = (
-    altair.Chart(pub_data)
-    .mark_bar()
-    .encode(
-        column=altair.Column(
-            agg_method("Fecha de publicación"), type="nominal", title="Período"
-        ),
-        y=altair.Y("count(Título)", title="Cantidad"),
-        color=altair.Color("Tipo de publicación"),
-        x=altair.X("Tipo de publicación", title=None, axis=None),
-        tooltip=[
-            altair.Tooltip("count(Título)", title="Total"),
-            altair.Tooltip("Tipo de publicación", title="Tipo"),
-            altair.Tooltip(agg_method("Fecha de publicación"), title="Fecha"),
-        ],
-    )
-)
-
-pub_chart_types = (
-    altair.Chart(pub_data, title="Publicaciones por tipo")
-    .mark_arc()
-    .encode(
-        theta="count(Título)",
-        tooltip=[
-            altair.Tooltip("count(Título)", title="Total"),
-            altair.Tooltip("Tipo de publicación", title="Tipo"),
-        ],
-        color="Tipo de publicación",
-    )
-)
-
-st.altair_chart(pub_chart_dates | pub_chart_types, use_container_width=False)
-
-venues = (
-    pub_data[
-        pub_data["Tipo de publicación"].isin(
-            [
-                "Artículo publicado en journal",
-                "Artículo publicado en proceeding de congreso",
-                "Presentación en congreso (sin artículo)",
-            ]
-        )
-    ]
-    .groupby(["Tipo de publicación", "Nombre de la Publicación / Evento"])
-    .count()
-    .reset_index()
-)
-
-st.altair_chart(
-    altair.Chart(venues, width=200, title="Top de publicaciones")
-    .mark_bar()
-    .encode(
-        x=altair.X("Título", title="Publicaciones"),
-        y=altair.Y("Nombre de la Publicación / Evento"),
-        column="Tipo de publicación",
-        color="Tipo de publicación",
-        tooltip=[
-            altair.Tooltip("Nombre de la Publicación / Evento", title="Nombre"),
-            altair.Tooltip("Tipo de publicación", title="Tipo"),
-            altair.Tooltip("count(Título)", title="Totalr"),
-        ],
-    )
-)
+        st.write(" ".join(text))

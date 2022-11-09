@@ -204,3 +204,18 @@ class ConferencePresentation(CustomModel):
     year: int = 2022
     paper: bool = False
     balance: int = 2022
+
+
+class Book(CustomModel):
+    title: str
+    publisher: str
+    authors: List[Person]
+    pages: int = None
+    url: HttpUrl = None
+    isbn: str = None
+    edition: int = 1
+    year: int = 2022
+
+
+class BookChapter(Book):
+    chapter: str

@@ -1,30 +1,13 @@
 import pandas as pd
-from models import JournalPaper, Journal, Person, ConferencePresentation
+from models import JournalPaper, Journal, Person, ConferencePresentation, Book, BookChapter
 import Levenshtein
 
 df = pd.read_csv("/src/data/publications.csv")
 
-# Load authors
-
-# for i, row in df.iterrows():
-#     authors = row['Autores'].split('\n')
-
-#     for author in authors:
-#         person = Person(name=author, institution="-")
-
-#         for p2 in Person.all():
-#             if p2.name == person.name:
-#                 break
-#         else:
-#             print(person)
-#             person.save()
-
-# Load papers
-
 people = Person.all()
 
 for i, row in df.iterrows():
-    if row["Tipo"] not in ["Artículo publicado en proceeding de congreso", "Presentación en congreso (sin artículo)"]:
+    if row["Tipo"] not in ["Libro", "Capítulo de libro"]:
         continue
 
     title = row["Título"]
@@ -41,14 +24,25 @@ for i, row in df.iterrows():
 
     print(url)
 
-    paper = ConferencePresentation(
-        title=title.strip(),
-        authors=checked_authors,
-        url=url,
-        venue=row["Venue"].strip(),
-        year=year,
-        paper=row['Tipo'] == "Artículo publicado en proceeding de congreso"
-    )
+    if row['Tipo'] == "Libro":
+        paper = Book(
+            title=title.strip(),
+            authors=checked_authors,
+            url=url,
+            publisher=row['Publisher'],
+            year=year,
+            isbn=row['Metadata'],
+        )
+    elif row['Tipo'] == 'Capítulo de libro':
+        paper = BookChapter(
+            chapter=title.strip(),
+            title=row['Venue'],
+            authors=checked_authors,
+            url=url,
+            publisher=row['Publisher'],
+            year=year,
+            isbn=row['Metadata'],
+        )
 
     print(paper)
     paper.save()

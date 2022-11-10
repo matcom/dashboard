@@ -360,5 +360,5 @@ class Project(CustomModel):
             aproval_date=aproval_date,
             start_date=start_date,
             end_date=end_date,
-            state=state,
+            status=state,
         )

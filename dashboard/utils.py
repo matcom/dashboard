@@ -16,6 +16,13 @@ def count_theses_by_advisor( theses ) -> any:
 
     return advisors
 
+def count_theses_between_two_advisors( theses, advisor_1, advisor_2 ) -> any:
+    count = 0
+    for thesis in theses:
+        if advisor_1 in thesis.advisors and advisor_2 in thesis.advisors:
+            count += 1
+    return count
+
 def build_advisors_graph( advisors, theses ) -> any:
     
     nodes = []
@@ -35,7 +42,7 @@ def build_advisors_graph( advisors, theses ) -> any:
                     continue 
                 edges.append( Edge(
                     source=advisor, 
-                    label=thesis.title, 
+                    label=f"{count_theses_between_two_advisors( theses, advisor, advisor_2 )} tesis",
                     target=advisor_2,
                     directed=False,
                     collapsible=False

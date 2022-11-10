@@ -1,0 +1,15 @@
+advisors:
+- Camilo Denis González
+- Carlos Miguel Legón
+authors:
+- Bryan Machín García
+keywords:
+- hyperledger fabric
+- chaincode
+- ledger
+- channel
+- peer
+- orderer
+title: Análisis de rendimiento en redes de Hyperledger Fabric
+uuid: 8c2e9742-9693-45fa-ad7a-8698846d0ca2
+version: 0

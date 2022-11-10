@@ -11,22 +11,23 @@ st.set_page_config(
 subjects_tab, classes_tab = st.tabs(["Asignaturas", "Clases"])
 
 with subjects_tab:
-    with st.expander("⭐ Crear nueva asignatura"):
+    if st.session_state.get("write_access", False):
+        with st.expander("⭐ Crear nueva asignatura"):
 
-        cols = st.columns([2, 2, 1, 1])
-        subject = cols[0].text_input("Nombre de la asignatura")
-        career = cols[1].selectbox(
-            "Carrera", ["Matemática", "Ciencia de la Computación", "Externa"]
-        )
-        year = cols[2].selectbox("Año", [1, 2, 3, 4], format_func=lambda a: f"Año {a}")
-        semester = cols[3].selectbox(
-            "Semestre", [1, 2], format_func=lambda s: f"Semestre {s}"
-        )
+            cols = st.columns([2, 2, 1, 1])
+            subject = cols[0].text_input("Nombre de la asignatura")
+            career = cols[1].selectbox(
+                "Carrera", ["Matemática", "Ciencia de la Computación", "Externa"]
+            )
+            year = cols[2].selectbox("Año", [1, 2, 3, 4], format_func=lambda a: f"Año {a}")
+            semester = cols[3].selectbox(
+                "Semestre", [1, 2], format_func=lambda s: f"Semestre {s}"
+            )
 
-        subject = Subject(subject=subject, career=career, year=year, semester=semester)
+            subject = Subject(subject=subject, career=career, year=year, semester=semester)
 
-        if st.button("💾 Salvar asignatura"):
-            subject.save()
+            if st.button("💾 Salvar asignatura"):
+                subject.save()
 
     st.write("#### 📝 Listado de asignaturas")
 
@@ -39,35 +40,36 @@ with subjects_tab:
 
 
 with classes_tab:
-    with st.expander("📝 Crear nueva entrada"):
-        cols = st.columns([2, 2, 1, 1])
+    if st.session_state.get("write_access", False):
+        with st.expander("📝 Crear nueva entrada"):
+            cols = st.columns([2, 2, 1, 1])
 
-        subject = cols[0].selectbox(
-            "Asignatura", sorted(Subject.all(), key=lambda s: s.subject)
-        )
-        professor = cols[1].selectbox(
-            "Profesor",
-            sorted(Person.own(), key=lambda s: (s.department, s.name)),
-            format_func=lambda p: f"{p.name} ({p.department})",
-        )
-        lecture_hours = cols[2].number_input(
-            "Horas de conferencia (semanal)", min_value=0, value=0
-        )
-        practice_hours = cols[3].number_input(
-            "Horas de prácticas (semanal)", min_value=0, value=0
-        )
+            subject = cols[0].selectbox(
+                "Asignatura", sorted(Subject.all(), key=lambda s: s.subject)
+            )
+            professor = cols[1].selectbox(
+                "Profesor",
+                sorted(Person.own(), key=lambda s: (s.department, s.name)),
+                format_func=lambda p: f"{p.name} ({p.department})",
+            )
+            lecture_hours = cols[2].number_input(
+                "Horas de conferencia (semanal)", min_value=0, value=0
+            )
+            practice_hours = cols[3].number_input(
+                "Horas de prácticas (semanal)", min_value=0, value=0
+            )
 
-        classes = Classes(
-            subject=subject,
-            professor=professor,
-            lecture_hours=lecture_hours,
-            practice_hours=practice_hours,
-        )
+            classes = Classes(
+                subject=subject,
+                professor=professor,
+                lecture_hours=lecture_hours,
+                practice_hours=practice_hours,
+            )
 
-        if lecture_hours == 0 and practice_hours == 0:
-            st.error("Al menos debe tener horas de conferencias o prácticas")
-        elif st.button("💾 Guardar entrada"):
-            classes.save()
+            if lecture_hours == 0 and practice_hours == 0:
+                st.error("Al menos debe tener horas de conferencias o prácticas")
+            elif st.button("💾 Guardar entrada"):
+                classes.save()
 
     st.write("#### ⏳ Carga docente")
 

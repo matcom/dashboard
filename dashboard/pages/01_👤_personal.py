@@ -9,62 +9,63 @@ st.set_page_config(
 people = Person.all()
 people.sort(key=lambda p: p.name)
 
-with st.expander("👤 Nueva entrada / Editar"):
-    if (
-        st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True)
-        == "📝 Editar"
-    ):
-        person = st.selectbox(
-            "Seleccione una entrada a modificar",
-            people,
-            format_func=lambda p: f"{p.name} ({p.institution})"
+if st.session_state.get('write_access', False):
+    with st.expander("👤 Nueva entrada / Editar"):
+        if (
+            st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True)
+            == "📝 Editar"
+        ):
+            person = st.selectbox(
+                "Seleccione una entrada a modificar",
+                people,
+                format_func=lambda p: f"{p.name} ({p.institution})"
+            )
+        else:
+            person = Person(
+                name="",
+                institution="Universidad de La Habana",
+                faculty="Facultad de Matemática y Computación",
+                department="",
+            )
+
+        person.name = st.text_input("Nombre", key="person_name", value=person.name)
+
+        best = max(people, key=lambda p: Levenshtein.ratio(p.name, person.name))
+        ratio = Levenshtein.ratio(best.name, person.name)
+
+        if ratio > 0.5:
+            st.warning(f"Verifique si la persona a agregar no es **{best.name}** que ya se encuentra la base de datos.")
+
+        person.institution = st.text_input(
+            "Institución", key="person_institution", value=person.institution or ""
         )
-    else:
-        person = Person(
-            name="",
-            institution="Universidad de La Habana",
-            faculty="Facultad de Matemática y Computación",
-            department="",
+        person.faculty = st.text_input(
+            "Facultad", key="person_faculty", value=person.faculty or ""
+        )
+        person.department = st.text_input(
+            "Departamento", key="person_department", value=person.department or ""
+        )
+        grades = ["Licenciado", "Ingeniero", "Máster en Ciencias", "Doctor en Ciencias"]
+        person.scientific_grade = st.selectbox(
+            "Grado científico",
+            grades,
+            key="person_scientific_grade",
+            index=grades.index(person.scientific_grade),
+        )
+        grades = ["Ninguno", "Instructor", "Asistente", "Auxiliar", "Titular"]
+        person.academic_grade = st.selectbox(
+            "Grado académico",
+            grades,
+            key="person_academic_grade",
+            index=grades.index(person.academic_grade),
         )
 
-    person.name = st.text_input("Nombre", key="person_name", value=person.name)
+        person.emails = [s.strip() for s in st.text_input("Email(s) -- Separados por punto y coma (;)", key="person_email", value="; ".join(person.emails)).split(";")]
+        person.orcid = st.text_input("ORCID", key="person_orcid", value=person.orcid or "")
 
-    best = max(people, key=lambda p: Levenshtein.ratio(p.name, person.name))
-    ratio = Levenshtein.ratio(best.name, person.name)
-
-    if ratio > 0.5:
-        st.warning(f"Verifique si la persona a agregar no es **{best.name}** que ya se encuentra la base de datos.")
-
-    person.institution = st.text_input(
-        "Institución", key="person_institution", value=person.institution or ""
-    )
-    person.faculty = st.text_input(
-        "Facultad", key="person_faculty", value=person.faculty or ""
-    )
-    person.department = st.text_input(
-        "Departamento", key="person_department", value=person.department or ""
-    )
-    grades = ["Licenciado", "Ingeniero", "Máster en Ciencias", "Doctor en Ciencias"]
-    person.scientific_grade = st.selectbox(
-        "Grado científico",
-        grades,
-        key="person_scientific_grade",
-        index=grades.index(person.scientific_grade),
-    )
-    grades = ["Ninguno", "Instructor", "Asistente", "Auxiliar", "Titular"]
-    person.academic_grade = st.selectbox(
-        "Grado académico",
-        grades,
-        key="person_academic_grade",
-        index=grades.index(person.academic_grade),
-    )
-
-    person.emails = [s.strip() for s in st.text_input("Email(s) -- Separados por punto y coma (;)", key="person_email", value="; ".join(person.emails)).split(";")]
-    person.orcid = st.text_input("ORCID", key="person_orcid", value=person.orcid or "")
-
-    if st.button("💾 Salvar entrada"):
-        person.save()
-        st.success("Entrada salvada con éxito.")
+        if st.button("💾 Salvar entrada"):
+            person.save()
+            st.success("Entrada salvada con éxito.")
 
 
 people_comp = []

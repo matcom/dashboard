@@ -1,4 +1,4 @@
-# Bienvenido al Dashboard de MatCom
+Para comenzar, si desea modificar datos tendrá que loguearse. De lo contrario puede utilizar este sistema como solo lectura.
 
 - **🎓 [thesis](/thesis)** muestra las tesis en curso y permite adicionar una tesis nueva.
 - **👥 [people](/people)** muestra la información del personal docente.

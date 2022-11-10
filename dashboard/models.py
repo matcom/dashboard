@@ -234,3 +234,11 @@ class Book(CustomModel):
 
 class BookChapter(Book):
     chapter: str
+
+
+class ResearchGroup(CustomModel):
+    name: str
+    head: Person = None
+    members: List[Person]
+    collaborators: List[Person]
+    keywords: List[str]

@@ -114,7 +114,7 @@ with listing:
 with create:
     if st.session_state.get('write_access', False):
         if (
-            st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True)
+            st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True, label_visibility="collapsed")
             == "📝 Editar"
         ):
             thesis = st.selectbox(

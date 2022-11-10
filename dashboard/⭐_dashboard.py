@@ -5,7 +5,7 @@ import os
 st.set_page_config(page_title="MatCom Dashboard", page_icon="⭐", layout="wide")
 
 
-st.title("Bienvenido al Dashboard de MatCom")
+st.title("⭐ Bienvenido al Dashboard de MatCom")
 
 left, right = st.columns(2)
 

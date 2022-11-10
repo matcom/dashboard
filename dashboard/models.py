@@ -5,6 +5,8 @@ from typing import List
 from uuid import UUID, uuid4
 
 import yaml
+import streamlit as st
+from datetime import date
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field, HttpUrl, EmailStr
 from typing_extensions import Self
@@ -242,3 +244,121 @@ class ResearchGroup(CustomModel):
     members: List[Person]
     collaborators: List[Person]
     keywords: List[str]
+
+
+class Project(CustomModel):
+    code: str = ""
+    title: str
+    project_type: str
+    program: str = ""
+    head: Person
+    members: List[Person]
+    main_entity: str
+    entities: List[str]
+    funding: List[str]
+    aproved: bool = False
+    aproval_date: date = None
+    start_date: date = None
+    end_date: date = None
+    status: str = "Normal"
+
+    @classmethod
+    def create(cls, key, obj=None):
+        code = st.text_input("Código (si tiene)", key=f"{key}_code").strip()
+        title = st.text_input("🔹 Título del proyecto", key=f"{key}_title").strip()
+        project_type = st.selectbox(
+            "Tipo de proyecto",
+            key=f"{key}_type",
+            options=[
+                "Nacional",
+                "Sectorial",
+                "Territorial",
+                "Institucional",
+                "Con Entidad no Empresarial",
+                "Internacional",
+                "Empresarial",
+                "Desarrollo Local",
+            ],
+        )
+
+        if project_type in ["Nacional", "Sectorial", "Territorial"]:
+            program = st.text_input(
+                f"🔹 Nombre del Programa {project_type}", key=f"{key}_program"
+            ).strip()
+        else:
+            program = None
+
+        main_entity = st.text_input(
+            "🔹 Entidad ejecutora (principal)", key=f"{key}_entity"
+        ).strip()
+        entities = [
+            s.strip()
+            for s in st.text_area(
+                "Entidades participantes adicionales (una por línea)",
+                key=f"{key}_entities",
+            ).split("\n")
+        ]
+        funding = [
+            s.strip()
+            for s in st.text_area(
+                "Entidades que financian (una por línea)", key=f"{key}_funding"
+            ).split("\n")
+        ]
+
+        people = Person.all()
+        people.sort(key=lambda p: p.name)
+
+        head = st.selectbox(
+            "Jefe / coordinador",
+            people,
+            key=f"{key}_head",
+            format_func=lambda p: f"{p.name} ({p.institution})",
+        )
+        members = st.multiselect("Miembros", people, key=f"{key}_members")
+
+        aproved = st.checkbox(
+            "¿El proyecto está en ejecución? (No marque si está enviado pero no aprobado)",
+            key=f"{key}_aproved",
+        )
+
+        if aproved:
+            aproval_date = st.date_input("Fecha de aprobación", key=f"{key}_aproval")
+            start_date = st.date_input("Fecha de inicio", key=f"{key}_start")
+            end_date = st.date_input("Fecha de fin (tentativa)", key=f"{key}_end")
+            state = st.selectbox(
+                "Estado de la ejecución",
+                ["Normal", "Atrasado", "Detenido", "Finalizado"],
+                key=f"{key}_state",
+            )
+        else:
+            aproval_date = None
+            start_date = None
+            end_date = None
+            state = ""
+
+        if not title:
+            return
+
+        if project_type in ["Nacional", "Sectorial", "Territorial"] and not program:
+            return
+
+        if not main_entity:
+            return
+
+        return Project(
+            uuid=key,
+            code=code,
+            title=title,
+            project_type=project_type,
+            program=program,
+            main_entity=main_entity,
+            entities=entities,
+            funding=funding,
+            head=head,
+            members=members,
+            aproved=aproved,
+            aproval_date=aproval_date,
+            start_date=start_date,
+            end_date=end_date,
+            state=state,
+        )

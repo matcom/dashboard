@@ -1,0 +1,26 @@
+aproval_date: '2022-11-10'
+aproved: true
+code: PN223LH010-005
+end_date: '2022-11-10'
+entities:
+- Universidad de Cienfuegos
+- Universidad de Pinar del Río
+- Facultad de Turismo
+funding:
+- CITMA
+head: 05b54266-35de-49ee-9d71-c47c672ea0b5
+main_entity: MatCom
+members:
+- b43697fa-2190-43d7-a647-73928725c6a7
+- 45d4d025-d2c3-43be-9494-7c1a9c0f4fc3
+- 5f35f633-9641-459c-9605-3c133611685e
+- 049163ba-9568-4632-92ca-62578fbb5823
+- 0c5b944f-3f1a-410a-9ff4-ccfb116bb97a
+- b82aa607-b211-42a5-aa94-6bbbcd1b84e1
+- 3f1c2a17-0da6-4de5-93e6-7ceba1a5c082
+program: Ciencias Básicas
+project_type: Nacional
+start_date: '2022-11-10'
+status: Normal
+title: Desarrollo de nuevos modelos y métodos para la toma de decisiones
+uuid: 77b04c4c-4aca-4f34-8149-9d2ac3b1aa3d

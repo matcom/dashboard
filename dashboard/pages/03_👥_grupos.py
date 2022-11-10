@@ -69,14 +69,33 @@ with create_view:
             if st.button("💾 Guardar"):
                 group.save()
                 st.success("Información guardad con éxito")
-
+    else:
+        st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")
 
 with list_view:
     for group in groups:
-        st.write(f"#### {group.name}")
-        st.write("**Líneas de investigación:** " + "; ".join(group.keywords))
-        st.write(f"**Coordinador**: {group.head.name}")
-        st.write("**Miembros:**\n" + "\n".join(f"- {p.name}" for p in sorted(group.members, key=lambda p: p.name)))
+        with st.expander(f"{group.name} ({len(group.members)} miembros)"):
+            left, mid, right = st.columns([2, 1, 1])
 
-        if group.collaborators:
-            st.write("**Colaboradores:**\n" + "\n".join(f"- {p.name}" for p in sorted(group.collaborators, key=lambda p: p.name)))
+            with left:
+                st.write(f"#### {group.name}")
+                st.write("**Líneas de investigación:** " + "; ".join(group.keywords))
+                st.write(f"**Coordinador**: {group.head.name}")
+
+            with mid:
+                st.write(
+                    "**Miembros:**\n"
+                    + "\n".join(
+                        f"- {p.name}" for p in sorted(group.members, key=lambda p: p.name)
+                    )
+                )
+
+            with right:
+                if group.collaborators:
+                    st.write(
+                        "**Colaboradores:**\n"
+                        + "\n".join(
+                            f"- {p.name}"
+                            for p in sorted(group.collaborators, key=lambda p: p.name)
+                        )
+                    )

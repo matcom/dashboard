@@ -46,7 +46,9 @@ with classes_tab:
             "Asignatura", sorted(Subject.all(), key=lambda s: s.subject)
         )
         professor = cols[1].selectbox(
-            "Profesor", sorted(Person.all(), key=lambda s: s.name)
+            "Profesor",
+            sorted(Person.own(), key=lambda s: (s.department, s.name)),
+            format_func=lambda p: f"{p.name} ({p.department})",
         )
         lecture_hours = cols[2].number_input(
             "Horas de conferencia (semanal)", min_value=0, value=0
@@ -69,7 +71,9 @@ with classes_tab:
 
     st.write("#### ⏳ Carga docente")
 
-    semester = st.selectbox("Semestre a mostrar", [1,2], format_func=lambda s: f"Semestre {s}")
+    semester = st.selectbox(
+        "Semestre a mostrar", [1, 2], format_func=lambda s: f"Semestre {s}"
+    )
 
     data = []
 
@@ -97,5 +101,5 @@ with classes_tab:
             color=altair.Color("subject", title="Asignatura"),
             tooltip=["subject", "hours", "uuid"],
         ),
-        use_container_width=True
+        use_container_width=True,
     )

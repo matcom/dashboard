@@ -26,7 +26,9 @@ class CustomModel(BaseModel):
         for key, value in data.items():
             if isinstance(value, dict) and "uuid" in value:
                 result[key] = value["uuid"]
-            elif isinstance(value, list) and all([isinstance(v, dict) and "uuid" in v for v in value]):
+            elif isinstance(value, list) and all(
+                [isinstance(v, dict) and "uuid" in v for v in value]
+            ):
                 result[key] = [v["uuid"] for v in value]
             elif isinstance(value, HttpUrl):
                 result[key] = str(value)
@@ -122,7 +124,7 @@ class Thesis(CustomModel):
 
     def save_thesis_pdf(self, pdf):
         self.version += 1
-        name_pdf =  f"{self.uuid}_v{self.version}.pdf"
+        name_pdf = f"{self.uuid}_v{self.version}.pdf"
         path: Path = Path(f"/src/data/Thesis/files/{name_pdf}")
         path.parent.mkdir(exist_ok=True, parents=True)
 
@@ -153,6 +155,15 @@ class Person(CustomModel):
     def __str__(self) -> str:
         return self.name
 
+    @classmethod
+    def own(cls):
+        return [
+            p
+            for p in cls.all()
+            if p.institution == "Universidad de La Habana"
+            and p.faculty == "Matemática y Computación"
+        ]
+
 
 class Classes(CustomModel):
     subject: Subject
@@ -161,7 +172,9 @@ class Classes(CustomModel):
     practice_hours: int
 
     def save(self):
-        func_check_same_data = lambda c: self.subject == c.subject and self.professor == c.professor
+        func_check_same_data = (
+            lambda c: self.subject == c.subject and self.professor == c.professor
+        )
         class_with_same_data = next(filter(func_check_same_data, Classes.all()), None)
         if class_with_same_data:
             self.uuid = class_with_same_data.uuid
@@ -171,10 +184,12 @@ class Classes(CustomModel):
 class Journal(CustomModel):
     title: str
     publisher: str
-    issn: str = ''
+    issn: str = ""
 
     def save(self):
-        func_check_same_data = lambda c: self.title == c.title and self.publisher == c.publisher
+        func_check_same_data = (
+            lambda c: self.title == c.title and self.publisher == c.publisher
+        )
         class_with_same_data = next(filter(func_check_same_data, Journal.all()), None)
         if class_with_same_data:
             self.uuid = class_with_same_data.uuid

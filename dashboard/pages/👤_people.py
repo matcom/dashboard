@@ -63,7 +63,7 @@ people_math = []
 people_uh = []
 people_extra = []
 
-st.write("#### Listado")
+st.write("#### 👥 Listado")
 for person in sorted(Person.all(), key=lambda s: s.name):
     if person.institution != "Universidad de La Habana":
         people_extra.append(person)

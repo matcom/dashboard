@@ -1,0 +1,21 @@
+aproval_date: '2022-09-29'
+aproved: true
+code: ''
+end_date: '2023-12-31'
+entities:
+- Cadic Consultores (Nicaragua)
+funding:
+- Cadic Consultores (Nicaragua)
+head: 0de365f8-d8ee-4ffb-ab49-6c321394cdee
+main_entity: MatCom
+members:
+- b82aa607-b211-42a5-aa94-6bbbcd1b84e1
+- 0de365f8-d8ee-4ffb-ab49-6c321394cdee
+- 7a5ebb82-f0e2-4a03-8572-26433ccb73d6
+- 2cfc27ae-75bf-4308-b949-229c77e36265
+program: ''
+project_type: Empresarial
+start_date: '2022-09-29'
+status: Normal
+title: Proyecto Cadic-UH
+uuid: cf4bfd01-0b26-4be4-9019-b42c19e2f8f6

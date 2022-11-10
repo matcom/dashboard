@@ -1,0 +1,21 @@
+aproval_date: '2021-01-20'
+aproved: true
+code: ''
+end_date: '2022-12-31'
+entities:
+- Instituto de Meteorología
+funding:
+- CITMA
+head: dc44cde8-58f2-42dd-b742-b0130b7bd03a
+main_entity: MatCom
+members:
+- dc44cde8-58f2-42dd-b742-b0130b7bd03a
+- d8318c70-c954-47ab-909a-543ff2d87591
+- 214f09c9-a770-4fd7-905f-c34a179fe18d
+- 3fef8162-f404-4923-b7d3-52631e6ae2d5
+program: Ciencias Básicas
+project_type: Nacional
+start_date: '2021-01-20'
+status: Normal
+title: Metodos numericos para problemas en multiples escalas
+uuid: 63322b1b-2501-45e5-b789-6cca4a20e459

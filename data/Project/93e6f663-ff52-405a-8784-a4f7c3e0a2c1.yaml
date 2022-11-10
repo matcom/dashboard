@@ -1,0 +1,33 @@
+aproval_date: '2021-01-31'
+aproved: true
+code: ''
+end_date: '2022-12-31'
+entities:
+- Universidad de La Habana
+funding:
+- CITMA
+head: f2ca61d4-7288-42ca-aea8-3e51f460f3f6
+main_entity: MatCom
+members:
+- f2ca61d4-7288-42ca-aea8-3e51f460f3f6
+- 1da21924-bbb8-4af3-9461-7b2e5f92dd47
+- 214f09c9-a770-4fd7-905f-c34a179fe18d
+- dc44cde8-58f2-42dd-b742-b0130b7bd03a
+- b43697fa-2190-43d7-a647-73928725c6a7
+- 45d4d025-d2c3-43be-9494-7c1a9c0f4fc3
+- 05b54266-35de-49ee-9d71-c47c672ea0b5
+- 933dc3ac-69ed-434a-94c7-bcef8ef76641
+- 17fd36bc-98da-46cc-83d4-801a553f5529
+- fe2c1e5a-7efd-446a-85d1-544e0e1e47dd
+- 10f3fe08-3282-48df-93e1-aa8a30d56d0e
+- 0c5b944f-3f1a-410a-9ff4-ccfb116bb97a
+- 024e6d24-579e-4bb4-9010-25a2243f6aac
+- 7dc36982-1a28-4bce-bb80-4de4a45a7323
+- a1ee0c3f-facc-4f43-b80f-e3df192528e6
+program: Ciencias Básicas
+project_type: Nacional
+start_date: '2021-01-31'
+status: Normal
+title: Modelos epidemiológicos avanzados. Estrategias de modelación, resolución y
+  aplicaciones.
+uuid: 93e6f663-ff52-405a-8784-a4f7c3e0a2c1

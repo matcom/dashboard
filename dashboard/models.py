@@ -286,7 +286,7 @@ class Project(CustomModel):
                 f"🔹 Nombre del Programa {project_type}", key=f"{key}_program"
             ).strip()
         else:
-            program = None
+            program = ""
 
         main_entity = st.text_input(
             "🔹 Entidad ejecutora (principal)", key=f"{key}_entity"

@@ -51,7 +51,7 @@ def build_advisors_graph( advisors, theses ) -> any:
                     collapsible=False
                 ))
 
-    config = Config( width=1000, height=700 )
+    config = Config( width=900, height=700 )
 
     return agraph(nodes=nodes, edges=edges, config=config)
 

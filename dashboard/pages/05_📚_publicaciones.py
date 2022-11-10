@@ -7,7 +7,7 @@ from models import JournalPaper, Person, Journal, ConferencePresentation, Book, 
 
 
 st.set_page_config(
-    page_title="MatCom Dashboard - Investigación", page_icon="📚", layout="wide"
+    page_title="MatCom Dashboard - Publicaciones", page_icon="📚", layout="wide"
 )
 
 year = st.sidebar.selectbox("Año", [2020, 2021, 2022], index=2)
@@ -76,6 +76,7 @@ with st.expander("⭐ Nuevo artículo / 📝 Editar"):
     paper.year = st.number_input(
         "Año", key="paper_year", min_value=2020, max_value=2022, value=paper.year
     )
+    paper.url = st.text_input("URL", value=paper.url)
 
     if st.button("💾 Guardar artículo"):
         paper.journal.save()

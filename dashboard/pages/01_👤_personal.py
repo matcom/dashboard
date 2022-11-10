@@ -1,10 +1,13 @@
 import streamlit as st
 from models import Person
+import Levenshtein
 
 st.set_page_config(
     page_title="MatCom Dashboard - Personal", page_icon="👤", layout="wide"
 )
 
+people = Person.all()
+people.sort(key=lambda p: p.name)
 
 with st.expander("👤 Nueva entrada / Editar"):
     if (
@@ -13,7 +16,7 @@ with st.expander("👤 Nueva entrada / Editar"):
     ):
         person = st.selectbox(
             "Seleccione una entrada a modificar",
-            sorted(Person.all(), key=lambda p: p.name),
+            people,
             format_func=lambda p: f"{p.name} ({p.institution})"
         )
     else:
@@ -25,6 +28,13 @@ with st.expander("👤 Nueva entrada / Editar"):
         )
 
     person.name = st.text_input("Nombre", key="person_name", value=person.name)
+
+    best = max(people, key=lambda p: Levenshtein.ratio(p.name, person.name))
+    ratio = Levenshtein.ratio(best.name, person.name)
+
+    if ratio > 0.5:
+        st.warning(f"Verifique si la persona a agregar no es **{best.name}** que ya se encuentra la base de datos.")
+
     person.institution = st.text_input(
         "Institución", key="person_institution", value=person.institution or ""
     )
@@ -63,8 +73,11 @@ people_math = []
 people_uh = []
 people_extra = []
 
-st.write("#### 👥 Listado")
-for person in sorted(Person.all(), key=lambda s: s.name):
+people = Person.all()
+people.sort(key=lambda s: s.name)
+
+st.write(f"#### 👥 Listado `{len(people)}`")
+for person in people:
     if person.institution != "Universidad de La Habana":
         people_extra.append(person)
         if not person.institution:

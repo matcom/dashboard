@@ -16,7 +16,7 @@ def count_theses_by_advisor( theses ) -> any:
 
     return advisors
 
-def build_tutors_graph( advisors, theses ) -> any:
+def build_advisors_graph( advisors, theses ) -> any:
     
     nodes = []
     edges = []

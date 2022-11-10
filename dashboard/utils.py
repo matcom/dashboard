@@ -34,7 +34,7 @@ def build_advisors_graph( advisors, theses ) -> any:
         nodes.append(Node(
             id=advisor,
             label=advisor,
-            color=darken_color('#00ff00', count_theses[advisor], 20),
+            color=darken_color('#ACDBC9', count_theses[advisor], 2*max(count_theses.values())),
             size=25 + count_theses[advisor] * 3,
         ))
 
@@ -43,10 +43,12 @@ def build_advisors_graph( advisors, theses ) -> any:
             for advisor_2 in thesis.advisors:
                 if advisor == advisor_2:
                     continue 
+                count_thesis = count_theses_between_two_advisors( theses, advisor, advisor_2 )
                 edges.append( Edge(
                     source=advisor, 
-                    label=f"{count_theses_between_two_advisors( theses, advisor, advisor_2 )} tesis",
+                    label=f"{count_thesis} tesis",
                     target=advisor_2,
+                    color=darken_color('#52FFCC', count_thesis, 10 ),
                     directed=False,
                     collapsible=False
                 ))

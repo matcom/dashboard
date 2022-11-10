@@ -1,7 +1,10 @@
 academic_grade: Instructor
 department: 'Matemática '
+emails:
+- ''
 faculty: Matemática y Computación
 institution: Universidad de La Habana
-name: 'Jorge Estrada Hernández '
+name: Jorge Estrada Hernández
+orcid: ''
 scientific_grade: Máster en Ciencias
 uuid: 63738649-724c-4407-a0a1-b540439d439c

@@ -43,6 +43,7 @@ def build_advisors_graph( advisors, theses ) -> any:
         nodes.append(Node(
             id=advisor,
             label=advisor,
+            title=f"{advisor}\n{count_theses[ advisor ]} tesis",
             color=darken_color('#ACDBC9', count_theses[advisor], 2*max_theses),
             size=25 + count_theses[advisor] * 3,
         ))

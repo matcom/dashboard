@@ -70,6 +70,14 @@ class CustomModel(BaseModel):
         return items
 
     @classmethod
+    def find(cls, **kwargs):
+        for item in cls.all():
+            if all(getattr(item,k,None) == v for k,v in kwargs.items()):
+                return item
+
+        raise KeyError(str(kwargs))
+
+    @classmethod
     def get(cls, uuid: str) -> Self:
         path: Path = Path("/src/data") / cls.__name__ / (str(uuid) + ".yaml")
 
@@ -201,9 +209,20 @@ class Journal(CustomModel):
         return f"{self.title} ({self.publisher})"
 
 
-class JournalPaper(CustomModel):
-    title: str
+class Publication(CustomModel):
     authors: List[Person]
+
+    @classmethod
+    def from_authors(cls, authors: List[Person]):
+        authors = set(authors)
+
+        for item in cls.all():
+            if set(item.authors) & authors:
+                yield item
+
+
+class JournalPaper(Publication):
+    title: str
     corresponding_author: Person = None
     url: HttpUrl = None
     journal: Journal = None
@@ -211,10 +230,29 @@ class JournalPaper(CustomModel):
     year: int = 2022
     balance: int = 2022
 
+    def format(self):
+        text = [f"📃 _{self.title}_."]
 
-class ConferencePresentation(CustomModel):
+        for author in self.authors:
+            fmt = author.name
+
+            if author.orcid:
+                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
+
+            if author.institution == "Universidad de La Habana":
+                fmt = f"**{fmt}**"
+
+            text.append(fmt.format(author.name) + ", ")
+
+        text.append(
+            f"En _{self.journal.title}_, {self.journal.publisher}. ISSN: {self.journal.issn}."
+        )
+        text.append(f"Número {self.issue}, {self.year}.")
+        return " ".join(text)
+
+
+class ConferencePresentation(Publication):
     title: str
-    authors: List[Person]
     url: HttpUrl = None
     venue: str = None
     location: str = None
@@ -222,20 +260,84 @@ class ConferencePresentation(CustomModel):
     paper: bool = False
     balance: int = 2022
 
+    def format(self):
+        if self.paper:
+            text = ["📃"]
+        else:
+            text = ["📢"]
 
-class Book(CustomModel):
+        text.append(f"_{self.title}_.")
+
+        for author in self.authors:
+            fmt = author.name
+
+            if author.orcid:
+                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
+
+            if author.institution == "Universidad de La Habana":
+                fmt = f"**{fmt}**"
+
+            text.append(fmt.format(author.name) + ", ")
+
+        text.append(
+            f"En _{self.venue}_, {self.location}, {self.year}"
+        )
+
+        return " ".join(text)
+
+
+class Book(Publication):
     title: str
     publisher: str
-    authors: List[Person]
     pages: int = None
     url: HttpUrl = None
     isbn: str = None
     edition: int = 1
     year: int = 2022
 
+    def format(self):
+        text = [f"📕 _{self.title}_."]
+
+        for author in self.authors:
+            fmt = author.name
+
+            if author.orcid:
+                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
+
+            if author.institution == "Universidad de La Habana":
+                fmt = f"**{fmt}**"
+
+            text.append(fmt.format(author.name) + ", ")
+
+        text.append(
+            f"{self.publisher}, ISBN: {self.isbn}, Edición: {self.edition}, Páginas: {self.pages}."
+        )
+
+        return " ".join(text)
+
 
 class BookChapter(Book):
     chapter: str
+
+    def format(self):
+        text = [f"📑 _{self.chapter}_."]
+
+        for author in self.authors:
+            fmt = author.name
+
+            if author.orcid:
+                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
+
+            if author.institution == "Universidad de La Habana":
+                fmt = f"**{fmt}**"
+
+            text.append(fmt.format(author.name) + ", ")
+
+        text.append(
+            f"En _{self.title}_, {self.publisher}, ISBN: {self.isbn}, Edición: {self.edition}, Páginas: {self.pages}."
+        )
+
+        return " ".join(text)
 
 
 class ResearchGroup(CustomModel):

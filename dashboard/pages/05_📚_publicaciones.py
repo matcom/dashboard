@@ -89,24 +89,8 @@ with st.expander("🔹 Listado de artículos"):
     data = []
 
     for paper in papers:
-        text = [f"📃 _{paper.title}_."]
+        st.write(paper.format())
 
-        for author in paper.authors:
-            fmt = author.name
-
-            if author.orcid:
-                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
-
-            if author.institution == "Universidad de La Habana":
-                fmt = f"**{fmt}**"
-
-            text.append(fmt.format(author.name) + ", ")
-
-        text.append(
-            f"En _{paper.journal.title}_, {paper.journal.publisher}. ISSN: {paper.journal.issn}."
-        )
-        text.append(f"Número {paper.issue}, {paper.year}.")
-        st.write(" ".join(text))
 
 presentations = [p for p in ConferencePresentation.all() if p.year == year]
 presentations.sort(key=lambda p: p.title)
@@ -171,29 +155,7 @@ with st.expander("🔹 Listado de presentaciones"):
     data = []
 
     for presentation in presentations:
-        if presentation.paper:
-            text = ["📃"]
-        else:
-            text = ["📢"]
-
-        text.append(f"_{presentation.title}_.")
-
-        for author in presentation.authors:
-            fmt = author.name
-
-            if author.orcid:
-                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
-
-            if author.institution == "Universidad de La Habana":
-                fmt = f"**{fmt}**"
-
-            text.append(fmt.format(author.name) + ", ")
-
-        text.append(
-            f"En _{presentation.venue}_, {presentation.location}, {presentation.year}"
-        )
-
-        st.write(" ".join(text))
+        st.write(presentation.format())
 
 
 books = [b for b in Book.all() if b.year == year]
@@ -202,7 +164,7 @@ books.sort(key=lambda b: b.title)
 chapters = [c for c in BookChapter.all() if c.year == year]
 chapters.sort(key=lambda b: b.chapter)
 
-st.write(f"#### 📚 Libros y Capítulos de Libros `{len(books) + len(chapters)}`")
+st.write(f"#### 📕 Libros y Capítulos de Libros `{len(books) + len(chapters)}`")
 
 if st.session_state.get('write_access', False):
     with st.expander("⭐ Nuevo libro / 📝 Editar"):
@@ -276,41 +238,7 @@ with st.expander("🔹 Listado de libros y capítulos"):
     data = []
 
     for book in books:
-        text = [f"📕 _{book.title}_."]
-
-        for author in book.authors:
-            fmt = author.name
-
-            if author.orcid:
-                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
-
-            if author.institution == "Universidad de La Habana":
-                fmt = f"**{fmt}**"
-
-            text.append(fmt.format(author.name) + ", ")
-
-        text.append(
-            f"{book.publisher}, ISBN: {book.isbn}, Edición: {book.edition}, Páginas: {book.pages}."
-        )
-
-        st.write(" ".join(text))
+        st.write(book.format())
 
     for chapter in chapters:
-        text = [f"📑 _{chapter.chapter}_."]
-
-        for author in chapter.authors:
-            fmt = author.name
-
-            if author.orcid:
-                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
-
-            if author.institution == "Universidad de La Habana":
-                fmt = f"**{fmt}**"
-
-            text.append(fmt.format(author.name) + ", ")
-
-        text.append(
-            f"En _{chapter.title}_, {chapter.publisher}, ISBN: {chapter.isbn}, Edición: {chapter.edition}, Páginas: {chapter.pages}."
-        )
-
-        st.write(" ".join(text))
+        st.write(chapter.format())

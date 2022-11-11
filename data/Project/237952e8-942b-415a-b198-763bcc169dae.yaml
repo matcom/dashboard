@@ -1,0 +1,22 @@
+aproval_date: '2022-09-15'
+aproved: true
+code: ''
+end_date: '2023-12-31'
+entities:
+- CIGB
+- Hospital Hermanos Amejeiras
+- Instituto de Angiología
+funding:
+- BioCubaFarma
+head: d8318c70-c954-47ab-909a-543ff2d87591
+main_entity: MatCom
+members:
+- d8318c70-c954-47ab-909a-543ff2d87591
+- dc44cde8-58f2-42dd-b742-b0130b7bd03a
+- 3fef8162-f404-4923-b7d3-52631e6ae2d5
+program: ''
+project_type: Empresarial
+start_date: '2022-09-15'
+status: Normal
+title: Análisis imagenológico en apoyo al diagnóstico y tratamiento de lesiones cutáneas
+uuid: 237952e8-942b-415a-b198-763bcc169dae

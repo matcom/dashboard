@@ -4,3 +4,4 @@ uvicorn
 pyyaml
 openpyxl
 streamlit-agraph
+levenshtein

@@ -1,7 +1,10 @@
-academic_grade: Instructor
-department: ''
-faculty: ''
-institution: ''
+academic_grade: Titular
+department: Matemática
+emails:
+- ''
+faculty: Matemática y Computación
+institution: Universidad de La Habana
 name: Isidro Alfredo Abello Ugalde
-scientific_grade: Licenciado
+orcid: ''
+scientific_grade: Doctor en Ciencias
 uuid: a1ee0c3f-facc-4f43-b80f-e3df192528e6

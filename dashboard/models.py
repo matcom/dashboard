@@ -265,7 +265,7 @@ class Project(CustomModel):
     @classmethod
     def create(cls, key, obj=None):
         code = st.text_input("Código (si tiene)", key=f"{key}_code").strip()
-        title = st.text_input("🔹 Título del proyecto", key=f"{key}_title").strip()
+        title = st.text_input("🔹Título del proyecto", key=f"{key}_title").strip()
         project_type = st.selectbox(
             "Tipo de proyecto",
             key=f"{key}_type",
@@ -283,13 +283,13 @@ class Project(CustomModel):
 
         if project_type in ["Nacional", "Sectorial", "Territorial"]:
             program = st.text_input(
-                f"🔹 Nombre del Programa {project_type}", key=f"{key}_program"
+                f"🔹Nombre del Programa {project_type}", key=f"{key}_program"
             ).strip()
         else:
             program = ""
 
         main_entity = st.text_input(
-            "🔹 Entidad ejecutora (principal)", key=f"{key}_entity"
+            "🔹Entidad ejecutora (principal)", key=f"{key}_entity"
         ).strip()
         entities = [
             s.strip()
@@ -361,4 +361,47 @@ class Project(CustomModel):
             start_date=start_date,
             end_date=end_date,
             status=state,
+        )
+
+
+class Award(CustomModel):
+    name: str
+    institution: str
+    title: str = ""
+    participants: List[Person]
+    awarded: bool = False
+    date: date = None
+
+    @classmethod
+    def create(cls, key, obj=None):
+        people = Person.all()
+        people.sort(key=lambda p: p.name)
+
+        name = st.text_input("🔹Nombre del premio", key=f"{key}_award_name")
+        institution = st.text_input("🔹Institución que otorga el premio", key=f"{key}_award_institution")
+        title = st.text_input("Título del artículo, proyecto, etc., que se premia (si aplica)", key=f"{key}_award_title")
+        participants = st.multiselect("🔹Participantes", people, key=f"{key}_award_participants")
+        awarded = st.checkbox("El premio ha sido otorgado (no marque si es todavía una propuesta)", key=f"{key}_award_awarded")
+
+        if awarded:
+            date = st.date_input("Fecha de otorgamiento", key=f"{key}_award_date")
+        else:
+            date = None
+
+        if not name:
+            return
+
+        if not institution:
+            return
+
+        if not participants:
+            return
+
+        return Award(
+            name=name,
+            institution=institution,
+            title=title,
+            participants=participants,
+            awarded=awarded,
+            date=date,
         )

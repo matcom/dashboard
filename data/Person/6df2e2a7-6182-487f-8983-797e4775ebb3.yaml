@@ -1,9 +1,10 @@
 academic_grade: Instructor
-department: Matemática
-emails: []
+department: Computación
+emails:
+- ''
 faculty: Matemática y Computación
 institution: Universidad de La Habana
 name: Juan Pablo Consuegra Ayala
-orcid: null
-scientific_grade: Doctor
+orcid: ''
+scientific_grade: Máster en Ciencias
 uuid: 6df2e2a7-6182-487f-8983-797e4775ebb3

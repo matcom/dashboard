@@ -17,7 +17,7 @@ def personal_report(person: Person):
     if person.orcid:
         lines.append(f"- **Perfil ORCID:** [{person.orcid}](https://orcid.org/{person.orcid})")
 
-    lines.append("### 📚 Publicaciones\n")
+    lines.append("### 📚 Publicaciones")
 
     lines.append("#### 📃 Artículos")
 

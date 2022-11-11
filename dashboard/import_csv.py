@@ -74,4 +74,4 @@ for i, row in df.iterrows():
     person.scientific_grade = academic_grade
 
     print(person)
-    person.save()
+    # person.save()

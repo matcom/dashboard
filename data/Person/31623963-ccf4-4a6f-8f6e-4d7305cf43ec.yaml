@@ -1,9 +1,10 @@
-academic_grade: Ninguno
+academic_grade: Asistente
 department: Computación
-emails: []
+emails:
+- ''
 faculty: Matemática y Computación
 institution: Universidad de La Habana
 name: Alfredo Somoza Moreno
-orcid: null
-scientific_grade: Licenciado
+orcid: ''
+scientific_grade: Máster en Ciencias
 uuid: 31623963-ccf4-4a6f-8f6e-4d7305cf43ec

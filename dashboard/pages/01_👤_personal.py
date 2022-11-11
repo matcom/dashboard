@@ -71,6 +71,7 @@ if st.session_state.get('write_access', False):
 people_comp = []
 people_appl = []
 people_math = []
+people_cript = []
 people_uh = []
 people_extra = []
 
@@ -95,6 +96,8 @@ for person in people:
         people_comp.append(person)
     elif person.department == "Matemática Aplicada":
         people_appl.append(person)
+    elif person.department == "Instituto de Criptografía":
+        people_cript.append(person)
     else:
         people_math.append(person)
 
@@ -108,6 +111,9 @@ with st.expander(f"MatCom - Matemática Aplicada ({len(people_appl)})"):
 
 with st.expander(f"MatCom - Matemática ({len(people_math)})"):
     st.table([p.encode() for p in people_math])
+
+with st.expander(f"MatCom - Criptografía ({len(people_cript)})"):
+    st.table([p.encode() for p in people_cript])
 
 st.write("##### Resto")
 

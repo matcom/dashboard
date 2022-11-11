@@ -37,12 +37,13 @@ def build_advisors_graph( advisors, theses ) -> any:
     nodes = []
     edges = []
     count_theses = count_theses_by_advisor( theses )
+    max_theses = max(count_theses.values())
 
     for advisor in advisors:
         nodes.append(Node(
             id=advisor,
             label=advisor,
-            color=darken_color('#ACDBC9', count_theses[advisor], 2*max(count_theses.values())),
+            color=darken_color('#ACDBC9', count_theses[advisor], 2*max_theses),
             size=25 + count_theses[advisor] * 3,
         ))
 
@@ -56,7 +57,7 @@ def build_advisors_graph( advisors, theses ) -> any:
                     source=advisor, 
                     label=f"{count_thesis} tesis",
                     target=advisor_2,
-                    color=darken_color('#52FFCC', count_thesis, 10 ),
+                    color=darken_color('#52FFCC', count_thesis, max_theses ),
                     directed=False,
                     collapsible=False
                 ))

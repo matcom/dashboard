@@ -17,7 +17,6 @@ matches = {
     'Lucina Garcia Hernandez' :  'Lucina García' ,
     'Yudivian Almeida Cruz' :  'Yudivián Almeida Cruz' ,
     'Luciano Garcia Garrido' :  'Luciano García' ,
-    'Miguel Katrib Mora' :  'Miguel Katrib Mora' ,
     'Alberto Fernandez Oliva' :  'Alberto Fernández ' ,
     'Joanna Campbell Amos' :  'Joanna Campbell Amos' ,
     'Juan Enrique Morales Calvo' :  'Juan Enrique Morales Calvo' ,
@@ -36,7 +35,7 @@ matches = {
     'Carlos Narciso Bouza Herrera' :  'Carlos Bouza Herrera' ,
     'Sira Maria Allende Alonso' :  'Sira Allende Alonso' ,
     'Miraida Ferras Ferras' :  'Miraida Ferras Ferras' ,
-    'Marta Lourdes Baguer Diaz-Romanach' :  'Marta L. Baguer Diaz-Romanach' ,
+    'Marta Lourdes Baguer Diaz Romanach' :  'Marta L. Baguer Diaz-Romanach' ,
     'Angela Mireya Leon Mecias' :  'Ángela Mireya León Mecías' ,
     'Frank Michel Enrique Hevia' :  'Frank Michel Enrique Hevia' ,
     'Wilfredo Morales Lezca' :  'Wilfredo Morales Lezca' ,
@@ -53,7 +52,6 @@ matches = {
     'Reynaldo Rodriguez Ramos' :  'Reinaldo Rodríguez Ramos' ,
     'Mariano Rodriguez Ricard' :  'Mariano Rodríguez Ricard' ,
     'Jose Enrique Valdes Castro' :  'Jose Enrique Valdes Castro' ,
-    'Luis Ramiro Piñeiro Diaz' :  'Luis Ramiro Piñeiro' ,
     'Joaquin  Alberto Herrera Macias' :  'Joaquín Alberto Herrera Macías' ,
     'Lisset Suarez Plasencia' :  'Lisset Suárez Plasencia' ,
     'Yeneit Delgado Kios' :  'Yeneit Delgado Kios' ,
@@ -73,5 +71,7 @@ for i, row in df.iterrows():
     person.institution="Universidad de La Habana"
     person.faculty = "Matemática y Computación"
     person.department = department
-    person.academic_grade = academic_grade
+    person.scientific_grade = academic_grade
+
+    print(person)
     person.save()

@@ -5,7 +5,7 @@ def generate_widget_key() -> str:
     return str(randint(0, 1000000))
 
 
-def count_theses_by_advisor( theses ) -> any:
+def count_theses_by_advisor( theses ) -> dict:
     advisors = {}
 
     for thesis in theses:
@@ -16,7 +16,7 @@ def count_theses_by_advisor( theses ) -> any:
 
     return advisors
 
-def count_theses_between_two_advisors( theses, advisor_1, advisor_2 ) -> any:
+def count_theses_between_two_advisors( theses, advisor_1, advisor_2 ) -> int:
     count = 0
     for thesis in theses:
         if advisor_1 in thesis.advisors and advisor_2 in thesis.advisors:

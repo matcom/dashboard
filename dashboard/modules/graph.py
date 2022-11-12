@@ -63,7 +63,7 @@ def build_nodes_and_edges( publications: any ) -> Tuple[ List[NodeGraph], List[E
         # save nodes
         for author in publication.authors:
             if author.uuid not in all_nodes:
-                nn = NodeGraph(author, 25 + 3*publications_by_person[author.uuid])
+                nn = NodeGraph(author, 25 + 5*publications_by_person[author.uuid])
                 all_nodes[ author.uuid ] = nn
                 nodes.append( nn )
 
@@ -90,7 +90,7 @@ def build_publications_graph( publications: List[any], width = 900, height = 700
             title=f"{node.info.name}\n{publ}",
             label=node.info.name,
             color=node.color,
-            size=25
+            size=node.size
         ))
         
     for edge in edgesGraph:

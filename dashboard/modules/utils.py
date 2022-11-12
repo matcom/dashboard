@@ -34,7 +34,7 @@ def count_publications_between_two_persons( publications, person_1: Person, pers
             count += 1
     return count
 
-def count_publications_by_person( publications ) -> dict[ UUID, int ]:
+def count_publications_by_person( publications ) -> dict:
     count: dict[ UUID, int ] = {}
     
     for publication in publications:

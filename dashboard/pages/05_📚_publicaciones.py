@@ -4,7 +4,7 @@ import pandas as pd
 import altair
 
 from models import JournalPaper, Person, Journal, ConferencePresentation, Book, BookChapter
-from modules.graph import build_publications_graph
+
 
 st.set_page_config(
     page_title="MatCom Dashboard - Publicaciones", page_icon="📚", layout="wide"
@@ -314,36 +314,3 @@ with st.expander("🔹 Listado de libros y capítulos"):
         )
 
         st.write(" ".join(text))
-
-
-publications = {
-    "papers": {
-        "title": "Artículos",
-        "data": papers,   
-    },
-    "presentations": {
-        "title": "Presentaciones",
-        "data": presentations,   
-    },
-    "books": {
-        "title": "Libros",
-        "data": books,   
-    },
-    "chapters": {
-        "title": "Capítulos",
-        "data": chapters,   
-    }   
-}
-
-st.write('### 📊Gráfica de publicaciones')
-
-options = [ publication['title'] for publication in publications.values()]
-selection = st.multiselect( 'Seleccione las publicaciones que desea incluir en el gráfico', options, ['Libros', 'Capítulos'] )
-
-data = []
-for publication in publications.values():
-    if publication['title'] in selection:
-        for item in publication['data']:
-            data.append( item )
-
-graph = build_publications_graph( data )

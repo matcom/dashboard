@@ -314,3 +314,29 @@ with st.expander("🔹 Listado de libros y capítulos"):
         )
 
         st.write(" ".join(text))
+
+
+publications = {
+    "papers": {
+        "title": "Artículos",
+        "data": papers,   
+    },
+    "presentations": {
+        "title": "Presentaciones",
+        "data": presentations,   
+    },
+    "books": {
+        "title": "Libros",
+        "data": books,   
+    },
+    "chapters": {
+        "title": "Capítulos",
+        "data": chapters,   
+    }   
+}
+
+st.write('### 📊Gráfica de publicaciones')
+
+options = [ publication['title'] for publication in publications.values()]
+
+selection = st.multiselect( 'Seleccione las publicaciones que desea incluir en el gráfico', options, options )

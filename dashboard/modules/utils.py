@@ -1,4 +1,3 @@
-
 from random import randint
 import colorsys
 
@@ -7,7 +6,6 @@ from uuid import UUID
 
 def generate_widget_key() -> str:
     return str(randint(0, 1000000))
-
 
 def count_theses_by_advisor( theses ) -> dict:
     advisors = {}
@@ -27,13 +25,6 @@ def count_theses_between_two_advisors( theses, advisor_1, advisor_2 ) -> int:
             count += 1
     return count
 
-def count_publications_between_two_persons( publications, person_1: Person, person_2: Person ) -> int:
-    count = 0
-    for publication in publications:
-        if person_1 in publication.authors and person_2 in publication.authors:
-            count += 1
-    return count
-
 def count_publications_by_person( publications ) -> dict:
     count: dict[ UUID, int ] = {}
     
@@ -43,6 +34,13 @@ def count_publications_by_person( publications ) -> dict:
                 count[ author.uuid ] = 0
             count[ author.uuid ] += 1
 
+    return count
+
+def count_publications_between_two_persons( publications, person_1: Person, person_2: Person ) -> int:
+    count = 0
+    for publication in publications:
+        if person_1 in publication.authors and person_2 in publication.authors:
+            count += 1
     return count
 
 def darken_color(color:str, number:int, range:int) -> str:

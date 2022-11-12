@@ -6,8 +6,20 @@ from typing import List, Tuple
 from models import Person
 from uuid import UUID
 
+class NodeGraph:
+    def __init__(self, info: Person, size = 25, color = '#ACDBC9') -> None:
+        self.info = info
+        self.color = color
+        self.size = size
+
+class EdgeGraph:
+    def __init__(self, source:NodeGraph, target:NodeGraph, info, color='#ACDBC9') -> None:
+        self.source = source
+        self.target = target
+        self.info = info
+        self.color = color
+
 def build_advisors_graph( advisors, theses ) -> any:
-    
     nodes = []
     edges = []
     count_theses = count_theses_by_advisor( theses )
@@ -40,19 +52,6 @@ def build_advisors_graph( advisors, theses ) -> any:
     config = Config( width=900, height=700 )
     return agraph(nodes=nodes, edges=edges, config=config)
 
-class NodeGraph:
-    def __init__(self, info: Person, size = 25, color = '#ACDBC9') -> None:
-        self.info = info
-        self.color = color
-        self.size = size
-
-class EdgeGraph:
-    def __init__(self, source:NodeGraph, target:NodeGraph, info, color='#ACDBC9') -> None:
-        self.source = source
-        self.target = target
-        self.info = info
-        self.color = color
-
 def build_nodes_and_edges( publications: any ) -> Tuple[ List[NodeGraph], List[EdgeGraph] ]:
     all_nodes: dict[UUID, Person] = {}
     nodes: List[NodeGraph] = []
@@ -84,9 +83,9 @@ def build_nodes_and_edges( publications: any ) -> Tuple[ List[NodeGraph], List[E
 
 def build_publications_graph( publications: List[any], width = 900, height = 700 ) -> any:
     nodesGraph, edgesGraph = build_nodes_and_edges( publications )
+    publ_by_person = count_publications_by_person( publications )
     nodes: List[Node] = []
     edges: List[Edge] = []
-    publ_by_person = count_publications_by_person( publications )
     
     for node in nodesGraph:
         publ = f"{publ_by_person[ node.info.uuid ]} {'publicación' if publ_by_person[node.info.uuid] == 1 else 'publicaciones'}"

@@ -1,5 +1,6 @@
 from streamlit_agraph import agraph, Node, Edge, Config
-from modules.utils import darken_color, count_theses_by_advisor, count_theses_between_two_advisors
+from modules.utils import darken_color, select_color
+from modules.utils import count_theses_by_advisor, count_theses_between_two_advisors
 from modules.utils import count_publications_by_person, count_publications_between_two_persons
 
 from typing import List, Tuple
@@ -52,7 +53,7 @@ def build_advisors_graph( advisors, theses ) -> any:
     config = Config( width=900, height=700 )
     return agraph(nodes=nodes, edges=edges, config=config)
 
-def build_nodes_and_edges( publications: any ) -> Tuple[ List[NodeGraph], List[EdgeGraph] ]:
+def build_nodes_and_edges( publications: any, color: Tuple[str, str] ) -> Tuple[ List[NodeGraph], List[EdgeGraph] ]:
     all_nodes: dict[UUID, Person] = {}
     nodes: List[NodeGraph] = []
     edges: List[EdgeGraph] = []
@@ -66,7 +67,11 @@ def build_nodes_and_edges( publications: any ) -> Tuple[ List[NodeGraph], List[E
                 nn = NodeGraph(
                     author, 
                     size=25 + 5*publications_by_person[author.uuid],
-                    color=darken_color('#ACDBC9', publications_by_person[author.uuid], 2*max_publications)
+                    color=darken_color(
+                        color=select_color( author, color, '#ACDBC9' ), 
+                        number=publications_by_person[author.uuid], 
+                        range=2*max_publications
+                    )
                 )
                 all_nodes[ author.uuid ] = nn
                 nodes.append( nn )
@@ -81,8 +86,8 @@ def build_nodes_and_edges( publications: any ) -> Tuple[ List[NodeGraph], List[E
     del all_nodes
     return (nodes, edges)
 
-def build_publications_graph( publications: List[any], width = 900, height = 700 ) -> any:
-    nodesGraph, edgesGraph = build_nodes_and_edges( publications )
+def build_publications_graph( publications: List[any], color: Tuple[str, str], width = 900, height = 700 ) -> any:
+    nodesGraph, edgesGraph = build_nodes_and_edges( publications, color )
     publ_by_person = count_publications_by_person( publications )
     nodes: List[Node] = []
     edges: List[Edge] = []
@@ -117,4 +122,4 @@ def build_publications_graph( publications: List[any], width = 900, height = 700
         ))
 
     config = Config( width=width, height=height )
-    return agraph(nodes=nodes, edges=edges, config=config)
+    return nodes, edges, agraph(nodes=nodes, edges=edges, config=config)

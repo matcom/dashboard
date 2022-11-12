@@ -2,6 +2,11 @@ from streamlit_agraph import agraph, Node, Edge, Config
 from modules.utils import darken_color, count_theses_by_advisor, count_theses_between_two_advisors
 
 from typing import List, Tuple
+from models import Person
+from uuid import UUID
+
+from random import randint
+import streamlit as st
 
 def build_advisors_graph( advisors, theses ) -> any:
     
@@ -35,45 +40,75 @@ def build_advisors_graph( advisors, theses ) -> any:
                 ))
 
     config = Config( width=900, height=700 )
-
     return agraph(nodes=nodes, edges=edges, config=config)
 
-def build_nodes_and_edges( publications: any ) -> Tuple[ List[Node], List[Edge] ]:
-    is_nodes = {}
-    nodes = []
-    edges = []
-    for publication in publications:
-        for author in publication.authors:
-            if author.name not in is_nodes:
-                is_nodes[author.name] = True
-                nodes.append( 
-                    Node(
-                    id=author.name,
-                    label=author.name,
-                    title=author.name,
-                    color='#ACDBC9',
-                    size=25,
-                ))
+class NodeGraph:
+    def __init__(self, info: Person) -> None:
+        self.info = info
+        self.color = '#ACDBC9'
+        self.size = 25
 
-            for author_2 in publication.authors:
-                if author != author_2:
-                    edges.append( 
-                        Edge(
-                            source=author.name, 
-                            label="1",
-                            target=author_2.name,
-                            color='#52FFCC',
-                            directed=False,
-                            collapsible=False
-                        ))
-    del is_nodes
-    return ( nodes, edges )
+class EdgeGraph:
+    def __init__(self, source:NodeGraph, target:NodeGraph, info) -> None:
+        self.source = source
+        self.target = target
+        self.info = info
+        self.color = '#ACDBC9'
 
-
-def build_publications_graph( publications: any ) -> any:
-
-    nodes, edges = build_nodes_and_edges( publications )
-
-    config = Config( width=900, height=700 )
+def build_nodes_and_edges( publications: any ) -> Tuple[ List[NodeGraph], List[EdgeGraph] ]:
+    all_nodes: dict[UUID, Person] = {}
+    nodes: List[NodeGraph] = []
+    edges: List[EdgeGraph] = []
     
+    for publication in publications:
+        # save nodes
+        for author in publication.authors:
+            if author.uuid not in all_nodes:
+                nn = NodeGraph(author)
+                all_nodes[ author.uuid ] = nn
+                nodes.append( nn )
+
+        # save edges 
+        for i in range( len(publication.authors) ):
+            author = publication.authors[i]
+            for j in range(i + 1, len(publication.authors)):
+                author_2 = publication.authors[j]
+                edges.append(EdgeGraph(all_nodes[author.uuid], all_nodes[author_2.uuid], publication))
+
+    del all_nodes
+    return (nodes, edges)
+
+def build_publications_graph( publications: List[any], width = 900, height = 700 ) -> any:
+    nodesGraph, edgesGraph = build_nodes_and_edges( publications )
+    nodes: List[Node] = []
+    edges: List[Edge] = []
+
+    for node in nodesGraph:
+        nodes.append(Node( 
+            id=f"{node.info.uuid}",
+            label=node.info.name,
+            title=node.info.name,
+            color=node.color,
+            size=25
+        ))
+        
+    for edge in edgesGraph:
+        edges.append(Edge(
+            source=f"{edge.source.info.uuid}", 
+            label=f"{5} publicación",
+            target=f"{edge.target.info.uuid}",
+            color=edge.color,
+            directed=False,
+            collapsible=False
+        ))
+        edges.append(Edge(
+            source=f"{edge.target.info.uuid}", 
+            label=f"{5} publicación",
+            target=f"{edge.source.info.uuid}",
+            color=edge.color,
+            directed=False,
+            collapsible=False
+        ))
+
+    config = Config( width=width, height=height )
     return agraph(nodes=nodes, edges=edges, config=config)

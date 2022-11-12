@@ -58,12 +58,17 @@ def build_nodes_and_edges( publications: any ) -> Tuple[ List[NodeGraph], List[E
     nodes: List[NodeGraph] = []
     edges: List[EdgeGraph] = []
     publications_by_person = count_publications_by_person( publications )
+    max_publications = max(publications_by_person.values())
     
     for publication in publications:
         # save nodes
         for author in publication.authors:
             if author.uuid not in all_nodes:
-                nn = NodeGraph(author, 25 + 5*publications_by_person[author.uuid])
+                nn = NodeGraph(
+                    author, 
+                    size=25 + 5*publications_by_person[author.uuid],
+                    color=darken_color('#ACDBC9', publications_by_person[author.uuid], 2*max_publications)
+                )
                 all_nodes[ author.uuid ] = nn
                 nodes.append( nn )
 

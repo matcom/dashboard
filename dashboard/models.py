@@ -195,6 +195,8 @@ class Journal(CustomModel):
     title: str
     publisher: str
     issn: str = ""
+    indices: List[str] = Field(default_factory=list)
+    url: HttpUrl = None
 
     def save(self):
         func_check_same_data = (
@@ -204,6 +206,15 @@ class Journal(CustomModel):
         if class_with_same_data:
             self.uuid = class_with_same_data.uuid
         CustomModel.save(self)
+
+    def format(self):
+        indices = ", ".join(f"_{index}_" for index in self.indices)
+        title = f"**{self.title}**"
+
+        if self.url:
+            title = f"[{title}]({self.url})"
+
+        return f"🗞️ {title}, {self.publisher}. ISSN: {self.issn}. Indexado en: {indices}."
 
     def __str__(self):
         return f"{self.title} ({self.publisher})"
@@ -227,6 +238,7 @@ class JournalPaper(Publication):
     url: HttpUrl = None
     journal: Journal = None
     issue: int = 1
+    volume: int = 1
     year: int = 2022
     balance: int = 2022
 
@@ -247,7 +259,7 @@ class JournalPaper(Publication):
         text.append(
             f"En _{self.journal.title}_, {self.journal.publisher}. ISSN: {self.journal.issn}."
         )
-        text.append(f"Número {self.issue}, {self.year}.")
+        text.append(f"Volumen {self.volume}, Número {self.issue}, {self.year}.")
         return " ".join(text)
 
 
@@ -259,6 +271,7 @@ class ConferencePresentation(Publication):
     year: int = 2022
     paper: bool = False
     balance: int = 2022
+    event_type: str = "Internacional"
 
     def format(self):
         if self.paper:

@@ -248,8 +248,8 @@ class JournalPaper(Publication):
         for author in self.authors:
             fmt = author.name
 
-            if author.orcid:
-                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
+            # if author.orcid:
+            #     fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
 
             if author.institution == "Universidad de La Habana":
                 fmt = f"**{fmt}**"
@@ -284,8 +284,8 @@ class ConferencePresentation(Publication):
         for author in self.authors:
             fmt = author.name
 
-            if author.orcid:
-                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
+            # if author.orcid:
+            #     fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
 
             if author.institution == "Universidad de La Habana":
                 fmt = f"**{fmt}**"
@@ -314,8 +314,8 @@ class Book(Publication):
         for author in self.authors:
             fmt = author.name
 
-            if author.orcid:
-                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
+            # if author.orcid:
+            #     fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
 
             if author.institution == "Universidad de La Habana":
                 fmt = f"**{fmt}**"
@@ -338,8 +338,8 @@ class BookChapter(Book):
         for author in self.authors:
             fmt = author.name
 
-            if author.orcid:
-                fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
+            # if author.orcid:
+            #     fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
 
             if author.institution == "Universidad de La Habana":
                 fmt = f"**{fmt}**"

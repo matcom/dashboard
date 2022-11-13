@@ -1,4 +1,5 @@
 import streamlit as st
+import collections
 import altair
 import pandas as pd
 
@@ -92,15 +93,35 @@ def research_balance(start_date, end_date):
             international.append(paper)
         elif "Otro (Nacional)" in paper.journal.indices:
             national.append(paper)
-        elif paper.journal.publisher == "Universidad de La Habana":
-            uh.append(paper)
-        else:
+        elif "Universidad de La Habana" != paper.journal.publisher:
             rest.append(paper)
+
+        if paper.journal.publisher == "Universidad de La Habana":
+            uh.append(paper)
 
         for author in paper.authors:
             if author.institution != "Universidad de La Habana":
                 colab.append(author)
                 break
+
+    events = [p for p in ConferencePresentation.all() if p.year == end_date.year]
+    events.sort(key=lambda e: e.title)
+
+    international_events = collections.defaultdict(list)
+    international_cuba = collections.defaultdict(list)
+    national_events = collections.defaultdict(list)
+    activities = collections.defaultdict(list)
+
+    for e in events:
+        if e.event_type == "Internacional":
+            if "Cuba" in str(e.location):
+                international_cuba[(e.venue, e.location)].append(e)
+            else:
+                international_events[(e.venue, e.location)].append(e)
+        elif e.event_type == "Nacional":
+            national_events[(e.venue, e.location)].append(e)
+        else:
+            activities[(e.venue, e.location)].append(e)
 
     yield "### 📃 Publicaciones"
 
@@ -113,7 +134,7 @@ def research_balance(start_date, end_date):
                 dict(Tipo="Internacional", Cantidad=len(international)),
                 dict(Tipo="Nacional", Cantidad=len(national)),
                 dict(Tipo="Editorial UH", Cantidad=len(uh)),
-                dict(Tipo="Resto", Cantidad=len(rest)),
+                dict(Tipo="Sin índice", Cantidad=len(rest)),
                 dict(Tipo="Colaboraciones", Cantidad=len(colab)),
                 dict(Tipo="Presentaciones", Cantidad=len(presentations)),
                 dict(Tipo="Libros, etc", Cantidad=len(books) + len(chapters)),
@@ -156,3 +177,25 @@ def research_balance(start_date, end_date):
 
     for chapter in chapters:
         yield chapter.format()
+
+    yield "### 📢 Eventos"
+
+    yield "#### 💠 Internacionales"
+
+    for (venue, location), events in international_events.items():
+        yield f"_{venue}_, {location}: **{len(events)} ponencia(s)**"
+
+    yield "#### 💠 Internacionales en Cuba"
+
+    for (venue, location), events in international_cuba.items():
+        yield f"_{venue}_, {location}: **{len(events)} ponencia(s)**"
+
+    yield "#### 💠 Nacionales"
+
+    for (venue, location), events in national_events.items():
+        yield f"_{venue}_, {location}: **{len(events)} ponencia(s)**"
+
+    yield "#### 💠 Actividades Científicas"
+
+    for (venue, location), events in activities.items():
+        yield f"_{venue}_, {location}: **{len(events)} ponencia(s)**"

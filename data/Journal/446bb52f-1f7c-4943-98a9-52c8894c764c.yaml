@@ -1,4 +1,8 @@
-issn: ''
-publisher: ELSEVIER
+issn: 0020-0255
+publisher: Elsevier
 title: Information Sciences
 uuid: 446bb52f-1f7c-4943-98a9-52c8894c764c
+url: https://www.sciencedirect.com/journal/information-sciences
+indices:
+  - Web of Science
+  - Scopus

@@ -365,6 +365,33 @@ class Project(CustomModel):
     status: str = "Normal"
 
     @classmethod
+    def from_members(cls, people:List[Person]):
+        people = set(people)
+
+        for project in cls.all():
+            if set(project.members) & people:
+                yield project
+
+
+    def format(self):
+        lines = [f"⚗️ **{self.title}**"]
+
+        if self.code:
+            lines.append(f"[{self.code}]")
+
+        lines.append(f"Proyecto {self.project_type}")
+
+        if self.program:
+            lines.append(f"En _{self.program}_")
+
+        lines.append(self.main_entity)
+
+        lines.append(f"Aprobado: {self.aproval_date.year}.")
+
+        return ". ".join(lines)
+
+
+    @classmethod
     def create(cls, key, obj=None):
         code = st.text_input("Código (si tiene)", key=f"{key}_code").strip()
         title = st.text_input("🔹Título del proyecto", key=f"{key}_title").strip()

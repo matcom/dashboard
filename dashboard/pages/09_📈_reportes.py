@@ -18,5 +18,5 @@ with personal:
     person = st.selectbox("Seleccione la persona", ['-'] + people)
 
     if person != '-':
-        with st.spinner():
+        with st.spinner("Generando reporte..."):
             st.write(personal_report(person))

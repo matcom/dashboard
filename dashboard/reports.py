@@ -1,7 +1,7 @@
 import streamlit as st
 
 from typing import List
-from models import Person, JournalPaper, ConferencePresentation, Book, BookChapter
+from models import Person, JournalPaper, ConferencePresentation, Book, BookChapter, Project
 
 
 def personal_report(person: Person):
@@ -37,5 +37,9 @@ def personal_report(person: Person):
     for paper in BookChapter.from_authors([person]):
         lines.append("- " + paper.format())
 
+    lines.append("### ⚗️ Proyectos")
+
+    for project in Project.from_members([person]):
+        lines.append("- " + project.format())
 
     return "\n".join(lines)

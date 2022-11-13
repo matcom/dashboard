@@ -1,0 +1,21 @@
+aproval_date: '2022-11-13'
+aproved: true
+code: ''
+end_date: '2022-11-13'
+entities:
+- Universidad de Alicante
+funding:
+- Universidad de Alicante
+head: 17fd36bc-98da-46cc-83d4-801a553f5529
+main_entity: MatCom
+members:
+- 17fd36bc-98da-46cc-83d4-801a553f5529
+- 024e6d24-579e-4bb4-9010-25a2243f6aac
+- 7dc36982-1a28-4bce-bb80-4de4a45a7323
+- 289b9629-808b-4983-8793-e88a6effaca5
+program: ''
+project_type: Internacional
+start_date: '2022-11-13'
+status: Normal
+title: 'LETO: Learning Engine Through Ontologies'
+uuid: aa11bb7c-d591-4529-af44-fff0564448f2

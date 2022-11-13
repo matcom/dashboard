@@ -1,0 +1,18 @@
+aproval_date: '2022-11-13'
+aproved: true
+code: ''
+end_date: '2023-11-13'
+entities:
+- ''
+funding:
+- Banco Central de Cuba
+head: e2dc923c-57f3-44be-9cdb-bdb4feb1bb30
+main_entity: Instituto de Criptografía, MatCom
+members: []
+program: ''
+project_type: Empresarial
+start_date: '2022-11-13'
+status: Normal
+title: Servicios para la Identificación del problema, análisis de requerimientos,
+  y propuesta de tecnología a aplicar al MDP
+uuid: f0b1ce27-7e4c-4c66-9965-4da570894b57

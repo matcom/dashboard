@@ -1,0 +1,19 @@
+aproval_date: '2022-11-13'
+aproved: true
+code: ''
+end_date: '2022-11-13'
+entities:
+- ''
+funding:
+- Tecnomática
+head: e2dc923c-57f3-44be-9cdb-bdb4feb1bb30
+main_entity: Instituto de Criptografía
+members:
+- e2dc923c-57f3-44be-9cdb-bdb4feb1bb30
+program: ''
+project_type: Empresarial
+start_date: '2022-11-13'
+status: Normal
+title: Servicio C-T BlockChain 2. Sistema para la Trazabilidad del Combustible de
+  Aviación con Tecnología Blockchain (TrazaJet)
+uuid: 81453de0-648e-43d8-8ef7-cf1b58239930

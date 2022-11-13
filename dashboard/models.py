@@ -363,6 +363,8 @@ class Project(CustomModel):
     main_entity: str
     entities: List[str]
     funding: List[str]
+    funds_total: int = 0
+    funds_collected: int = 0
     aproved: bool = False
     aproval_date: date = None
     start_date: date = None

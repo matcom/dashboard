@@ -171,17 +171,17 @@ class Person(CustomModel):
 
             if len(name) > 2:
                 last_names = f"{name[-2]}-{name[-1]}"
-                names = "".join([n[0] + "." for n in name[:-2]])
+                names = ".".join([n[0] for n in name[:-2]])
             else:
                 last_names = name[-1]
-                names = "".join([n[0] + "." for n in name[:-1]])
+                names = ".".join([n[0] for n in name[:-1]])
 
             fmt = f"{last_names} {names}"
         except:
             fmt = self.name
 
         if self.institution == "Universidad de La Habana":
-            fmt = f"**{fmt}**"
+            fmt = f"**{fmt} ({self.faculty})**"
 
         if self.orcid:
             fmt = f"{fmt} [↩️](https://orcid.org/{self.orcid})"

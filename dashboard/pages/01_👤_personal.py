@@ -87,7 +87,7 @@ for person in people:
 
         continue
 
-    if person.faculty != "Matemática y Computación":
+    if person.faculty != "MatCom":
         people_uh.append(person)
 
         continue

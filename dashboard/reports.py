@@ -64,7 +64,9 @@ def research_balance(start_date, end_date):
     papers = [p for p in JournalPaper.all() if p.year == end_date.year]
     papers.sort(key=lambda p: p.title)
 
-    presentations = [p for p in ConferencePresentation.all() if p.year == end_date.year and p.paper]
+    presentations = [
+        p for p in ConferencePresentation.all() if p.year == end_date.year and p.paper
+    ]
     presentations.sort(key=lambda p: p.title)
 
     books = [p for p in Book.all() if p.year == end_date.year]
@@ -93,11 +95,10 @@ def research_balance(start_date, end_date):
             international.append(paper)
         elif "Otro (Nacional)" in paper.journal.indices:
             national.append(paper)
-        elif "Universidad de La Habana" != paper.journal.publisher:
-            rest.append(paper)
-
-        if paper.journal.publisher == "Universidad de La Habana":
+        elif paper.journal.publisher == "Universidad de La Habana":
             uh.append(paper)
+        else:
+            rest.append(paper)
 
         for author in paper.authors:
             if author.institution != "Universidad de La Habana":
@@ -126,20 +127,23 @@ def research_balance(start_date, end_date):
     yield "### 📃 Publicaciones"
 
     data = pd.DataFrame(
-            [
-                dict(Tipo="Total", Cantidad=len(papers) + len(presentations) + len(books) + len(chapters)),
-                dict(Tipo="Artículos", Cantidad=len(papers)),
-                dict(Tipo="WoS / Scopus", Cantidad=len(wos_scopus)),
-                dict(Tipo="RICYT / Scielo", Cantidad=len(ricyt_scielo)),
-                dict(Tipo="Internacional", Cantidad=len(international)),
-                dict(Tipo="Nacional", Cantidad=len(national)),
-                dict(Tipo="Editorial UH", Cantidad=len(uh)),
-                dict(Tipo="Sin índice", Cantidad=len(rest)),
-                dict(Tipo="Colaboraciones", Cantidad=len(colab)),
-                dict(Tipo="Presentaciones", Cantidad=len(presentations)),
-                dict(Tipo="Libros, etc", Cantidad=len(books) + len(chapters)),
-            ]
-        )
+        [
+            dict(
+                Tipo="Total",
+                Cantidad=len(papers) + len(presentations) + len(books) + len(chapters),
+            ),
+            dict(Tipo="Artículos", Cantidad=len(papers)),
+            dict(Tipo="WoS / Scopus", Cantidad=len(wos_scopus)),
+            dict(Tipo="RICYT / Scielo", Cantidad=len(ricyt_scielo)),
+            dict(Tipo="Internacional", Cantidad=len(international)),
+            dict(Tipo="Nacional", Cantidad=len(national)),
+            dict(Tipo="Editorial UH", Cantidad=len(uh)),
+            dict(Tipo="Sin índice", Cantidad=len(rest)),
+            dict(Tipo="Colaboraciones", Cantidad=len(colab)),
+            dict(Tipo="Presentaciones", Cantidad=len(presentations)),
+            dict(Tipo="Libros, etc", Cantidad=len(books) + len(chapters)),
+        ]
+    )
 
     yield data
 
@@ -179,6 +183,53 @@ def research_balance(start_date, end_date):
         yield chapter.format()
 
     yield "### 📢 Eventos"
+
+    def total_events(d):
+        return sum(len(v) for v in d.values())
+
+    def total_events_first_author(d):
+        return sum(1 for v in d.values() for e in v if e.authors[0].faculty == "MatCom")
+
+    def total_events_colab_uh(d):
+        return sum(
+            1
+            for v in d.values()
+            for e in v
+            if any(
+                a.institution == "Universidad de La Habana"
+                and not a.faculty == "MatCom"
+                for a in e.authors
+            )
+        )
+
+    yield pd.DataFrame(
+        [
+            dict(
+                Tipo="Eventos Internacionales",
+                Total=total_events(international_events),
+                Principal=total_events_first_author(international_events),
+                Colab=total_events_colab_uh(international_events),
+            ),
+            dict(
+                Tipo="Eventos Internacionales en Cuba",
+                Total=total_events(international_cuba),
+                Principal=total_events_first_author(international_cuba),
+                Colab=total_events_colab_uh(international_cuba),
+            ),
+            dict(
+                Tipo="Eventos Nacionales",
+                Total=total_events(national_events),
+                Principal=total_events_first_author(national_events),
+                Colab=total_events_colab_uh(national_events),
+            ),
+            dict(
+                Tipo="Actividades Cientítficas",
+                Total=total_events(activities),
+                Principal=total_events_first_author(activities),
+                Colab=total_events_colab_uh(activities),
+            ),
+        ]
+    )
 
     yield "#### 💠 Internacionales"
 

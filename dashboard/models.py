@@ -266,7 +266,7 @@ class JournalPaper(Publication):
     balance: int = 2022
 
     def format(self):
-        text = [f"📃 _{self.title}_."]
+        text = [f"📃 {self.title}."]
 
         for author in self.authors:
             text.append(author.format() + ", ")
@@ -317,7 +317,7 @@ class Book(Publication):
     year: int = 2022
 
     def format(self):
-        text = [f"📕 _{self.title}_."]
+        text = [f"📕 {self.title}."]
 
         for author in self.authors:
             text.append(author.format() + ", ")
@@ -339,7 +339,7 @@ class BookChapter(Book):
             text.append(author.format() + ", ")
 
         text.append(
-            f"En _{self.title}_, {self.publisher}, ISBN: {self.isbn}, Edición: {self.edition}, Páginas: {self.pages}."
+            f"**Capítulo en el libro:** {self.title}, {self.publisher}, ISBN: {self.isbn}, Edición: {self.edition}, Páginas: {self.pages}."
         )
 
         return " ".join(text)

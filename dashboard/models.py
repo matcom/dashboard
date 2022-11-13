@@ -165,6 +165,29 @@ class Person(CustomModel):
     def __str__(self) -> str:
         return self.name
 
+    def format(self):
+        try:
+            name = self.name.split()
+
+            if len(name) > 2:
+                last_names = f"{name[-2]}-{name[-1]}"
+                names = "".join([n[0] + "." for n in name[:-2]])
+            else:
+                last_names = name[-1]
+                names = "".join([n[0] + "." for n in name[:-1]])
+
+            fmt = f"{last_names} {names}"
+        except:
+            fmt = self.name
+
+        if self.institution == "Universidad de La Habana":
+            fmt = f"**{fmt}**"
+
+        if self.orcid:
+            fmt = f"{fmt} [↩️](https://orcid.org/{self.orcid})"
+
+        return fmt
+
     @classmethod
     def own(cls):
         return [
@@ -246,15 +269,7 @@ class JournalPaper(Publication):
         text = [f"📃 _{self.title}_."]
 
         for author in self.authors:
-            fmt = author.name
-
-            # if author.orcid:
-            #     fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
-
-            if author.institution == "Universidad de La Habana":
-                fmt = f"**{fmt}**"
-
-            text.append(fmt.format(author.name) + ", ")
+            text.append(author.format() + ", ")
 
         text.append(
             f"En _{self.journal.title}_, {self.journal.publisher}. ISSN: {self.journal.issn}."
@@ -267,6 +282,7 @@ class ConferencePresentation(Publication):
     title: str
     url: HttpUrl = None
     venue: str = None
+
     location: str = None
     year: int = 2022
     paper: bool = False
@@ -282,15 +298,7 @@ class ConferencePresentation(Publication):
         text.append(f"_{self.title}_.")
 
         for author in self.authors:
-            fmt = author.name
-
-            # if author.orcid:
-            #     fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
-
-            if author.institution == "Universidad de La Habana":
-                fmt = f"**{fmt}**"
-
-            text.append(fmt.format(author.name) + ", ")
+            text.append(author.format() + ", ")
 
         text.append(
             f"En _{self.venue}_, {self.location}, {self.year}"
@@ -312,15 +320,7 @@ class Book(Publication):
         text = [f"📕 _{self.title}_."]
 
         for author in self.authors:
-            fmt = author.name
-
-            # if author.orcid:
-            #     fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
-
-            if author.institution == "Universidad de La Habana":
-                fmt = f"**{fmt}**"
-
-            text.append(fmt.format(author.name) + ", ")
+            text.append(author.format() + ", ")
 
         text.append(
             f"{self.publisher}, ISBN: {self.isbn}, Edición: {self.edition}, Páginas: {self.pages}."
@@ -336,15 +336,7 @@ class BookChapter(Book):
         text = [f"📑 _{self.chapter}_."]
 
         for author in self.authors:
-            fmt = author.name
-
-            # if author.orcid:
-            #     fmt = f"[{fmt}](https://orcid.org/{author.orcid})"
-
-            if author.institution == "Universidad de La Habana":
-                fmt = f"**{fmt}**"
-
-            text.append(fmt.format(author.name) + ", ")
+            text.append(author.format() + ", ")
 
         text.append(
             f"En _{self.title}_, {self.publisher}, ISBN: {self.isbn}, Edición: {self.edition}, Páginas: {self.pages}."

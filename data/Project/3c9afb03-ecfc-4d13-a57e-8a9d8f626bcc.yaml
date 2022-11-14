@@ -1,7 +1,7 @@
 aproval_date: '2022-05-10'
 aproved: true
 code: ''
-end_date: '2023-12-31'
+end_date: '2022-11-10'
 entities:
 - ''
 funding:
@@ -17,3 +17,5 @@ title: Sistema descentralizado, basado en tecnología de cadenas de bloques, par
   identificación de propietarios de medicamentos y la gestión de su información de
   propiedad y transferencia
 uuid: 3c9afb03-ecfc-4d13-a57e-8a9d8f626bcc
+funds_total: 720000
+funds_collected: 0

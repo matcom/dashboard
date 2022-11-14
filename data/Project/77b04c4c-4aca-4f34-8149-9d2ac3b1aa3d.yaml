@@ -1,7 +1,7 @@
-aproval_date: '2022-11-10'
+aproval_date: '2021-01-31'
 aproved: true
 code: PN223LH010-005
-end_date: '2022-11-10'
+end_date: '2023-12-31'
 entities:
 - Universidad de Cienfuegos
 - Universidad de Pinar del Río
@@ -21,7 +21,7 @@ members:
 - 3f1c2a17-0da6-4de5-93e6-7ceba1a5c082
 program: Programa Nacional de Ciencias Básicas
 project_type: Nacional
-start_date: '2022-11-10'
+start_date: '2021-01-31'
 status: Normal
 title: Desarrollo de nuevos modelos y métodos para la toma de decisiones
 uuid: 77b04c4c-4aca-4f34-8149-9d2ac3b1aa3d

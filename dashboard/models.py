@@ -194,7 +194,7 @@ class Person(CustomModel):
             p
             for p in cls.all()
             if p.institution == "Universidad de La Habana"
-            and p.faculty == "Matemática y Computación"
+            and p.faculty == "MatCom"
         ]
 
 
@@ -381,7 +381,7 @@ class Project(CustomModel):
 
 
     def format(self):
-        lines = [f"⚗️ **{self.title}**"]
+        lines = [f"⚗️ _{self.title}_"]
 
         if self.code:
             lines.append(f"[{self.code}]")
@@ -391,9 +391,19 @@ class Project(CustomModel):
         if self.program:
             lines.append(f"En _{self.program}_")
 
-        lines.append(self.main_entity)
+        lines.append(f"**Coordinador:** {self.head.name}")
 
-        lines.append(f"Aprobado: {self.aproval_date.year}.")
+        lines.append(f"**Entidad ejecutora:** {self.main_entity}")
+
+        if self.entities:
+            lines.append(f"**Entidades participantes:** {', '.join(self.entities)}")
+
+        lines.append(f"**Fecha de aprobación:** {self.aproval_date}")
+
+        duration = (self.end_date - self.start_date).days // 30
+        lines.append(f"**Duración**: {self.start_date} a {self.end_date} ({duration} meses)")
+
+        lines.append(f"**Estado**: {self.status}")
 
         return ". ".join(lines)
 

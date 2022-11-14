@@ -1,7 +1,7 @@
-aproval_date: '2022-11-13'
+aproval_date: '2022-08-24'
 aproved: true
 code: ''
-end_date: '2022-11-13'
+end_date: '2023-10-24'
 entities:
 - Tecnomática
 funding:
@@ -14,7 +14,9 @@ members:
 - 7dc36982-1a28-4bce-bb80-4de4a45a7323
 program: ''
 project_type: Empresarial
-start_date: '2022-11-13'
+start_date: '2022-08-24'
 status: Normal
 title: Diseño de Sala Situacional
 uuid: ad5d2a79-4660-4f44-a51a-2f96b111db45
+funds_total: 160000
+funds_collected: 0

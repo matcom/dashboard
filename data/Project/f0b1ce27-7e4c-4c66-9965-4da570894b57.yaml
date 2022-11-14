@@ -13,6 +13,8 @@ program: ''
 project_type: Empresarial
 start_date: '2022-11-13'
 status: Normal
-title: Servicios para la Identificación del problema, análisis de requerimientos,
+title: Servicios para la identificación del problema, análisis de requerimientos,
   y propuesta de tecnología a aplicar al MDP
 uuid: f0b1ce27-7e4c-4c66-9965-4da570894b57
+funds_total: 360000
+funds_collected: 360000

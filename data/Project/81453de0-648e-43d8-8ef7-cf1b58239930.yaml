@@ -1,7 +1,7 @@
-aproval_date: '2022-11-13'
+aproval_date: '2022-09-02'
 aproved: true
 code: ''
-end_date: '2022-11-13'
+end_date: '2023-05-03'
 entities:
 - ''
 funding:
@@ -12,8 +12,10 @@ members:
 - e2dc923c-57f3-44be-9cdb-bdb4feb1bb30
 program: ''
 project_type: Empresarial
-start_date: '2022-11-13'
+start_date: '2022-09-02'
 status: Normal
 title: Servicio C-T BlockChain 2. Sistema para la Trazabilidad del Combustible de
   Aviación con Tecnología Blockchain (TrazaJet)
 uuid: 81453de0-648e-43d8-8ef7-cf1b58239930
+funds_total: 640000
+funds_collected: 225000

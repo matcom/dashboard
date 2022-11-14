@@ -231,22 +231,62 @@ def research_balance(start_date, end_date):
         ]
     )
 
-    yield "#### 💠 Internacionales"
+    if international_events:
+        yield "#### 💠 Internacionales"
 
     for (venue, location), events in international_events.items():
         yield f"_{venue}_, {location}: **{len(events)} ponencia(s)**"
 
-    yield "#### 💠 Internacionales en Cuba"
+    if international_cuba:
+        yield "#### 💠 Internacionales en Cuba"
 
     for (venue, location), events in international_cuba.items():
         yield f"_{venue}_, {location}: **{len(events)} ponencia(s)**"
 
-    yield "#### 💠 Nacionales"
+    if national_events:
+        yield "#### 💠 Nacionales"
 
     for (venue, location), events in national_events.items():
         yield f"_{venue}_, {location}: **{len(events)} ponencia(s)**"
 
-    yield "#### 💠 Actividades Científicas"
+    if activities:
+        yield "#### 💠 Actividades Científicas"
 
     for (venue, location), events in activities.items():
         yield f"_{venue}_, {location}: **{len(events)} ponencia(s)**"
+
+    yield "### ⚗️ Proyectos"
+
+    projects = Project.all()
+    projects.sort(key=lambda p: (p.project_type, p.title))
+
+    df = (
+        pd.DataFrame(
+            [
+                dict(Proyecto=p.title, Estado=p.status, Tipo=p.project_type)
+                for p in projects
+            ]
+        )
+        .groupby(["Tipo", "Estado"])
+        .count()
+        .reset_index()
+        .set_index("Tipo")
+    )
+
+    yield df
+
+    yield pd.DataFrame(
+        [
+            dict(
+                Proyecto=p.title,
+                Fondos=p.funds_total,
+                Efectuado=p.funds_collected,
+                Financia="; ".join(p.funding),
+                Resto=p.funds_total - p.funds_collected,
+            )
+            for p in projects
+        ]
+    ).set_index(["Proyecto", "Financia"])
+
+    for project in projects:
+        yield project.format()

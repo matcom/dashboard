@@ -11,6 +11,7 @@ from models import (
     Book,
     BookChapter,
     Project,
+    Award,
 )
 
 
@@ -290,3 +291,46 @@ def research_balance(start_date, end_date):
 
     for project in projects:
         yield project.format()
+
+    yield "### 👥 Personal"
+
+    people = set(Person.own())
+
+    yield pd.DataFrame(
+        [dict(Persona=p.name, Grado=p.scientific_grade) for p in people]
+    ).groupby("Grado").count()
+
+    people_with_papers = (
+        set(
+            person
+            for paper in papers + presentations + books + chapters + events
+            for person in paper.authors
+        )
+        & people
+    )
+
+    st.write(f"**Personal con publicaciones:** {len(people_with_papers)} ({len(people_with_papers) * 100 / len(people):0.1f}%)")
+
+    people_in_projects = (
+        set(
+            person
+            for project in projects
+            for person in [project.head] + project.members
+        )
+        & people
+    )
+
+    st.write(f"**Personal con proyectos:** {len(people_in_projects)} ({len(people_in_projects) * 100 / len(people):0.1f}%)")
+
+    st.write(f"**Personal en ambos:** {len(people_in_projects & people_with_papers)}")
+
+    people_in_awards = (
+        set(
+            person
+            for award in Award.all()
+            for person in award.participants
+        )
+        & people
+    )
+
+    st.write(f"**Personal con premios:** {len(people_in_awards)} ({len(people_in_awards) * 100 / len(people):0.1f}%)")

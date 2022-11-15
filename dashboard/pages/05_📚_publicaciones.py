@@ -279,3 +279,52 @@ with journals_tab:
 
     for journal in journals:
         st.write(journal.format())
+
+
+        publications = {
+    "papers": {
+        "title": "Artículos",
+        "data": papers,   
+    },
+    "presentations": {
+        "title": "Presentaciones",
+        "data": presentations,   
+    },
+    "books": {
+        "title": "Libros",
+        "data": books,   
+    },
+    "chapters": {
+        "title": "Capítulos",
+        "data": chapters,   
+    }   
+}
+
+st.write('### 📊Gráfica de publicaciones')
+
+options = [ publication['title'] for publication in publications.values()]
+selection = st.multiselect( 'Seleccione las publicaciones que desea incluir en el gráfico', options, ['Libros', 'Capítulos'] )
+
+# show in the graph
+data = []
+for publication in publications.values():
+    if publication['title'] in selection:
+        for item in publication['data']:
+            data.append( item )
+
+
+sections = { 'Todas': True }
+for publ in data:
+    for author in publ.authors:
+        if author.department != '':
+            sections[ author.department ] = True
+        if author.department != '':
+            sections[ author.institution ] = True
+        if author.department != '':
+            sections[ author.faculty ] = True
+
+
+section = st.selectbox("Seleccionar una sección", sections.keys(), index=0)
+color = st.color_picker('Color de la sección', '#ACDBC9', key=654)
+
+_, _, graph = build_publications_graph( data, color=[section, color], height=1000 )

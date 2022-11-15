@@ -1,7 +1,9 @@
 academic_grade: Instructor
-department: ''
-faculty: ''
-institution: ''
+department: Computación
+emails: []
+faculty: MatCom
+institution: Universidad de La Habana
 name: Ernesto Borrego Rodríguez
+orcid: null
 scientific_grade: Licenciado
 uuid: 82afd5e0-a07b-47c3-a328-ab97dca3d0bb

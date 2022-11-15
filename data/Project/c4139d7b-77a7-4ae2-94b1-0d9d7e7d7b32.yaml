@@ -1,0 +1,32 @@
+aproval_date: '2021-01-01'
+aproved: true
+code: PN223LH006-015
+end_date: '2023-12-31'
+entities:
+- Facultad de Matemática y Computación, Universidad de La Habana
+- Facultad de Ciencias Naturales y Exactas, Universidad de Oriente
+- Facultad de Informática y Matemática, Universidad de Holguín
+- Facultad de Ciencias de la Educación, Universidad de Guantánamo
+funding:
+- CITMA
+head: e2dc923c-57f3-44be-9cdb-bdb4feb1bb30
+main_entity: Instituto de Criptografía, Facultad de Matemática y Computación, Universidad
+  de La Habana
+members:
+- e2dc923c-57f3-44be-9cdb-bdb4feb1bb30
+- d2c058b7-a601-461d-96ab-c229f54bf963
+- 925c587c-9550-4fd5-b4a0-88594fe86eb1
+- 1975ffc1-a90f-41f3-8b64-3cd378cc7a60
+- 421a8583-ca4e-4306-ab4b-c8c0e9c754be
+- 69fcb077-1f77-4172-9fff-c60cff0d35bf
+- ddbf6115-74ed-4bb4-a872-e8baf3f8509e
+- 3a67792d-bdd8-4631-ba19-e2b9fbb2147c
+- d017e5e3-b5ef-418f-bc05-8fbd6292d2c8
+- b93d80fc-4b19-4225-81d1-7fbb9b393722
+- 6c808c6e-9c00-4fbe-bc92-1b5f525d1fa3
+program: Telecomunicaciones e Informatización de la Sociedad
+project_type: Nacional
+start_date: '2021-01-01'
+status: Normal
+title: Criptografía aplicada a la Seguridad de las Tecnologías de la Información
+uuid: c4139d7b-77a7-4ae2-94b1-0d9d7e7d7b32

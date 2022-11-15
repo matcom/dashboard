@@ -1,7 +1,10 @@
 academic_grade: Titular
-department: Matemática MATCOM
-faculty: 'Dirección de formación de pregrado '
+department: Matemática
+emails:
+- ''
+faculty: MatCom
 institution: Universidad de La Habana
 name: Rita Roldán Inguanzo
+orcid: ''
 scientific_grade: Doctor en Ciencias
 uuid: ebe07024-ad54-4153-b3ce-d7f1bb6f4180

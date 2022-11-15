@@ -1,7 +1,9 @@
 academic_grade: Instructor
-department: ''
-faculty: ''
-institution: ''
+department: Computación
+emails: []
+faculty: MatCom
+institution: Universidad de La Habana
 name: Yeneit Delgado Kios
-scientific_grade: Licenciado
+orcid: null
+scientific_grade: Máster en Ciencias
 uuid: 3f1c2a17-0da6-4de5-93e6-7ceba1a5c082

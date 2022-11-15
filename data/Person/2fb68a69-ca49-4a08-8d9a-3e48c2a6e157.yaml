@@ -1,5 +1,10 @@
+academic_grade: Instructor
 department: Computación
-faculty: Matemática y Computación
+emails:
+- ''
+faculty: MatCom
 institution: Universidad de La Habana
 name: Daniel Valdés Pérez
+orcid: ''
+scientific_grade: Licenciado
 uuid: 2fb68a69-ca49-4a08-8d9a-3e48c2a6e157

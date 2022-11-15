@@ -1,7 +1,9 @@
 academic_grade: Instructor
-department: ' Matemática Aplicada'
-faculty: Matcom
+department: Matemática Aplicada
+emails: []
+faculty: MatCom
 institution: Universidad de La Habana
 name: Elianys García-Pola Cordobes
-scientific_grade: Máster en Ciencias
+orcid: null
+scientific_grade: Licenciado
 uuid: e54e03a0-a6de-460d-bd05-381b965249e8

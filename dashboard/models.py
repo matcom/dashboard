@@ -70,6 +70,14 @@ class CustomModel(BaseModel):
         return items
 
     @classmethod
+    def find(cls, **kwargs):
+        for item in cls.all():
+            if all(getattr(item,k,None) == v for k,v in kwargs.items()):
+                return item
+
+        raise KeyError(str(kwargs))
+
+    @classmethod
     def get(cls, uuid: str) -> Self:
         path: Path = Path("/src/data") / cls.__name__ / (str(uuid) + ".yaml")
 
@@ -157,13 +165,36 @@ class Person(CustomModel):
     def __str__(self) -> str:
         return self.name
 
+    def format(self):
+        try:
+            name = self.name.split()
+
+            if len(name) > 2:
+                last_names = f"{name[-2]}-{name[-1]}"
+                names = ".".join([n[0] for n in name[:-2]])
+            else:
+                last_names = name[-1]
+                names = ".".join([n[0] for n in name[:-1]])
+
+            fmt = f"{last_names} {names}"
+        except:
+            fmt = self.name
+
+        if self.institution == "Universidad de La Habana":
+            fmt = f"**{fmt} ({self.faculty})**"
+
+        if self.orcid:
+            fmt = f"{fmt} [↩️](https://orcid.org/{self.orcid})"
+
+        return fmt
+
     @classmethod
     def own(cls):
         return [
             p
             for p in cls.all()
             if p.institution == "Universidad de La Habana"
-            and p.faculty == "Matemática y Computación"
+            and p.faculty == "MatCom"
         ]
 
 
@@ -187,6 +218,8 @@ class Journal(CustomModel):
     title: str
     publisher: str
     issn: str = ""
+    indices: List[str] = Field(default_factory=list)
+    url: HttpUrl = None
 
     def save(self):
         func_check_same_data = (
@@ -197,45 +230,119 @@ class Journal(CustomModel):
             self.uuid = class_with_same_data.uuid
         CustomModel.save(self)
 
+    def format(self):
+        indices = ", ".join(f"_{index}_" for index in self.indices)
+        title = f"**{self.title}**"
+
+        if self.url:
+            title = f"[{title}]({self.url})"
+
+        return f"🗞️ {title}, {self.publisher}. ISSN: {self.issn}. Indexado en: {indices}."
+
     def __str__(self):
         return f"{self.title} ({self.publisher})"
 
 
-class JournalPaper(CustomModel):
-    title: str
+class Publication(CustomModel):
     authors: List[Person]
+
+    @classmethod
+    def from_authors(cls, authors: List[Person]):
+        authors = set(authors)
+
+        for item in cls.all():
+            if set(item.authors) & authors:
+                yield item
+
+
+class JournalPaper(Publication):
+    title: str
     corresponding_author: Person = None
     url: HttpUrl = None
     journal: Journal = None
     issue: int = 1
+    volume: int = 1
     year: int = 2022
     balance: int = 2022
 
+    def format(self):
+        text = [f"📃 {self.title}."]
 
-class ConferencePresentation(CustomModel):
+        for author in self.authors:
+            text.append(author.format() + ", ")
+
+        text.append(
+            f"En _{self.journal.title}_, {self.journal.publisher}. ISSN: {self.journal.issn}."
+        )
+        text.append(f"Volumen {self.volume}, Número {self.issue}, {self.year}.")
+        return " ".join(text)
+
+
+class ConferencePresentation(Publication):
     title: str
-    authors: List[Person]
     url: HttpUrl = None
     venue: str = None
+
     location: str = None
     year: int = 2022
     paper: bool = False
     balance: int = 2022
+    event_type: str = "Internacional"
+
+    def format(self):
+        if self.paper:
+            text = ["📃"]
+        else:
+            text = ["📢"]
+
+        text.append(f"_{self.title}_.")
+
+        for author in self.authors:
+            text.append(author.format() + ", ")
+
+        text.append(
+            f"En _{self.venue}_, {self.location}, {self.year}"
+        )
+
+        return " ".join(text)
 
 
-class Book(CustomModel):
+class Book(Publication):
     title: str
     publisher: str
-    authors: List[Person]
     pages: int = None
     url: HttpUrl = None
     isbn: str = None
     edition: int = 1
     year: int = 2022
 
+    def format(self):
+        text = [f"📕 {self.title}."]
+
+        for author in self.authors:
+            text.append(author.format() + ", ")
+
+        text.append(
+            f"{self.publisher}, ISBN: {self.isbn}, Edición: {self.edition}, Páginas: {self.pages}."
+        )
+
+        return " ".join(text)
+
 
 class BookChapter(Book):
     chapter: str
+
+    def format(self):
+        text = [f"📑 _{self.chapter}_."]
+
+        for author in self.authors:
+            text.append(author.format() + ", ")
+
+        text.append(
+            f"**Capítulo en el libro:** {self.title}, {self.publisher}, ISBN: {self.isbn}, Edición: {self.edition}, Páginas: {self.pages}."
+        )
+
+        return " ".join(text)
 
 
 class ResearchGroup(CustomModel):
@@ -256,11 +363,50 @@ class Project(CustomModel):
     main_entity: str
     entities: List[str]
     funding: List[str]
+    funds_total: int = 0
+    funds_collected: int = 0
     aproved: bool = False
     aproval_date: date = None
     start_date: date = None
     end_date: date = None
     status: str = "Normal"
+
+    @classmethod
+    def from_members(cls, people:List[Person]):
+        people = set(people)
+
+        for project in cls.all():
+            if set(project.members) & people:
+                yield project
+
+
+    def format(self):
+        lines = [f"⚗️ _{self.title}_"]
+
+        if self.code:
+            lines.append(f"[{self.code}]")
+
+        lines.append(f"Proyecto {self.project_type}")
+
+        if self.program:
+            lines.append(f"En _{self.program}_")
+
+        lines.append(f"**Coordinador:** {self.head.name}")
+
+        lines.append(f"**Entidad ejecutora:** {self.main_entity}")
+
+        if self.entities:
+            lines.append(f"**Entidades participantes:** {', '.join(self.entities)}")
+
+        lines.append(f"**Fecha de aprobación:** {self.aproval_date}")
+
+        duration = (self.end_date - self.start_date).days // 30
+        lines.append(f"**Duración**: {self.start_date} a {self.end_date} ({duration} meses)")
+
+        lines.append(f"**Estado**: {self.status}")
+
+        return ". ".join(lines)
+
 
     @classmethod
     def create(cls, key, obj=None):

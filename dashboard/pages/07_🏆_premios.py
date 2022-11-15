@@ -49,7 +49,7 @@ with create_view:
 
 with list_view:
     awards = Award.all()
-    awards.sort(key=lambda a: a.name)
+    awards.sort(key=lambda a: (-a.date.year, a.name))
 
     for award in awards:
         text = [f"🏆 **{award.name}**."]

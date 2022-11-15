@@ -2,6 +2,7 @@ authors:
 - 13abd4e7-8183-4fc0-b608-ff8e7533f825
 - 5f35f633-9641-459c-9605-3c133611685e
 balance: 2022
+event_type: Internacional
 location: La Habana, Cuba
 paper: false
 title: Bayesian hierarchical espatio-temporal model for the diabetes mellitus mortality

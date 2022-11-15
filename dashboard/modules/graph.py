@@ -20,6 +20,7 @@ class EdgeGraph:
         self.info = info
         self.color = color
 
+        
 def build_advisors_graph( advisors, theses ) -> any:
     nodes = []
     edges = []
@@ -53,6 +54,7 @@ def build_advisors_graph( advisors, theses ) -> any:
     config = Config( width=900, height=700 )
     return agraph(nodes=nodes, edges=edges, config=config)
 
+  
 def build_nodes_and_edges( publications: any, color: Tuple[str, str] ) -> Tuple[ List[NodeGraph], List[EdgeGraph] ]:
     all_nodes: dict[UUID, Person] = {}
     nodes: List[NodeGraph] = []
@@ -123,3 +125,4 @@ def build_publications_graph( publications: List[any], color: Tuple[str, str], w
 
     config = Config( width=width, height=height )
     return nodes, edges, agraph(nodes=nodes, edges=edges, config=config)
+

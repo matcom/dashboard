@@ -1,7 +1,10 @@
 academic_grade: Instructor
 department: Computación
-faculty: Matemática y Computación
+emails:
+- jpconsuegra@matcom.uh.cu
+faculty: MatCom
 institution: Universidad de La Habana
 name: Juan Pablo Consuegra Ayala
+orcid: 0000-0003-2009-393X
 scientific_grade: Máster en Ciencias
 uuid: 6df2e2a7-6182-487f-8983-797e4775ebb3

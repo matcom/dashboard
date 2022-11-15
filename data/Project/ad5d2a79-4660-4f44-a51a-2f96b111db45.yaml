@@ -1,0 +1,22 @@
+aproval_date: '2022-08-24'
+aproved: true
+code: ''
+end_date: '2023-10-24'
+entities:
+- Tecnomática
+funding:
+- Tecnomática
+head: 17fd36bc-98da-46cc-83d4-801a553f5529
+main_entity: MatCom
+members:
+- 17fd36bc-98da-46cc-83d4-801a553f5529
+- 024e6d24-579e-4bb4-9010-25a2243f6aac
+- 7dc36982-1a28-4bce-bb80-4de4a45a7323
+program: ''
+project_type: Empresarial
+start_date: '2022-08-24'
+status: Normal
+title: Diseño de Sala Situacional
+uuid: ad5d2a79-4660-4f44-a51a-2f96b111db45
+funds_total: 160000
+funds_collected: 0

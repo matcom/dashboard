@@ -3,11 +3,11 @@ import json
 from pathlib import Path
 from typing import List
 
-import altair
 import pandas as pd
 import streamlit as st
 from models import Thesis
-from utils import generate_widget_key
+from modules.utils import generate_widget_key
+from modules.graph import build_advisors_graph
 
 st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide")
 
@@ -55,61 +55,7 @@ with listing:
 
     st.write("#### 👥 Distribución por tutores")
 
-    cols = st.columns(2)
-
-    thesis_df = []
-
-    for thesis in theses:
-        for advisor in thesis.advisors:
-            for keyword in thesis.keywords:
-                thesis_df.append(
-                    dict(thesis=thesis.title, advisor=advisor, keyword=keyword)
-                )
-
-    thesis_df = pd.DataFrame(thesis_df)
-
-    cols[0].altair_chart(
-        altair.Chart(thesis_df)
-        .mark_bar()
-        .encode(
-            y=altair.X("advisor", title="Tutor"),
-            x=altair.Y("distinct(thesis)", title="No. Tesis"),
-            color=altair.Color("advisor", legend=None),
-            tooltip=[altair.Tooltip("distinct(thesis)", title="No. Tesis")],
-        )
-    )
-
-    coauthor_df = []
-
-    for thesis in theses:
-        for advisor_i in thesis.advisors:
-            for advisor_j in thesis.advisors:
-                if advisor_i == advisor_j:
-                    continue
-
-                coauthor_df.append(
-                    dict(thesis=thesis.title, advisor_i=advisor_i, advisor_j=advisor_j)
-                )
-
-    coauthor_df = pd.DataFrame(coauthor_df)
-
-    cols[1].altair_chart(
-        altair.Chart(coauthor_df)
-        .mark_point(filled=True)
-        .encode(
-            x=altair.X("advisor_i", title="Tutor"),
-            y=altair.Y("advisor_j", title="Tutor"),
-            color=altair.Color("advisor_i", legend=None),
-            size=altair.Size("count(thesis)", legend=None),
-            tooltip=[
-                altair.Tooltip("count(thesis)", title="No. Tesis"),
-                altair.Tooltip("advisor_i", title="Tutor (1)"),
-                altair.Tooltip("advisor_j", title="Tutor (2)"),
-            ],
-        )
-        .properties(width=600, height=600)
-    )
-
+    graph = build_advisors_graph(advisors, theses)
 
 with create:
     if st.session_state.get('write_access', False):

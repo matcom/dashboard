@@ -11,7 +11,7 @@ from modules.graph import build_advisors_graph
 
 st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide")
 
-listing, create = st.tabs(["📃 Listado", "➕ Crear nueva Tesis"])
+listing, create,details = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles"])
 
 theses: List[Thesis] = []
 
@@ -124,3 +124,32 @@ with create:
                 st.error(e)
 
             st.code(thesis.yaml(), "yaml")
+
+with details:
+    thesis = st.selectbox(
+        "Seleccione una tesis",
+        sorted(theses, key=lambda t: t.title),
+        format_func=lambda t: f"{t.title} - {t.authors[0]}",
+    )
+
+    st.write(f"#### 📝 Título: {thesis.title}")
+    st.write(f"#### 👤 Autores: {', '.join(thesis.authors)}")
+    st.write(f"#### 👨‍🏫 Tutores: {', '.join(thesis.advisors)}")
+    st.write(f"#### 🔑 Palabras clave: {', '.join(thesis.keywords)}")
+    st.write(f"#### 📄 Versión: {thesis.version}")
+    st.write(f"#### 📚 Balance: {thesis.balance}")
+    
+    
+    name_pdf = f"{thesis.uuid}_v{thesis.version}.pdf"
+    path: Path = Path(f"/src/data/Thesis/files/{name_pdf}")
+    
+    if path.exists():
+        with open(path, "rb") as file:
+            btn=st.download_button(
+                label="📥 Descargar Tesis",
+                data=file,
+                file_name=name_pdf,
+                
+            )
+    else:
+        st.write(f"####   No existe el pdf de la tesis")            

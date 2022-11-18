@@ -558,4 +558,11 @@ class Court(CustomModel):
     members: List[Person]
     date: Date = None
     time: Date = None
+    minutes_duration: int
     place: str
+    
+    def check(self):
+        if len(self.members) < 1:
+            raise ValueError("Se debe agregar los miembros del tribunal")
+        
+        return True

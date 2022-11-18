@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List
 from uuid import UUID, uuid4
+from datetime import date as Date
 
 import yaml
 import streamlit as st
@@ -551,3 +552,10 @@ class Award(CustomModel):
             awarded=awarded,
             date=date,
         )
+
+class Court(CustomModel):
+    thesis: Thesis = None
+    members: List[Person]
+    date: Date = None
+    time: Date = None
+    place: str

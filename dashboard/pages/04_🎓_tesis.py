@@ -162,7 +162,7 @@ with courts:
     ):
         st.write("## Edition")
     else:
-        court = Court(thesis=None, members=[], date=None, time=None, minutes_duration=60, place="")
+        court = Court(thesis=None, members=[], date=None, minutes_duration=60, place="")
         
     left, right = st.columns([2, 1])
 
@@ -188,9 +188,15 @@ with courts:
             key='courts_select_places',
         )
 
-        court.date = st.date_input('Seleccione una fecha', value=datetime.date.today())
-        
-        court.time = st.time_input('Seleccione una hora', value=datetime.time(7, 0))
+        date = st.date_input('Seleccione una fecha', value=datetime.date.today())
+        time = st.time_input('Seleccione una hora', value=datetime.time(7, 0))
+        court.date = datetime.datetime(
+            year=date.year,
+            month=date.month,
+            day=date.day,
+            hour=time.hour,
+            minute=time.minute
+        )
 
         court.minutes_duration = st.number_input(
             'Introduce los minutos de duración',

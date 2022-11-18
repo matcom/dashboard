@@ -1,17 +1,18 @@
 import collections
 import json
+import datetime
 from pathlib import Path
 from typing import List
 
 import pandas as pd
 import streamlit as st
-from models import Thesis
+from models import Thesis, Court, Person
 from modules.utils import generate_widget_key
 from modules.graph import build_advisors_graph
 
 st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide")
 
-listing, create,details = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles"])
+listing, create, details, courts = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles", "🤵 Tribunales"])
 
 theses: List[Thesis] = []
 
@@ -153,3 +154,45 @@ with details:
             )
     else:
         st.write(f"####   No existe el pdf de la tesis")            
+
+with courts:
+    if (
+        st.radio("", ["⭐ Nuevo Tribunal", "📝 Editar Tribunal"], horizontal=True, label_visibility="collapsed")
+        == "📝 Editar"
+    ):
+        st.write("## Edition")
+    else:
+        court = Court(thesis=None, members=[], date=None, time=None, place="")
+        
+    left, right = st.columns([2, 1])
+
+    with left:
+        
+        court.thesis = st.selectbox(
+            "Seleccione una tesis",
+            sorted(theses, key=lambda t: t.title),
+            format_func=lambda t: f"{t.title} - {t.authors[0]}",
+            key='courts_select_thesis',
+        )
+        
+        court.members = st.multiselect(
+            'Seleccione los miembros de la tesis', 
+            Person.all(),
+            [p for p in Person.all() if p.name in court.thesis.advisors] # selected advisors
+        )
+        
+        places = ['Aula 7', 'Aula 5', 'Biblioteca']
+        court.place = st.selectbox(
+            'Seleccione un local',
+            sorted(places),
+            key='courts_select_places',
+        )
+
+        court.date = st.date_input('Seleccione una fecha')
+        
+        court.time = st.time_input('Seleccione una hora')
+        
+    
+    with right:
+        if court.thesis != None:
+            st.code(court.yaml(), "yaml")

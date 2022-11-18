@@ -3,11 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List
 from uuid import UUID, uuid4
-from datetime import date as Date
+from datetime import timedelta, datetime as Datetime
 
 import yaml
 import streamlit as st
-from datetime import date
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field, HttpUrl, EmailStr
 from typing_extensions import Self
@@ -556,8 +555,7 @@ class Award(CustomModel):
 class Court(CustomModel):
     thesis: Thesis = None
     members: List[Person]
-    date: Date = None
-    time: Date = None
+    date: Datetime = None
     minutes_duration: int
     place: str
     
@@ -565,4 +563,23 @@ class Court(CustomModel):
         if len(self.members) < 1:
             raise ValueError("Se debe agregar los miembros del tribunal")
         
+        for court in Court.all():
+            if court.thesis == self.thesis:
+                raise ValueError("Ya existe un tribual para esta tesis")
+
+            end_time = court.date + timedelta(minutes=court.minutes_duration)
+            self_end_time = self.date + timedelta(minutes=self.minutes_duration)
+        
+            if court.date.date() == self.date.date():
+                if court.date.time() <= self.date.time() <= end_time.time() or self.date.time() <= court.date.time() <= self_end_time.time():
+                    
+                    # two theses in the same place and the same hour
+                    if self.place == court.place:
+                        raise ValueError(f"Ya existe una discusión de una tesis en __{court.place}__ a esa hora")
+
+                    # a peron in two places in the same moment
+                    for member in self.members:
+                        if member in court.members:
+                            raise ValueError(f"__{member.name}__ ya está en otro tribunal en ese momento")
+
         return True

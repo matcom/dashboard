@@ -188,9 +188,9 @@ with courts:
             key='courts_select_places',
         )
 
-        court.date = st.date_input('Seleccione una fecha')
+        court.date = st.date_input('Seleccione una fecha', value=datetime.date.today())
         
-        court.time = st.time_input('Seleccione una hora')
+        court.time = st.time_input('Seleccione una hora', value=datetime.time(7, 0))
 
         court.minutes_duration = st.number_input(
             'Introduce los minutos de duración',

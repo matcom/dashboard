@@ -162,7 +162,7 @@ with courts:
     ):
         st.write("## Edition")
     else:
-        court = Court(thesis=None, members=[], date=None, time=None, place="")
+        court = Court(thesis=None, members=[], date=None, time=None, minutes_duration=60, place="")
         
     left, right = st.columns([2, 1])
 
@@ -191,8 +191,21 @@ with courts:
         court.date = st.date_input('Seleccione una fecha')
         
         court.time = st.time_input('Seleccione una hora')
+
+        court.minutes_duration = st.number_input(
+            'Introduce los minutos de duración',
+            step=5,
+            min_value=20,
+            value = 60
+        )
         
-    
     with right:
-        if court.thesis != None:
-            st.code(court.yaml(), "yaml")
+        try:
+            court.check()
+            
+            if st.button("💾 Guardar Tribunal"):
+                court.save()
+                st.success(f"¡Tribunal de la tesis _{court.thesis.title}_ creada con éxito!")   
+        
+        except ValueError as e:
+            st.error(e)

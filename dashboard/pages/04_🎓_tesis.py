@@ -156,96 +156,98 @@ with thesis_details:
         st.write(f"####   No existe el pdf de la tesis")            
 
 with courts:
-    selected = st.radio(
-        "Tipo de entrada", 
-        ["⭐ Nuevo Tribunal"] + (["📝 Editar Tribunal"] if len(Court.all()) > 0 else []), 
-        horizontal=True, 
-        label_visibility="collapsed"
-    )
-    
-    if selected == "📝 Editar Tribunal":        
-        court = st.selectbox(
-            "Seleccione un tribunal a modificar",
-            sorted(Court.all(), key=lambda c: c.thesis.title),
-            format_func=lambda c: f"{c.thesis.title}",
-        )
-    else:
-        court = Court(thesis=None, members=[], date=None, minutes_duration=60, place=None)
-        
-    left, right = st.columns([2, 1])
-
-    with left:
-        theses = sorted(theses, key=lambda t: t.title)
-        court.thesis = st.selectbox(
-            "Seleccione una tesis",
-            theses,
-            format_func=lambda t: f"{t.title} - {t.authors[0]}",
-            index=theses.index(court.thesis if court.thesis else theses[0]),
-            key='courts_select_thesis',
+    if st.session_state.get('write_access', False):
+        selected = st.radio(
+            "Tipo de entrada", 
+            ["⭐ Nuevo Tribunal"] + (["📝 Editar Tribunal"] if len(Court.all()) > 0 else []), 
+            horizontal=True, 
+            label_visibility="collapsed"
         )
         
-        court.members = st.multiselect(
-            'Seleccione los miembros de la tesis', 
-            Person.all(),
-            [p for p in Person.all() if p.name in court.thesis.advisors] # selected advisors
-        )
-        
-        places = sorted(Place.all(), key=lambda p: p.description) + [ Place(description="➕ Nueva entrada") ]
-        court.place = st.selectbox(
-            'Seleccione un local',
-            places,
-            format_func=lambda p: p.description,
-            index=places.index(court.place if court.place else places[0]),
-            key='courts_select_places',
-        )
-        if court.place.description == "➕ Nueva entrada":
-            court.place.description = st.text_input(
-                "Descripción del lugar",
-                key="court_place_description",
+        if selected == "📝 Editar Tribunal":        
+            court = st.selectbox(
+                "Seleccione un tribunal a modificar",
+                sorted(Court.all(), key=lambda c: c.thesis.title),
+                format_func=lambda c: f"{c.thesis.title}",
             )
-        
-        date = st.date_input(
-            'Seleccione una fecha', 
-            value=court.date.date() if court.date else datetime.date.today(),
-        )
-        time = st.time_input(
-            'Seleccione una hora', 
-            value=court.date.time() if court.date else datetime.time(9, 0),
-        )
-        court.date = datetime.datetime(
-            year=date.year,
-            month=date.month,
-            day=date.day,
-            hour=time.hour,
-            minute=time.minute
-        )
-
-        court.minutes_duration = st.number_input(
-            'Introduce los minutos de duración',
-            step=5,
-            min_value=20,
-            value = court.minutes_duration
-        )
-        
-    with right:
-        try:
-            court.check()
+        else:
+            court = Court(thesis=None, members=[], date=None, minutes_duration=60, place=None)
             
-            if st.button("💾 Guardar Tribunal"):
-                court.save()
-                court.place.save()
-                if selected == "⭐ Nuevo Tribunal":
-                    st.success(f"¡Tribunal de la tesis _{court.thesis.title}_ creada con éxito!")   
-                elif selected == "📝 Editar Tribunal":
-                    st.success(f"¡Tribunal de la tesis _{court.thesis.title}_ editada con éxito!")   
+        left, right = st.columns([2, 1])
+
+        with left:
+            theses = sorted(theses, key=lambda t: t.title)
+            court.thesis = st.selectbox(
+                "Seleccione una tesis",
+                theses,
+                format_func=lambda t: f"{t.title} - {t.authors[0]}",
+                index=theses.index(court.thesis if court.thesis else theses[0]),
+                key='courts_select_thesis',
+            )
+            
+            court.members = st.multiselect(
+                'Seleccione los miembros de la tesis', 
+                Person.all(),
+                [p for p in Person.all() if p.name in court.thesis.advisors] # selected advisors
+            )
+            
+            places = sorted(Place.all(), key=lambda p: p.description) + [ Place(description="➕ Nueva entrada") ]
+            court.place = st.selectbox(
+                'Seleccione un local',
+                places,
+                format_func=lambda p: p.description,
+                index=places.index(court.place if court.place else places[0]),
+                key='courts_select_places',
+            )
+            if court.place.description == "➕ Nueva entrada":
+                court.place.description = st.text_input(
+                    "Descripción del lugar",
+                    key="court_place_description",
+                )
+            
+            date = st.date_input(
+                'Seleccione una fecha', 
+                value=court.date.date() if court.date else datetime.date.today(),
+            )
+            time = st.time_input(
+                'Seleccione una hora', 
+                value=court.date.time() if court.date else datetime.time(9, 0),
+            )
+            court.date = datetime.datetime(
+                year=date.year,
+                month=date.month,
+                day=date.day,
+                hour=time.hour,
+                minute=time.minute
+            )
+
+            court.minutes_duration = st.number_input(
+                'Introduce los minutos de duración',
+                step=5,
+                min_value=20,
+                value = court.minutes_duration
+            )
+            
+        with right:
+            try:
+                court.check()
                 
-        except ValueError as e:
-            st.error(e)
+                if st.button("💾 Guardar Tribunal"):
+                    court.save()
+                    court.place.save()
+                    if selected == "⭐ Nuevo Tribunal":
+                        st.success(f"¡Tribunal de la tesis _{court.thesis.title}_ creada con éxito!")   
+                    elif selected == "📝 Editar Tribunal":
+                        st.success(f"¡Tribunal de la tesis _{court.thesis.title}_ editada con éxito!")   
+                    
+            except ValueError as e:
+                st.error(e)
 
 
 with court_details:
     st.write("##### 🏷️ Filtros")
     
+    places = sorted(Place.all(), key=lambda p: p.description)
     member_selected = st.selectbox(
         "Filtrar por un miembro de tribunal",
         ["Todos"] + [ p.name for p in Person.all() ],
@@ -277,4 +279,4 @@ with court_details:
         df = pd.DataFrame(data)
         st.dataframe(df)
     else:
-        st.write("No hay datos para mostrar")
+        st.error("No hay datos para mostrar")

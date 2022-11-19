@@ -217,9 +217,27 @@ with courts:
             st.error(e)
             
 with court_details:
+    st.write("##### 🏷️ Filtros")
+    
+    member_selected = st.selectbox(
+        "Seleccione un miembro de tribunal",
+        ["Todos"] + [ p.name for p in Person.all() ],
+        key='court_details_select_member',
+    )
+    
     data = []
     for court in Court.all():
-        data.append(court.encode())
+        include = True
+        if member_selected != "Todos":
+            if member_selected not in [p.name for p in court.members]:
+                include = False
+
+        if include:
+            data.append(court.encode())
     
-    df = pd.DataFrame(data)
-    st.dataframe(df)
+    
+    if len(data) > 0:
+        df = pd.DataFrame(data)
+        st.dataframe(df)
+    else:
+        st.write("No hay datos para mostrar")

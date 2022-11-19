@@ -583,3 +583,13 @@ class Court(CustomModel):
                             raise ValueError(f"__{member.name}__ ya está en otro tribunal en ese momento")
 
         return True
+    
+    def encode(self) -> dict:
+        return {
+            "Tesis": f"{self.thesis.title} - {self.thesis.authors[0]}",
+            "Miembros del tribunal": [member.name for member in self.members],
+            "Fecha": self.date.strftime("%Y-%m-%d"),
+            "Hora Inicio": self.date.strftime("%H:%M"),
+            "Hora Termina": (self.date + timedelta(minutes=self.minutes_duration)).strftime("%H:%M"),
+            "Lugar": self.place,
+        }

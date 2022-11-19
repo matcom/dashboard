@@ -125,7 +125,9 @@ with create:
                 st.error(e)
 
             st.code(thesis.yaml(), "yaml")
-
+    else:
+        st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")
+        
 with thesis_details:
     thesis = st.selectbox(
         "Seleccione una tesis",
@@ -242,7 +244,9 @@ with courts:
                     
             except ValueError as e:
                 st.error(e)
-
+    else:
+        st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")
+        
 
 with court_details:
     st.write("##### 🏷️ Filtros")

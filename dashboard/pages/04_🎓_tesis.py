@@ -156,8 +156,12 @@ with thesis_details:
         st.write(f"####   No existe el pdf de la tesis")            
 
 with courts:
-    options = ["⭐ Nuevo Tribunal", "📝 Editar Tribunal"]
-    selected = st.radio("", options, horizontal=True, label_visibility="collapsed")
+    selected = st.radio(
+        "Tipo de entrada", 
+        ["⭐ Nuevo Tribunal"] + (["📝 Editar Tribunal"] if len(Court.all()) > 0 else []), 
+        horizontal=True, 
+        label_visibility="collapsed"
+    )
     
     if selected == "📝 Editar Tribunal":        
         court = st.selectbox(

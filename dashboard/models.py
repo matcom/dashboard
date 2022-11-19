@@ -552,17 +552,23 @@ class Award(CustomModel):
             date=date,
         )
 
+class Place(CustomModel):
+    description: str
+
 class Court(CustomModel):
     thesis: Thesis = None
     members: List[Person]
     date: Datetime = None
     minutes_duration: int
-    place: str
+    place: Place = None
     
     def check(self):
         if len(self.members) < 1:
             raise ValueError("Se debe agregar los miembros del tribunal")
-  
+
+        if len(self.place.description) < 1:
+            raise ValueError("Se debe agregar un lugar")
+            
         for court in Court.all():
             if court.uuid == self.uuid:
                 continue

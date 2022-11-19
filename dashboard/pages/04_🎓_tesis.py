@@ -220,11 +220,17 @@ with court_details:
     st.write("##### 🏷️ Filtros")
     
     member_selected = st.selectbox(
-        "Seleccione un miembro de tribunal",
+        "Filtrar por un miembro de tribunal",
         ["Todos"] + [ p.name for p in Person.all() ],
         key='court_details_select_member',
     )
-    
+
+    place_selected = st.selectbox(
+        "Filtrar por un lugar",
+        ["Todos"] + [ p for p in places ],
+        key='court_details_select_place',
+    )
+   
     data = []
     for court in Court.all():
         include = True
@@ -232,6 +238,10 @@ with court_details:
             if member_selected not in [p.name for p in court.members]:
                 include = False
 
+        if place_selected != "Todos":
+            if place_selected != court.place:
+                include = False
+    
         if include:
             data.append(court.encode())
     

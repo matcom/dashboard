@@ -12,7 +12,7 @@ from modules.graph import build_advisors_graph
 
 st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide")
 
-listing, create, details, courts = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles", "🤵 Tribunales"])
+listing, create, thesis_details, courts, court_details = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles - Tesis", "🤵 Tribunales", "📜 Detalles - Tribunales"])
 
 theses: List[Thesis] = []
 
@@ -126,7 +126,7 @@ with create:
 
             st.code(thesis.yaml(), "yaml")
 
-with details:
+with thesis_details:
     thesis = st.selectbox(
         "Seleccione una tesis",
         sorted(theses, key=lambda t: t.title),
@@ -215,3 +215,11 @@ with courts:
         
         except ValueError as e:
             st.error(e)
+            
+with court_details:
+    data = []
+    for court in Court.all():
+        data.append(court.encode())
+    
+    df = pd.DataFrame(data)
+    st.dataframe(df)

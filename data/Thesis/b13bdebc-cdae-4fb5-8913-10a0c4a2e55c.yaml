@@ -1,0 +1,15 @@
+advisors:
+- Ángela León Mecías
+authors:
+- Reinaldo Barrera Travieso
+- Ariel Plasencia Díaz
+balance: 2022
+keywords:
+- Difusión anisotrópica
+- coeficiente de difusión
+- umbral del gradiente
+- Perona & Malik
+title: Suavizado por Difusión Anisotrópica no lineal y detección de Bordes en Imágenes
+  Médicas.
+uuid: b13bdebc-cdae-4fb5-8913-10a0c4a2e55c
+version: 0

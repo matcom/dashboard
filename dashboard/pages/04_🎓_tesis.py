@@ -158,9 +158,13 @@ with thesis_details:
 with courts:
     if (
         st.radio("", ["⭐ Nuevo Tribunal", "📝 Editar Tribunal"], horizontal=True, label_visibility="collapsed")
-        == "📝 Editar"
+        == "📝 Editar Tribunal"
     ):
-        st.write("## Edition")
+        court = st.selectbox(
+            "Seleccione un tribunal a modificar",
+            sorted(Court.all(), key=lambda c: c.thesis.title),
+            format_func=lambda c: f"{c.thesis.title}",
+        )
     else:
         court = Court(thesis=None, members=[], date=None, minutes_duration=60, place="")
         
@@ -168,10 +172,12 @@ with courts:
 
     with left:
         
+        theses = sorted(theses, key=lambda t: t.title)
         court.thesis = st.selectbox(
             "Seleccione una tesis",
-            sorted(theses, key=lambda t: t.title),
+            theses,
             format_func=lambda t: f"{t.title} - {t.authors[0]}",
+            index=theses.index(court.thesis if court.thesis else theses[0]),
             key='courts_select_thesis',
         )
         
@@ -185,11 +191,18 @@ with courts:
         court.place = st.selectbox(
             'Seleccione un local',
             sorted(places),
+            index=places.index(court.place if court.place else places[0]),
             key='courts_select_places',
         )
 
-        date = st.date_input('Seleccione una fecha', value=datetime.date.today())
-        time = st.time_input('Seleccione una hora', value=datetime.time(7, 0))
+        date = st.date_input(
+            'Seleccione una fecha', 
+            value=court.date.date() if court.date else datetime.date.today(),
+        )
+        time = st.time_input(
+            'Seleccione una hora', 
+            value=court.date.time() if court.date else datetime.time(9, 0),
+        )
         court.date = datetime.datetime(
             year=date.year,
             month=date.month,
@@ -202,7 +215,7 @@ with courts:
             'Introduce los minutos de duración',
             step=5,
             min_value=20,
-            value = 60
+            value = court.minutes_duration
         )
         
     with right:

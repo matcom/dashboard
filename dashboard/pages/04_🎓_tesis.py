@@ -6,7 +6,7 @@ from typing import List
 
 import pandas as pd
 import streamlit as st
-from models import Thesis, Court, Person
+from models import Thesis, Court, Person, Place
 from modules.utils import generate_widget_key
 from modules.graph import build_advisors_graph
 
@@ -156,20 +156,21 @@ with thesis_details:
         st.write(f"####   No existe el pdf de la tesis")            
 
 with courts:
-    selected = st.radio("", ["⭐ Nuevo Tribunal", "📝 Editar Tribunal"], horizontal=True, label_visibility="collapsed")
-    if selected == "📝 Editar Tribunal":
+    options = ["⭐ Nuevo Tribunal", "📝 Editar Tribunal"]
+    selected = st.radio("", options, horizontal=True, label_visibility="collapsed")
+    
+    if selected == "📝 Editar Tribunal":        
         court = st.selectbox(
             "Seleccione un tribunal a modificar",
             sorted(Court.all(), key=lambda c: c.thesis.title),
             format_func=lambda c: f"{c.thesis.title}",
         )
     else:
-        court = Court(thesis=None, members=[], date=None, minutes_duration=60, place="")
+        court = Court(thesis=None, members=[], date=None, minutes_duration=60, place=None)
         
     left, right = st.columns([2, 1])
 
     with left:
-        
         theses = sorted(theses, key=lambda t: t.title)
         court.thesis = st.selectbox(
             "Seleccione una tesis",
@@ -185,14 +186,20 @@ with courts:
             [p for p in Person.all() if p.name in court.thesis.advisors] # selected advisors
         )
         
-        places = ['Aula 7', 'Aula 5', 'Biblioteca']
+        places = sorted(Place.all(), key=lambda p: p.description) + [ Place(description="➕ Nueva entrada") ]
         court.place = st.selectbox(
             'Seleccione un local',
-            sorted(places),
-            index=sorted(places).index(court.place if court.place else places[0]),
+            places,
+            format_func=lambda p: p.description,
+            index=places.index(court.place if court.place else places[0]),
             key='courts_select_places',
         )
-
+        if court.place.description == "➕ Nueva entrada":
+            court.place.description = st.text_input(
+                "Descripción del lugar",
+                key="court_place_description",
+            )
+        
         date = st.date_input(
             'Seleccione una fecha', 
             value=court.date.date() if court.date else datetime.date.today(),
@@ -222,6 +229,7 @@ with courts:
             
             if st.button("💾 Guardar Tribunal"):
                 court.save()
+                court.place.save()
                 if selected == "⭐ Nuevo Tribunal":
                     st.success(f"¡Tribunal de la tesis _{court.thesis.title}_ creada con éxito!")   
                 elif selected == "📝 Editar Tribunal":

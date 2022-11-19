@@ -156,10 +156,8 @@ with thesis_details:
         st.write(f"####   No existe el pdf de la tesis")            
 
 with courts:
-    if (
-        st.radio("", ["⭐ Nuevo Tribunal", "📝 Editar Tribunal"], horizontal=True, label_visibility="collapsed")
-        == "📝 Editar Tribunal"
-    ):
+    selected = st.radio("", ["⭐ Nuevo Tribunal", "📝 Editar Tribunal"], horizontal=True, label_visibility="collapsed")
+    if selected == "📝 Editar Tribunal":
         court = st.selectbox(
             "Seleccione un tribunal a modificar",
             sorted(Court.all(), key=lambda c: c.thesis.title),
@@ -191,7 +189,7 @@ with courts:
         court.place = st.selectbox(
             'Seleccione un local',
             sorted(places),
-            index=places.index(court.place if court.place else places[0]),
+            index=sorted(places).index(court.place if court.place else places[0]),
             key='courts_select_places',
         )
 
@@ -224,11 +222,15 @@ with courts:
             
             if st.button("💾 Guardar Tribunal"):
                 court.save()
-                st.success(f"¡Tribunal de la tesis _{court.thesis.title}_ creada con éxito!")   
-        
+                if selected == "⭐ Nuevo Tribunal":
+                    st.success(f"¡Tribunal de la tesis _{court.thesis.title}_ creada con éxito!")   
+                elif selected == "📝 Editar Tribunal":
+                    st.success(f"¡Tribunal de la tesis _{court.thesis.title}_ editada con éxito!")   
+                
         except ValueError as e:
             st.error(e)
-            
+
+
 with court_details:
     st.write("##### 🏷️ Filtros")
     
@@ -256,7 +258,7 @@ with court_details:
                 include = False
     
         if include:
-            data.append(court.encode())
+            data.append(court.print())
     
     
     if len(data) > 0:

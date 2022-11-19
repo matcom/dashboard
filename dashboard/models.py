@@ -562,7 +562,7 @@ class Court(CustomModel):
     def check(self):
         if len(self.members) < 1:
             raise ValueError("Se debe agregar los miembros del tribunal")
-        
+  
         for court in Court.all():
             if court.thesis == self.thesis:
                 raise ValueError("Ya existe un tribual para esta tesis")
@@ -584,7 +584,7 @@ class Court(CustomModel):
 
         return True
     
-    def encode(self) -> dict:
+    def print(self) -> dict:
         return {
             "Tesis": f"{self.thesis.title} - {self.thesis.authors[0]}",
             "Miembros del tribunal": [member.name for member in self.members],

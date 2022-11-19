@@ -564,6 +564,9 @@ class Court(CustomModel):
             raise ValueError("Se debe agregar los miembros del tribunal")
   
         for court in Court.all():
+            if court.uuid == self.uuid:
+                continue
+            
             if court.thesis == self.thesis:
                 raise ValueError("Ya existe un tribual para esta tesis")
 
@@ -583,7 +586,7 @@ class Court(CustomModel):
                             raise ValueError(f"__{member.name}__ ya está en otro tribunal en ese momento")
 
         return True
-    
+
     def print(self) -> dict:
         return {
             "Tesis": f"{self.thesis.title} - {self.thesis.authors[0]}",

@@ -4,7 +4,7 @@ import pandas as pd
 import altair
 
 from models import JournalPaper, Person, Journal, ConferencePresentation, Book, BookChapter
-
+from modules.graph import build_publications_graph
 
 st.set_page_config(
     page_title="MatCom Dashboard - Publicaciones", page_icon="📚", layout="wide"

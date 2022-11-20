@@ -1,0 +1,14 @@
+advisors:
+- Fernando Rodríguez Flores
+- Ernesto Alejandro Borrego Rodríguez
+authors:
+- Enrique Martínez González
+balance: 2022
+keywords:
+- Sistema de ecuaciones diferenciales lineales con respecto a los parámetros
+- Regresión simbólica
+- Algoritmo genético
+title: Una propuesta para encontrar el sistema de ecuaciones diferenciales lineales
+  con respecto a los parámetros que mejor ajuste un conjunto de datos
+uuid: e0e663e8-1d92-4b3c-ac88-34eaca977061
+version: 1

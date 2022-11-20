@@ -178,15 +178,17 @@ with courts:
         left, right = st.columns([2, 1])
 
         with left:
-            theses = sorted(theses, key=lambda t: t.title)
-            court.thesis = st.selectbox(
-                "Seleccione una tesis",
-                theses,
-                format_func=lambda t: f"{t.title} - {t.authors[0]}",
-                index=theses.index(court.thesis if court.thesis else theses[0]),
-                key='courts_select_thesis',
-            )
             
+            if selected == "⭐ Nuevo Tribunal":
+                theses = sorted(theses, key=lambda t: t.title)
+                court.thesis = st.selectbox(
+                    "Seleccione una tesis",
+                    theses,
+                    format_func=lambda t: f"{t.title} - {t.authors[0]}",
+                    index=theses.index(court.thesis if court.thesis else theses[0]),
+                    key='courts_select_thesis',
+                )
+                
             court.members = st.multiselect(
                 'Seleccione los miembros de la tesis', 
                 Person.all(),

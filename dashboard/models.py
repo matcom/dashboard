@@ -584,7 +584,7 @@ class Court(CustomModel):
                     
                     # two theses in the same place and the same hour
                     if self.place == court.place:
-                        raise ValueError(f"Ya existe una discusión de una tesis en __{court.place}__ a esa hora")
+                        raise ValueError(f"Ya existe una discusión de una tesis en __{court.place.description}__ a esa hora")
 
                     # a peron in two places in the same moment
                     for member in self.members:
@@ -596,9 +596,9 @@ class Court(CustomModel):
     def print(self) -> dict:
         return {
             "Tesis": f"{self.thesis.title} - {self.thesis.authors[0]}",
-            "Miembros del tribunal": [member.name for member in self.members],
+            "Miembros del tribunal": ", ".join([member.name for member in self.members]),
             "Fecha": self.date.strftime("%Y-%m-%d"),
             "Hora Inicio": self.date.strftime("%H:%M"),
             "Hora Termina": (self.date + timedelta(minutes=self.minutes_duration)).strftime("%H:%M"),
-            "Lugar": self.place,
+            "Lugar": self.place.description,
         }

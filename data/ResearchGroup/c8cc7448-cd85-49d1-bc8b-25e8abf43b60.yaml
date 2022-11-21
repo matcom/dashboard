@@ -1,4 +1,6 @@
-collaborators: []
+collaborators:
+- 289b9629-808b-4983-8793-e88a6effaca5
+- 68d03c09-408e-477e-a203-a71055bf151d
 head: 17fd36bc-98da-46cc-83d4-801a553f5529
 keywords:
 - NLP
@@ -17,5 +19,6 @@ members:
 - cdb343ca-23d5-4ebf-b16e-517e7af33da0
 - 57077d77-b2f1-4e65-9005-c2c9f63cc574
 - 1d703d3f-0f44-4f67-90d3-3c85794b4275
+- e4678113-3317-4c54-a9fe-726faff1c578
 name: Inteligencia Artificial y Ciencia de Datos
 uuid: c8cc7448-cd85-49d1-bc8b-25e8abf43b60

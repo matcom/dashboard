@@ -1,0 +1,15 @@
+advisors:
+- Fernando Rodríguez Flores
+authors:
+- David Guaty Domínguez
+balance: 2022
+keywords:
+- regresión simbólica
+- ecuación diferencial ordinaria
+- redes neuronales
+- interpolación
+- espacio de búsqueda.
+title: Acotación del espacio de búsqueda de la regresión simbólica para ecuaciones
+  diferenciales ordinarias lineales en los parámetros mediante redes neuronales
+uuid: fba7108c-c657-4f9b-b176-7cb5fb82c2ef
+version: 1

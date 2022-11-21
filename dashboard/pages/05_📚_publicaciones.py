@@ -42,7 +42,27 @@ with papers_tab:
                 )
             else:
                 paper = JournalPaper(title="", authors=[], journal=journals[0])
-
+            author_name, author_institution = st.columns(2)
+            with author_name:
+                name = st.text_input("Nombre del autor", "", key="author_name")
+            with author_institution:
+                institution = st.text_input("Institución del autor",value="", key="institution")
+            if st.button("Añadir"):
+                #add to people if it does not exist
+                #exist the option that there are two people with the same name but different institutions
+                #in this case I consider it appropriate that the people with the institution they belong to are shown
+                #so that there is no confusion
+                #this is a change that could be done in the future
+                person = next((p for p in people if p.name == name), None)
+                if person is None:
+                    person = Person(name=name, institution=institution)
+                    person.save()
+                    people.append(person)
+                    people.sort(key=lambda p: p.name)
+                
+                else:
+                    st.warning("Ya existe una persona con ese nombre")    
+               
             paper.title = st.text_input("Título", key="paper_title", value=paper.title)
             paper.authors = st.multiselect(
                 "Autores", key="paper_authors", options=people, default=paper.authors

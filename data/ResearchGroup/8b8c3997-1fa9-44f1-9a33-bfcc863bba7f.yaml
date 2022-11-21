@@ -1,0 +1,18 @@
+collaborators:
+- 45d4d025-d2c3-43be-9494-7c1a9c0f4fc3
+- 0c5b944f-3f1a-410a-9ff4-ccfb116bb97a
+- 9832114d-c0fb-4e01-99a7-0e807e313356
+head: dc44cde8-58f2-42dd-b742-b0130b7bd03a
+keywords:
+- Procesamiento de imágenes
+- Aplicaciones con funciones wavelets
+- Solución numérica de Ecuaciones Diferenciales de orden entero y fraccionario
+- Métodos numéricos basados en factorización de matrices para el análisis y procesamiento
+  de datos multiescala.
+members:
+- dc44cde8-58f2-42dd-b742-b0130b7bd03a
+- d8318c70-c954-47ab-909a-543ff2d87591
+- 214f09c9-a770-4fd7-905f-c34a179fe18d
+- 3fef8162-f404-4923-b7d3-52631e6ae2d5
+name: Análisis Numérico y de Imágenes
+uuid: 8b8c3997-1fa9-44f1-9a33-bfcc863bba7f

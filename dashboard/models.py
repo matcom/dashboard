@@ -580,7 +580,7 @@ class Court(CustomModel):
             self_end_time = self.date + timedelta(minutes=self.minutes_duration)
         
             if court.date.date() == self.date.date():
-                if court.date.time() <= self.date.time() <= end_time.time() or self.date.time() <= court.date.time() <= self_end_time.time():
+                if court.date.time() <= self.date.time() < end_time.time() or self.date.time() <= court.date.time() < self_end_time.time():
                     
                     # two theses in the same place and the same hour
                     if self.place == court.place:

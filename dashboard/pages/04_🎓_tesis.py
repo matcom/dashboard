@@ -234,7 +234,7 @@ with courts:
             
         with right:
             try:
-                court.check()
+                st.warning(court.check())
                 
                 if st.button("💾 Guardar Tribunal"):
                     court.save()

@@ -5,10 +5,12 @@ advisors:
 authors:
 - Abel Antonio Cruz Suárez
 - ''
+balance: 2022
 keywords:
 - metapoblaciones
 - movimiento langrangiano
 - movimiento euleriano
 - modelos compartimentales
-title: Propagación de epidemias mediante modelos basados en metapoblaciones
+title: Difusión de epidemias sobre redes empleando movimiento langrangiano
 uuid: 6f73b0b9-498e-4e98-afd8-8a11fd1bad7a
+version: 1

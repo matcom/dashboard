@@ -1,0 +1,12 @@
+advisors:
+- José Rodríguez Tito
+authors:
+- Grettel Hernández Garbey
+balance: 2022
+keywords:
+- Secreto Compartido
+- Esquema de Umbral de Shamir
+- Interpolación Polinómica de Lagrange
+title: Secreto Compartido en un campo de Galois GFp
+uuid: 1f02d5e9-0416-4743-b5ee-efe32ca4a146
+version: 0

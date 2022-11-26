@@ -1,0 +1,14 @@
+advisors:
+- Roberto Marti Cedeño
+authors:
+- José Alejandro Solís Fernández
+balance: 2022
+keywords:
+- inventario
+- control de acceso
+- api rest
+- DBMS
+- ''
+title: Sistema de Control de Personal e Inventarios
+uuid: ab5277b7-2b2e-48df-9645-ff7378deb8c1
+version: 1

@@ -1,0 +1,13 @@
+advisors:
+- Roberto Marti Cedeño
+authors:
+- Nadia González Fernández
+balance: 2022
+keywords:
+- autenticación
+- keycloak
+- single sign-on
+- usuarios
+title: Sistema central de autenticación
+uuid: 9cbfe2bc-995e-47b3-9049-b6142641df68
+version: 0

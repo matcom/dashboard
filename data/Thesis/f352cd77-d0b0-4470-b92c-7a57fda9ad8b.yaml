@@ -4,9 +4,13 @@ advisors:
 authors:
 - Javier E. Domínguez Hernández
 - David Orlando De Quesada Oliva
+balance: 2022
 keywords:
 - Machine Learning
 - Matemática Aplicada
-- Procesamiento de señales digitales.
-title: Modelo de Machine Learning para detectar y clasificar anomalías en la carretera
+- Procesamiento de señales digitales
+- Sensores móviles
+- ''
+title: Sistema para la detección automática de baches en la carretera
 uuid: f352cd77-d0b0-4470-b92c-7a57fda9ad8b
+version: 0

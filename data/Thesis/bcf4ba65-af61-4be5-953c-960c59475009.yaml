@@ -1,0 +1,16 @@
+advisors:
+- Lic. Alexi Massó Muñoz
+- Lic. Roberto Martí Cedeño
+authors:
+- Enmanuel Verdesia Suárez
+balance: 2022
+keywords:
+- DNS
+- BIND9
+- Golang
+- Vuejs
+- Docker
+- API
+title: Gestión de Dominio
+uuid: bcf4ba65-af61-4be5-953c-960c59475009
+version: 1

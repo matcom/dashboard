@@ -1,9 +1,10 @@
 advisors:
 - Camilo Denis González
+- Daniel Mena Frias
 - Miguel Katrib Mora
-- Alexi Massó Muñoz
 authors:
 - José Alejandro Labourdette Lartigue Soto
+balance: 2022
 keywords:
 - dapp
 - Hyperledger Fabric

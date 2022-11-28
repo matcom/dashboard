@@ -3,11 +3,12 @@ advisors:
 authors:
 - Ariel Alfonso Triana Pérez
 - Javier Alejandro Valdés González
+balance: 2022
 keywords:
 - Reconstrucción 3D
 - Segmentación
 - Ulcera de Pie Diabético
-title: Reconstrucción 3D de úlcera de pie diabético con cámaras de profundidad Intel
-  RealSense D435i
+title: Reconstrucción 3D de la úlcera del pie diabético con cámaras de profundidad
+  Intel RealSense D435i
 uuid: 6a66f877-b3b2-408c-bb1b-09d36d2ff15a
-version: 0
+version: 1

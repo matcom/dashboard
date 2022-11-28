@@ -1,0 +1,16 @@
+advisors:
+- José Luis Castañeda Lorenzo
+- José Alejandro Mesejo Chiong
+authors:
+- Victor Manuel Lantigua Cano
+- Victor Manuel Lantigua Cano
+balance: 2022
+keywords:
+- API
+- veterinaria
+- Clean Architecture
+- C#
+title: 'HCVet: Servidor y API de soporte de aplicación móvil para historia clínica
+  veterinaria'
+uuid: 7bf261c0-ddf8-4abf-b86e-e36e2b76f2fc
+version: 0

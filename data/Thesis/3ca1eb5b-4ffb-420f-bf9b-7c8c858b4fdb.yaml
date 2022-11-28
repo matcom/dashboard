@@ -1,7 +1,7 @@
 advisors:
 - Damian Valdés Santiago
 authors:
-- Adrián Rodríguez Portales
+- Adrian Rodriguez Portales
 balance: 2022
 keywords:
 - diseño de filtros wavelet
@@ -10,4 +10,4 @@ keywords:
 title: Construcción de una base wavelet biortogonal y discreta que permita la detección
   de patrones en imágenes de mamografía digital
 uuid: 3ca1eb5b-4ffb-420f-bf9b-7c8c858b4fdb
-version: 1
+version: 2

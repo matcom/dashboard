@@ -4,9 +4,9 @@ authors:
 - Carlos Toledo
 balance: 2022
 keywords:
-- modelos no lineales del procesamiento de imágenes
+- modelos no lineales para el procesamiento de imágenes
 - procesamiento de imágenes
-- optimización
+- parametrización
 title: Paquete de Python para el Procesamiento de Imágenes Usando Varios Modelos no
   Lineales
 uuid: 6d6968cd-4e02-4b73-9722-17e06b62979e

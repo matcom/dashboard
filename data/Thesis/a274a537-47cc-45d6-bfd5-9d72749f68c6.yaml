@@ -3,6 +3,7 @@ advisors:
 - José Luis Castañeda Lorenzo
 authors:
 - Darian Dominguez Alayón
+balance: 2022
 keywords:
 - GPS
 - GNSS
@@ -12,5 +13,6 @@ keywords:
 - ubicación
 - dispositivo móvil
 - torres celulares satélites, GNSS Logger, Android Native
-title: Aplicación móvil para mejorar el posicionamiento con GPS en Android
+title: Mejora del posicionamiento con GPS en Android
 uuid: a274a537-47cc-45d6-bfd5-9d72749f68c6
+version: 1

@@ -1,14 +1,17 @@
 advisors:
-- Damian Valdés Santiago
-- Aurora Camacho
+- MSc. Damian Valdés Santiago
+- Dra.C. Aurora Camacho
 authors:
 - Camilo Rodríguez Velázquez
 balance: 2022
 keywords:
-- desarrollo web
-- lexicografía digital
-- humanidades digitales
+- tesoro
+- lexicográfico
+- software
+- diccionario
+- lema
+- corpus
 title: Sistema web para la digitalización y procesamiento del Tesoro Lexicográfico
   de Cuba
-uuid: 0573496e-507c-459f-bfa0-9c2c877e4c41
+uuid: ddecad41-3a0b-463e-bc27-9b3f7d5a3b52
 version: 1

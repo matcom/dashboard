@@ -2,6 +2,7 @@ advisors:
 - Pedro Quintero Rojas
 authors:
 - José Carlos Hernández Piñera
+balance: 2022
 keywords:
 - horario
 - restricciones
@@ -9,3 +10,4 @@ keywords:
 - DDD
 title: Sistema de gestión de horarios.
 uuid: 75813d3c-d7da-4766-ac1f-da7795bedfaa
+version: 1

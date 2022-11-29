@@ -3,9 +3,11 @@ advisors:
 - Ernesto Luis Estevanell Valladares
 authors:
 - Samuel David Suárez Rodríguez
+balance: 2022
 keywords:
 - AutoGOAL
 - unsupervised-learning
 - autoencoder
-title: AutoGOAL unsupervised
+title: AutoML no supervisado
 uuid: 8ba93f8f-bcd2-4473-acff-e6462baf0bcf
+version: 1

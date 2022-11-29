@@ -1,11 +1,13 @@
 advisors:
-- "Dayany Alfaro González"
+- Dayany Alfaro González
 - Alejandro Piad Morffis
 authors:
 - Miguel Alejandro Rodriguez Hernandez
+balance: 2022
 keywords:
 - activelearning
 - brat
 - ml
 title: Sistema de Active-Learning basado en BRAT
 uuid: 59407126-bdcc-4f53-a658-e2dce95e81ed
+version: 1

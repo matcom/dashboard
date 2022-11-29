@@ -1,0 +1,16 @@
+advisors:
+- Camilo Denis González
+- Daniel Frias Mena
+- Miguel Katrib Mora
+authors:
+- José Alejandro Labourdette Lartigue Soto
+balance: 2022
+keywords:
+- Blockchain
+- Certificados Académicos
+- Sistema Distribuido
+- Hyperledger Fabric
+- Gestor Universitario
+title: Lógica para un gestor de Certificados Académicos
+uuid: c07c4581-005a-4df3-b63c-94a8d72ac3d3
+version: 1

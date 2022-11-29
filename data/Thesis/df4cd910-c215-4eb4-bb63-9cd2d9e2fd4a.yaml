@@ -2,6 +2,7 @@ advisors:
 - Yaidir Mustelier Ruiz
 authors:
 - Andy Ledesma García
+balance: 2022
 keywords:
 - sistema electoral
 - votación representativa
@@ -9,3 +10,4 @@ keywords:
 - blockchain
 title: Sistema de votación representativa sobre Quórum
 uuid: df4cd910-c215-4eb4-bb63-9cd2d9e2fd4a
+version: 1

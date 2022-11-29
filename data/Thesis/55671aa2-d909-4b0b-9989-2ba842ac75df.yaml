@@ -2,6 +2,7 @@ advisors:
 - Yaidir Mustelier Ruiz
 authors:
 - Alben Luis Urquiza Rojas
+balance: 2022
 keywords:
 - blockchain
 - blind auction
@@ -9,3 +10,4 @@ keywords:
 - solidity
 title: Sistema de subasta a ciegas sobre Quorum
 uuid: 55671aa2-d909-4b0b-9989-2ba842ac75df
+version: 1

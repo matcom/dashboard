@@ -3,9 +3,11 @@ advisors:
 - Alejandro Piad Morffis
 authors:
 - Karel Díaz Vergara
+balance: 2022
 keywords:
 - autogoal
 - model
 - based
 title: AutoGOAL model-based
 uuid: 01f3981f-795b-4945-8037-47d4aa65859b
+version: 1

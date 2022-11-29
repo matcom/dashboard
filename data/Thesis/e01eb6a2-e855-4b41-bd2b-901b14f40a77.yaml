@@ -2,6 +2,7 @@ advisors:
 - Alejandro Piad Morffis
 authors:
 - Tony Raúl Blanco Fernández
+balance: 2022
 keywords:
 - benchmark
 - aprendizaje por reforzamiento
@@ -12,3 +13,4 @@ keywords:
 title: Evaluación de modelos de aprendizaje reforzado en tareas cognitivas de propósito
   general
 uuid: e01eb6a2-e855-4b41-bd2b-901b14f40a77
+version: 1

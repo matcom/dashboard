@@ -7,10 +7,10 @@ balance: 2022
 keywords:
 - DNS
 - BIND9
+- servidor de nombres
 - Golang
 - Vuejs
-- Docker
-- API
+- API REST
 title: Gestión de Dominio
 uuid: bcf4ba65-af61-4be5-953c-960c59475009
-version: 1
+version: 2

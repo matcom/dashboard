@@ -3,6 +3,7 @@ advisors:
 - Miguel Katrib Mora
 authors:
 - Luis Alejandro Lara Rojas
+balance: 2022
 keywords:
 - Hyperledger Fabric
 - fabric-contract-api
@@ -11,4 +12,4 @@ keywords:
 title: Módulo fabric-contract-api para implementar contratos inteligentes empleando
   Python
 uuid: debbfa59-330e-460a-978e-52cb0d2b0116
-version: 0
+version: 1

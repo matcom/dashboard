@@ -1,0 +1,15 @@
+advisors:
+- DrC. Alejandro Piad Morffis
+- Lic. Frank Sadan Naranjo Noda
+authors:
+- Javier Alejandro Lopetegui González
+balance: 2022
+keywords:
+- estilo
+- embeddings
+- transferencia de estilo en texto
+- generación de texto
+- autoencoder
+title: Destilación no supervisada de estilo en texto
+uuid: 141b5567-b187-4670-949e-4c253793a2d8
+version: 1

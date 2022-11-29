@@ -1,0 +1,17 @@
+advisors:
+- Alejandro Mesejo
+- José L. Castañeda
+authors:
+- David Campanería Cisneros
+- Dayron Fernández Acosta
+- Pablo Adrián Fuentes González
+balance: 2022
+keywords:
+- historias clínicas digitales
+- Dart
+- Kotlin
+- API
+- veterinaria
+title: 'HCVet: Aplicación móvil para historia clínica veterinaria'
+uuid: f651f01b-1db7-455c-b98b-3bf7b04b0ab2
+version: 1

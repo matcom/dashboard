@@ -4,6 +4,7 @@ advisors:
 - Miguel Katrib Mora
 authors:
 - Ariel Antonio Huerta Martín
+balance: 2022
 keywords:
 - Hyperledger Fabric
 - chaincode
@@ -12,4 +13,4 @@ keywords:
 - certificado académicos, token
 title: Interfaz de Usuario de Gestor de Certiﬁcados Académicos
 uuid: bdef73b8-79a5-4c24-bf99-6a681fe23fe3
-version: 0
+version: 1

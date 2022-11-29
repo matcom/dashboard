@@ -1,0 +1,14 @@
+advisors:
+- MSc. Damian Valdés Santiago
+authors:
+- Miguel Alejandro Asin Barthelemy
+balance: 2022
+keywords:
+- wavelets
+- detectar
+- patrones
+- imágenes
+title: Construcción de bases wavelets discretas según la Transformada de Daubechies
+  para detectar patrones en imágenes digitales
+uuid: 106fc17e-8ad3-4a15-bda7-df66d9f0b1ad
+version: 1

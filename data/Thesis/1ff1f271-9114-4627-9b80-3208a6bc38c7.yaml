@@ -1,0 +1,15 @@
+advisors:
+- Lic. Ernesto Alejandro Borrego Rodríguez
+authors:
+- Thalia Blanco Figueras
+balance: 2022
+keywords:
+- heurísticas
+- metaheurísticas
+- algoritmo genético
+- corte de guillotina
+- Método Simplex
+title: Alternativa de solución al problema de cortes y empaquetado 2D utilizando Algoritmo
+  Genético
+uuid: 1ff1f271-9114-4627-9b80-3208a6bc38c7
+version: 1

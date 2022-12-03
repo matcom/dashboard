@@ -1,0 +1,15 @@
+advisors:
+- Lic. Jorge Díaz Suárez
+authors:
+- Eduardo Moreira González
+balance: 2022
+keywords:
+- simulación
+- modelación
+- cultivo
+- WOFOST
+- PCSE
+title: Modelación y simulación de cultivos con el modelo WOFOST. Desarrollo de una
+  interfaz de usuario.
+uuid: cd509a7e-01d9-4cea-bec6-04f4511b09be
+version: 1

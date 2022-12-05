@@ -3,9 +3,11 @@ advisors:
 - Alejandro Piad Morffis
 authors:
 - Osmany Pérez Rodríguez
+balance: 2022
 keywords:
 - automL
 - computabilidad
 - lenguajes
 title: Tipos Semánticos de AutoGOAL
 uuid: 631c3f02-9742-4b78-bfcf-98333e747460
+version: 1

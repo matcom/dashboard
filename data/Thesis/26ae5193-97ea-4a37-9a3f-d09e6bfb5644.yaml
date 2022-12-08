@@ -6,10 +6,10 @@ authors:
 - Amalia Nilda Ibarra Rodríguez
 balance: 2022
 keywords:
-- Csharp
+- C#
 - Hyperledger Fabric
 - chaincode
 title: Módulo fabric-chaincode-api para implementar contratos inteligentes empleando
   C#
 uuid: 26ae5193-97ea-4a37-9a3f-d09e6bfb5644
-version: 1
+version: 2

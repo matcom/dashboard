@@ -1,9 +1,10 @@
-academic_grade: Auxiliar
+academic_grade: Ninguno
 department: Matemática
-emails: []
+emails:
+- ''
 faculty: MatCom
 institution: Universidad de La Habana
-name: Wilfredo Morales Lezca
-orcid: null
-scientific_grade: Licenciado
+name: ''
+orcid: ''
+scientific_grade: Ingeniero
 uuid: 360e3848-b495-407b-8ea4-09327d344fc4

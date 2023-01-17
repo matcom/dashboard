@@ -1,17 +1,18 @@
 import collections
 import json
+import datetime
 from pathlib import Path
 from typing import List
 
 import pandas as pd
 import streamlit as st
-from models import Thesis
+from models import Thesis, Court, Person, Place
 from modules.utils import generate_widget_key
 from modules.graph import build_advisors_graph
 
 st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide")
 
-listing, create,details = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles"])
+listing, create, thesis_details, courts, court_details = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles - Tesis", "🤵 Tribunales", "📜 Detalles - Tribunales"])
 
 theses: List[Thesis] = []
 
@@ -124,8 +125,10 @@ with create:
                 st.error(e)
 
             st.code(thesis.yaml(), "yaml")
-
-with details:
+    else:
+        st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")
+        
+with thesis_details:
     thesis = st.selectbox(
         "Seleccione una tesis",
         sorted(theses, key=lambda t: t.title),
@@ -153,3 +156,133 @@ with details:
             )
     else:
         st.write(f"####   No existe el pdf de la tesis")            
+
+with courts:
+    if st.session_state.get('write_access', False):
+        selected = st.radio(
+            "Tipo de entrada", 
+            ["⭐ Nuevo Tribunal"] + (["📝 Editar Tribunal"] if len(Court.all()) > 0 else []), 
+            horizontal=True, 
+            label_visibility="collapsed"
+        )
+        
+        if selected == "📝 Editar Tribunal":        
+            court = st.selectbox(
+                "Seleccione un tribunal a modificar",
+                sorted(Court.all(), key=lambda c: c.thesis.title),
+                format_func=lambda c: f"{c.thesis.title}",
+            )
+        else:
+            court = Court(thesis=None, members=[], date=None, minutes_duration=60, place=None)
+            
+        left, right = st.columns([2, 1])
+
+        with left:
+            
+            if selected == "⭐ Nuevo Tribunal":
+                theses = sorted(theses, key=lambda t: t.title)
+                court.thesis = st.selectbox(
+                    "Seleccione una tesis",
+                    theses,
+                    format_func=lambda t: f"{t.title} - {t.authors[0]}",
+                    index=theses.index(court.thesis if court.thesis else theses[0]),
+                    key='courts_select_thesis',
+                )
+                
+            court.members = st.multiselect(
+                'Seleccione los miembros de la tesis', 
+                Person.all(),
+                [p for p in Person.all() if p.name in court.thesis.advisors] # selected advisors
+            )
+            
+            places = sorted(Place.all(), key=lambda p: p.description) + [ Place(description="➕ Nueva entrada") ]
+            court.place = st.selectbox(
+                'Seleccione un local',
+                places,
+                format_func=lambda p: p.description,
+                index=places.index(court.place if court.place else places[0]),
+                key='courts_select_places',
+            )
+            if court.place.description == "➕ Nueva entrada":
+                court.place.description = st.text_input(
+                    "Descripción del lugar",
+                    key="court_place_description",
+                )
+            
+            date = st.date_input(
+                'Seleccione una fecha', 
+                value=court.date.date() if court.date else datetime.date.today(),
+            )
+            time = st.time_input(
+                'Seleccione una hora', 
+                value=court.date.time() if court.date else datetime.time(9, 0),
+            )
+            court.date = datetime.datetime(
+                year=date.year,
+                month=date.month,
+                day=date.day,
+                hour=time.hour,
+                minute=time.minute
+            )
+
+            court.minutes_duration = st.number_input(
+                'Introduce los minutos de duración',
+                step=5,
+                min_value=20,
+                value = court.minutes_duration
+            )
+            
+        with right:
+            try:
+                st.warning(court.check())
+                
+                if st.button("💾 Guardar Tribunal"):
+                    court.save()
+                    court.place.save()
+                    if selected == "⭐ Nuevo Tribunal":
+                        st.success(f"¡Tribunal de la tesis _{court.thesis.title}_ creada con éxito!")   
+                    elif selected == "📝 Editar Tribunal":
+                        st.success(f"¡Tribunal de la tesis _{court.thesis.title}_ editada con éxito!")   
+                    
+            except ValueError as e:
+                st.error(e)
+    else:
+        st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")
+        
+
+with court_details:
+    st.write("##### 🏷️ Filtros")
+    
+    places = sorted(Place.all(), key=lambda p: p.description)
+    member_selected = st.selectbox(
+        "Filtrar por un miembro de tribunal",
+        ["Todos"] + [ p.name for p in Person.all() ],
+        key='court_details_select_member',
+    )
+
+    place_selected = st.selectbox(
+        "Filtrar por un lugar",
+        ["Todos"] + [ p for p in places ],
+        key='court_details_select_place',
+    )
+   
+    data = []
+    for court in Court.all():
+        include = True
+        if member_selected != "Todos":
+            if member_selected not in [p.name for p in court.members]:
+                include = False
+
+        if place_selected != "Todos":
+            if place_selected != court.place:
+                include = False
+    
+        if include:
+            data.append(court.print())
+    
+    
+    if len(data) > 0:
+        df = pd.DataFrame(data)
+        st.dataframe(df)
+    else:
+        st.error("No hay datos para mostrar")

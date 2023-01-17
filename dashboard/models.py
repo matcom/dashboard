@@ -3,10 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List
 from uuid import UUID, uuid4
+from datetime import timedelta, datetime as Datetime
 
 import yaml
 import streamlit as st
-from datetime import date
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field, HttpUrl, EmailStr
 from typing_extensions import Self
@@ -551,3 +551,55 @@ class Award(CustomModel):
             awarded=awarded,
             date=date,
         )
+
+class Place(CustomModel):
+    description: str
+
+class Court(CustomModel):
+    thesis: Thesis = None
+    members: List[Person]
+    date: Datetime = None
+    minutes_duration: int
+    place: Place = None
+    
+    def check(self):
+        if len(self.members) < 1:
+            raise ValueError("Se debe agregar los miembros del tribunal")
+
+        if len(self.place.description) < 1:
+            raise ValueError("Se debe agregar un lugar")
+            
+        for court in Court.all():
+            if court.uuid == self.uuid:
+                continue
+            
+            if court.thesis == self.thesis:
+                raise ValueError("Ya existe un tribual para esta tesis")
+
+            end_time = court.date + timedelta(minutes=court.minutes_duration)
+            self_end_time = self.date + timedelta(minutes=self.minutes_duration)
+        
+            if court.date.date() == self.date.date():
+                if court.date.time() <= self.date.time() < end_time.time() or self.date.time() <= court.date.time() < self_end_time.time():
+                    
+                    # two theses in the same place and the same hour
+                    if self.place == court.place:
+                        return f"Ya existe una discusión de una tesis en __{court.place.description}__ a esa hora"
+
+                    # a peron in two places in the same moment
+                    for member in self.members:
+                        if member in court.members:
+                            return f"__{member.name}__ ya está en otro tribunal en ese momento"
+
+        return ""
+
+    def print(self) -> dict:
+        conflicting = self.check() != ""        
+        return {
+            "Tesis": ("⚠️ " if conflicting else "") + f"{self.thesis.title} - {self.thesis.authors[0]}",
+            "Miembros del tribunal": ", ".join([member.name for member in self.members]),
+            "Fecha": self.date.strftime("%Y-%m-%d"),
+            "Hora Inicio": self.date.strftime("%H:%M"),
+            "Hora Termina": (self.date + timedelta(minutes=self.minutes_duration)).strftime("%H:%M"),
+            "Lugar": self.place.description,
+        }

@@ -334,3 +334,15 @@ def research_balance(start_date, end_date):
     )
 
     st.write(f"**Personal con premios:** {len(people_in_awards)} ({len(people_in_awards) * 100 / len(people):0.1f}%)")
+
+    doctor_with_research = (
+        set(
+            person
+            for paper in papers + presentations + books + chapters + events
+            for person in paper.authors
+            if person.scientific_grade == "Doctor en Ciencias"
+        )
+        & people
+    )
+
+    st.write(f"**Doctores con investigación:** {len(doctor_with_research)}")

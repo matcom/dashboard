@@ -3,15 +3,16 @@ import json
 from pathlib import Path
 from typing import List
 
+import auth
 import pandas as pd
 import streamlit as st
 from models import Thesis
-from modules.utils import generate_widget_key
 from modules.graph import build_advisors_graph
+from modules.utils import generate_widget_key
 
 st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide")
 
-listing, create,details = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles"])
+listing, create, details = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles"])
 
 theses: List[Thesis] = []
 
@@ -58,9 +59,14 @@ with listing:
     graph = build_advisors_graph(advisors, theses)
 
 with create:
-    if st.session_state.get('write_access', False):
+    if auth.is_user_logged():
         if (
-            st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True, label_visibility="collapsed")
+            st.radio(
+                "Tipo de entrada",
+                ["⭐ Nueva entrada", "📝 Editar"],
+                horizontal=True,
+                label_visibility="collapsed",
+            )
             == "📝 Editar"
         ):
             thesis = st.selectbox(
@@ -102,11 +108,9 @@ with create:
                 ).split(";")
             ]
             if "file_uploader_key" not in st.session_state:
-                st.session_state["file_uploader_key"] = generate_widget_key();
+                st.session_state["file_uploader_key"] = generate_widget_key()
             pdf = st.file_uploader(
-                "📤 Subir Tesis",
-                type="pdf",
-                key= st.session_state["file_uploader_key"]
+                "📤 Subir Tesis", type="pdf", key=st.session_state["file_uploader_key"]
             )
 
         with right:
@@ -138,18 +142,16 @@ with details:
     st.write(f"#### 🔑 Palabras clave: {', '.join(thesis.keywords)}")
     st.write(f"#### 📄 Versión: {thesis.version}")
     st.write(f"#### 📚 Balance: {thesis.balance}")
-    
-    
+
     name_pdf = f"{thesis.uuid}_v{thesis.version}.pdf"
     path: Path = Path(f"/src/data/Thesis/files/{name_pdf}")
-    
+
     if path.exists():
         with open(path, "rb") as file:
-            btn=st.download_button(
+            btn = st.download_button(
                 label="📥 Descargar Tesis",
                 data=file,
                 file_name=name_pdf,
-                
             )
     else:
-        st.write(f"####   No existe el pdf de la tesis")            
+        st.write(f"####   No existe el pdf de la tesis")

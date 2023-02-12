@@ -1,4 +1,5 @@
 import streamlit as st
+import auth
 from uuid import uuid4
 from models import Project
 
@@ -30,7 +31,7 @@ list_view, create_view, edit_view = st.tabs(
 
 
 with create_view:
-    if st.session_state.get("write_access", False):
+    if auth.is_user_logged():
         if "current_project" in st.session_state:
             key = st.session_state.current_project
         else:
@@ -48,7 +49,7 @@ with create_view:
 
 
 with edit_view:
-    if st.session_state.get("write_access", False):
+    if auth.is_user_logged():
         pass
     else:
         st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")

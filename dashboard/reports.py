@@ -1,59 +1,171 @@
-import streamlit as st
 import collections
+from typing import Iterator
+
 import altair
 import pandas as pd
-
-from typing import List
+import streamlit as st
 from models import (
-    Person,
-    JournalPaper,
-    ConferencePresentation,
+    Award,
     Book,
     BookChapter,
+    Classes,
+    ConferencePresentation,
+    JournalPaper,
+    Person,
     Project,
-    Award,
+    ResearchGroup,
+    Thesis,
 )
 
 
-def personal_report(person: Person):
+def _soft_bl(text: str) -> str:
+    return f"""{text}
+"""
+
+
+def personal_report(
+    person: Person,
+    show_personal_info=False,
+    show_papers=False,
+    show_projects=False,
+    show_theses=False,
+    show_classes=False,
+    show_research_groups=False,
+    show_awards=False,
+) -> Iterator[str]:
     lines = []
 
-    lines.append("### 👤 Información personal\n")
-    lines.append(f"- **Institución**: {person.institution}")
-    lines.append(f"- **Facultad**: {person.faculty}")
-    lines.append(f"- **Departamento**: {person.department}")
-    lines.append(f"- **Grado científico:** {person.scientific_grade}")
-    lines.append(f"- **Categoría docente:** {person.academic_grade}")
+    # --------------------------------------------------------------------------
+    if show_personal_info:
+        lines.append("### 👤 Información personal")
 
-    if person.orcid:
-        lines.append(
-            f"- **Perfil ORCID:** [{person.orcid}](https://orcid.org/{person.orcid})"
-        )
+        personal_info = _soft_bl(f"- **Institución**: {person.institution}")
+        personal_info += _soft_bl(f"- **Facultad**: {person.faculty}")
+        personal_info += _soft_bl(f"- **Departamento**: {person.department}")
+        personal_info += _soft_bl(f"- **Grado científico:** {person.scientific_grade}")
+        personal_info += _soft_bl(f"- **Categoría docente:** {person.academic_grade}")
+        if person.orcid:
+            personal_info += _soft_bl(
+                f"- **Perfil ORCID:** [{person.orcid}](https://orcid.org/{person.orcid})"
+            )
 
-    lines.append("### 📚 Publicaciones")
+        lines.append(personal_info)
 
-    lines.append("#### 📃 Artículos")
+    # --------------------------------------------------------------------------
+    if show_papers:
+        total = 0
 
-    for paper in JournalPaper.from_authors([person]):
-        lines.append("- " + paper.format())
+        articles = ""
+        article_count = 0
+        for paper in JournalPaper.from_authors([person]):
+            articles += f"- {paper.format()}\n\n"
+            article_count += 1
 
-    lines.append("#### 📢 Ponencias")
+        total += article_count
 
-    for paper in ConferencePresentation.from_authors([person]):
-        lines.append("- " + paper.format())
+        conferences = ""
+        conf_count = 0
+        for paper in ConferencePresentation.from_authors([person]):
+            conferences += f"- {paper.format()}\n\n"
+            conf_count += 1
 
-    lines.append("#### 📕 Libros y Capítulos de Libro")
+        total += conf_count
 
-    for paper in Book.from_authors([person]):
-        lines.append("- " + paper.format())
+        books = ""
+        book_counts = 0
+        for paper in Book.from_authors([person]):
+            books += f"- {paper.format()}\n\n"
+            book_counts += 1
 
-    for paper in BookChapter.from_authors([person]):
-        lines.append("- " + paper.format())
+        chapters = ""
+        for paper in BookChapter.from_authors([person]):
+            chapters += f"- {paper.format()}\n\n"
+            book_counts += 1
 
-    lines.append("### ⚗️ Proyectos")
+        total += book_counts
 
-    for project in Project.from_members([person]):
-        lines.append("- " + project.format())
+        lines.append(f"### 📚 Publicaciones ({total})")
+
+        lines.append(f"#### 📃 Artículos ({article_count})")
+        if article_count > 0:
+            lines.append(articles)
+
+        lines.append(f"#### 📢 Ponencias ({conf_count})")
+        if conf_count > 0:
+            lines.append(conferences)
+
+        lines.append(f"#### 📕 Libros y Capítulos de Libro ({book_counts})")
+        if book_counts > 0:
+            lines.append(books)
+
+    # --------------------------------------------------------------------------
+    if show_projects:
+
+        projects = ""
+        entries = 0
+        for project in Project.from_members([person]):
+            projects += f"- {project.format()}\n\n"
+            entries += 1
+
+        lines.append(f"### ⚗️ Proyectos ({entries})")
+        if entries > 0:
+            lines.append(projects)
+
+    # --------------------------------------------------------------------------
+    if show_theses:
+        supervised_theses = ""
+        entries = 0
+        for thesis in Thesis.from_advisors([person]):
+            supervised_theses += _soft_bl(f"- {thesis.title}")
+            entries += 1
+
+        lines.append(f"### 📑 Tesis tutoreadas ({entries})")
+        if entries > 0:
+            lines.append(supervised_theses)
+
+    # --------------------------------------------------------------------------
+    if show_classes:
+        classes = ""
+        entries = 0
+        for _class in Classes.from_professors([person]):
+            classes += _soft_bl("- " + _class.subject.subject)
+            entries += 1
+
+        lines.append(f"### 🧑‍🏫 Clases ({entries})")
+        if entries > 0:
+            lines.append(classes)
+
+    # --------------------------------------------------------------------------
+    if show_research_groups:
+        table = _soft_bl("| Grupo | Colaborador | Miembro | Líder |")
+        table += _soft_bl("| -- | :--: | :--: | :--: |")
+        entries = 0
+
+        for group, status in ResearchGroup.from_person(person):
+            colaborator = "✅" if status.is_colaborator else ""
+            member = "✅" if status.is_member else ""
+            head = "✅" if status.is_head else ""
+            table += f"| {group.name} | {colaborator} | {member} | {head} |\n"
+            entries += 1
+
+        lines.append(f"### 🔬 Grupos de investigación ({entries})")
+        if entries > 0:
+            lines.append(table)
+            lines.append("")
+
+    # --------------------------------------------------------------------------
+    if show_awards:
+        awards = ""
+        entries = 0
+        for award in Award.from_persons([person]):
+            awards += _soft_bl("- " + award.title)
+            entries += 1
+
+        lines.append(f"### 🏆 Premios ({entries})")
+        if entries > 0:
+            lines.append(awards)
+
+    # --------------------------------------------------------------------------
 
     for line in lines:
         yield line
@@ -309,7 +421,9 @@ def research_balance(start_date, end_date):
         & people
     )
 
-    st.write(f"**Personal con publicaciones:** {len(people_with_papers)} ({len(people_with_papers) * 100 / len(people):0.1f}%)")
+    st.write(
+        f"**Personal con publicaciones:** {len(people_with_papers)} ({len(people_with_papers) * 100 / len(people):0.1f}%)"
+    )
 
     people_in_projects = (
         set(
@@ -320,17 +434,16 @@ def research_balance(start_date, end_date):
         & people
     )
 
-    st.write(f"**Personal con proyectos:** {len(people_in_projects)} ({len(people_in_projects) * 100 / len(people):0.1f}%)")
+    st.write(
+        f"**Personal con proyectos:** {len(people_in_projects)} ({len(people_in_projects) * 100 / len(people):0.1f}%)"
+    )
 
     st.write(f"**Personal en ambos:** {len(people_in_projects & people_with_papers)}")
 
     people_in_awards = (
-        set(
-            person
-            for award in Award.all()
-            for person in award.participants
-        )
-        & people
+        set(person for award in Award.all() for person in award.participants) & people
     )
 
-    st.write(f"**Personal con premios:** {len(people_in_awards)} ({len(people_in_awards) * 100 / len(people):0.1f}%)")
+    st.write(
+        f"**Personal con premios:** {len(people_in_awards)} ({len(people_in_awards) * 100 / len(people):0.1f}%)"
+    )

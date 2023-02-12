@@ -1,17 +1,19 @@
-import streamlit as st
 import collections
+
 import altair
 import pandas as pd
-
-from typing import List
+import streamlit as st
 from models import (
-    Person,
-    JournalPaper,
-    ConferencePresentation,
+    Award,
     Book,
     BookChapter,
+    Classes,
+    ConferencePresentation,
+    JournalPaper,
+    Person,
     Project,
-    Award,
+    ResearchGroup,
+    Thesis,
 )
 
 
@@ -54,6 +56,35 @@ def personal_report(person: Person):
 
     for project in Project.from_members([person]):
         lines.append("- " + project.format())
+
+    lines.append("### 📑 Tesis tutoreadas")
+
+    for thesis in Thesis.from_advisors([person]):
+        lines.append("- " + thesis.title)
+
+    lines.append("### 🧑‍🏫 Clases")
+
+    for _class in Classes.from_professors([person]):
+        lines.append("- " + _class.subject.subject)
+
+    lines.append("### 🔬 Grupos de investigación")
+
+    table = """
+| Grupo | Colaborador | Miembro | Líder |
+| -- | :--: | :--: | :--: |
+"""
+    for group, status in ResearchGroup.from_person(person):
+        colaborator = "✅" if status.is_colaborator else ""
+        member = "✅" if status.is_member else ""
+        head = "✅" if status.is_head else ""
+        table += f"| {group.name} | {colaborator} | {member} | {head} |\n"
+    lines.append(table)
+    lines.append("\n")
+
+    lines.append("### 🏆 Premios")
+
+    for award in Award.from_persons([person]):
+        lines.append("- " + award.title)
 
     for line in lines:
         yield line
@@ -309,7 +340,9 @@ def research_balance(start_date, end_date):
         & people
     )
 
-    st.write(f"**Personal con publicaciones:** {len(people_with_papers)} ({len(people_with_papers) * 100 / len(people):0.1f}%)")
+    st.write(
+        f"**Personal con publicaciones:** {len(people_with_papers)} ({len(people_with_papers) * 100 / len(people):0.1f}%)"
+    )
 
     people_in_projects = (
         set(
@@ -320,17 +353,16 @@ def research_balance(start_date, end_date):
         & people
     )
 
-    st.write(f"**Personal con proyectos:** {len(people_in_projects)} ({len(people_in_projects) * 100 / len(people):0.1f}%)")
+    st.write(
+        f"**Personal con proyectos:** {len(people_in_projects)} ({len(people_in_projects) * 100 / len(people):0.1f}%)"
+    )
 
     st.write(f"**Personal en ambos:** {len(people_in_projects & people_with_papers)}")
 
     people_in_awards = (
-        set(
-            person
-            for award in Award.all()
-            for person in award.participants
-        )
-        & people
+        set(person for award in Award.all() for person in award.participants) & people
     )
 
-    st.write(f"**Personal con premios:** {len(people_in_awards)} ({len(people_in_awards) * 100 / len(people):0.1f}%)")
+    st.write(
+        f"**Personal con premios:** {len(people_in_awards)} ({len(people_in_awards) * 100 / len(people):0.1f}%)"
+    )

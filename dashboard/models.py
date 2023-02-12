@@ -1,14 +1,14 @@
 from __future__ import annotations
 
+from datetime import date
 from pathlib import Path
-from typing import List
+from typing import Iterator, List, NamedTuple, NewType, Tuple
 from uuid import UUID, uuid4
 
-import yaml
 import streamlit as st
-from datetime import date
+import yaml
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, Field, HttpUrl, EmailStr
+from pydantic import BaseModel, EmailStr, Field, HttpUrl
 from typing_extensions import Self
 
 
@@ -72,7 +72,7 @@ class CustomModel(BaseModel):
     @classmethod
     def find(cls, **kwargs):
         for item in cls.all():
-            if all(getattr(item,k,None) == v for k,v in kwargs.items()):
+            if all(getattr(item, k, None) == v for k, v in kwargs.items()):
                 return item
 
         raise KeyError(str(kwargs))
@@ -116,6 +116,14 @@ class Thesis(CustomModel):
     keywords: List[str]
     version: int = 0
     balance: int = 2022
+
+    @classmethod
+    def from_advisors(cls, advisors: List[Person]):
+        names = set([a.name for a in advisors])
+
+        for thesis in cls.all():
+            if set(thesis.advisors) & names:
+                yield thesis
 
     def check(self):
         if not self.title:
@@ -193,8 +201,7 @@ class Person(CustomModel):
         return [
             p
             for p in cls.all()
-            if p.institution == "Universidad de La Habana"
-            and p.faculty == "MatCom"
+            if p.institution == "Universidad de La Habana" and p.faculty == "MatCom"
         ]
 
 
@@ -203,6 +210,12 @@ class Classes(CustomModel):
     professor: Person
     lecture_hours: int
     practice_hours: int
+
+    @classmethod
+    def from_professors(cls, professors: List[Person]):
+        for _class in cls.all():
+            if _class.professor in professors:
+                yield _class
 
     def save(self):
         func_check_same_data = (
@@ -237,7 +250,9 @@ class Journal(CustomModel):
         if self.url:
             title = f"[{title}]({self.url})"
 
-        return f"🗞️ {title}, {self.publisher}. ISSN: {self.issn}. Indexado en: {indices}."
+        return (
+            f"🗞️ {title}, {self.publisher}. ISSN: {self.issn}. Indexado en: {indices}."
+        )
 
     def __str__(self):
         return f"{self.title} ({self.publisher})"
@@ -300,9 +315,7 @@ class ConferencePresentation(Publication):
         for author in self.authors:
             text.append(author.format() + ", ")
 
-        text.append(
-            f"En _{self.venue}_, {self.location}, {self.year}"
-        )
+        text.append(f"En _{self.venue}_, {self.location}, {self.year}")
 
         return " ".join(text)
 
@@ -345,12 +358,31 @@ class BookChapter(Book):
         return " ".join(text)
 
 
+class ResearchGroupPersonStatus(NamedTuple):
+    is_colaborator: bool
+    is_member: bool
+    is_head: bool
+
+
 class ResearchGroup(CustomModel):
     name: str
     head: Person = None
     members: List[Person]
     collaborators: List[Person]
     keywords: List[str]
+
+    @classmethod
+    def from_person(
+        cls, person: Person
+    ) -> Iterator[Tuple[ResearchGroup, ResearchGroupPersonStatus]]:
+        for group in cls.all():
+            is_colaborator = person in group.collaborators
+            is_member = person in group.members
+            is_head = person == group.head
+            if is_colaborator or is_member or is_head:
+                yield group, ResearchGroupPersonStatus(
+                    is_colaborator=is_colaborator, is_member=is_member, is_head=is_head
+                )
 
 
 class Project(CustomModel):
@@ -372,13 +404,12 @@ class Project(CustomModel):
     status: str = "Normal"
 
     @classmethod
-    def from_members(cls, people:List[Person]):
+    def from_members(cls, people: List[Person]):
         people = set(people)
 
         for project in cls.all():
             if set(project.members) & people:
                 yield project
-
 
     def format(self):
         lines = [f"⚗️ _{self.title}_"]
@@ -401,12 +432,13 @@ class Project(CustomModel):
         lines.append(f"**Fecha de aprobación:** {self.aproval_date}")
 
         duration = (self.end_date - self.start_date).days // 30
-        lines.append(f"**Duración**: {self.start_date} a {self.end_date} ({duration} meses)")
+        lines.append(
+            f"**Duración**: {self.start_date} a {self.end_date} ({duration} meses)"
+        )
 
         lines.append(f"**Estado**: {self.status}")
 
         return ". ".join(lines)
-
 
     @classmethod
     def create(cls, key, obj=None):
@@ -519,15 +551,32 @@ class Award(CustomModel):
     date: date = None
 
     @classmethod
+    def from_persons(cls, people: List[Person]):
+        persons = set(people)
+        for award in cls.all():
+            if award.awarded and set(award.participants) & persons:
+                yield award
+
+    @classmethod
     def create(cls, key, obj=None):
         people = Person.all()
         people.sort(key=lambda p: p.name)
 
         name = st.text_input("🔹Nombre del premio", key=f"{key}_award_name")
-        institution = st.text_input("🔹Institución que otorga el premio", key=f"{key}_award_institution")
-        title = st.text_input("Título del artículo, proyecto, etc., que se premia (si aplica)", key=f"{key}_award_title")
-        participants = st.multiselect("🔹Participantes", people, key=f"{key}_award_participants")
-        awarded = st.checkbox("El premio ha sido otorgado (no marque si es todavía una propuesta)", key=f"{key}_award_awarded")
+        institution = st.text_input(
+            "🔹Institución que otorga el premio", key=f"{key}_award_institution"
+        )
+        title = st.text_input(
+            "Título del artículo, proyecto, etc., que se premia (si aplica)",
+            key=f"{key}_award_title",
+        )
+        participants = st.multiselect(
+            "🔹Participantes", people, key=f"{key}_award_participants"
+        )
+        awarded = st.checkbox(
+            "El premio ha sido otorgado (no marque si es todavía una propuesta)",
+            key=f"{key}_award_awarded",
+        )
 
         if awarded:
             date = st.date_input("Fecha de otorgamiento", key=f"{key}_award_date")

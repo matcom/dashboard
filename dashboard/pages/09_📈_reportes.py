@@ -1,8 +1,9 @@
 import datetime
 
 import streamlit as st
-from models import Person
-from reports import personal_report, research_balance
+from streamlit.elements import select_slider
+from models import Person, ResearchGroup
+from reports import group_report, personal_report, research_balance
 
 st.set_page_config(
     page_title="MatCom Dashboard - Reportes", page_icon="📈", layout="wide"
@@ -20,6 +21,9 @@ balance, posgrado, personal, group = st.tabs(
 
 people = Person.own()
 people.sort(key=lambda p: p.name)
+
+groups = ResearchGroup.all()
+groups.sort(key=lambda g: g.name)
 
 
 with balance:
@@ -50,10 +54,26 @@ with personal:
     }
     filter_names = list(filters.keys())
     selections = st.multiselect("Filtros", filter_names, filter_names)
-
     kwargs = {filters[sel]: True for sel in selections}
 
     if person is not None and person.name != "":
         with st.spinner("Generando reporte..."):
             for line in personal_report(person, **kwargs):
+                st.write(line)
+
+with group:
+    selected_group = st.selectbox("Seleccione el grupo", groups)
+
+    filters = {
+        "Infromación general": "show_general_info",
+        "Publicaciones": "show_papers",
+        "Premios": "show_awards",
+    }
+    filter_names = list(filters.keys())
+    selections = st.multiselect("Filtros", filter_names, filter_names)
+    kwargs = {filters[sel]: True for sel in selections}
+
+    if selected_group is not None and selected_group.name != "":
+        with st.spinner("Generando reporte..."):
+            for line in group_report(selected_group, **kwargs):
                 st.write(line)

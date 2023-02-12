@@ -1,5 +1,5 @@
 import collections
-from typing import Iterator
+from typing import Iterator, List
 
 import altair
 import pandas as pd
@@ -21,6 +21,109 @@ from models import (
 def _soft_bl(text: str) -> str:
     return f"""{text}
 """
+
+
+def _papers_by(persons: List[Person]) -> List[str]:
+    lines = []
+    total = 0
+
+    articles = ""
+    article_count = 0
+    for paper in JournalPaper.from_authors(persons):
+        articles += f"- {paper.format()}\n\n"
+        article_count += 1
+
+    total += article_count
+
+    conferences = ""
+    conf_count = 0
+    for paper in ConferencePresentation.from_authors(persons):
+        conferences += f"- {paper.format()}\n\n"
+        conf_count += 1
+
+    total += conf_count
+
+    books = ""
+    book_counts = 0
+    for paper in Book.from_authors(persons):
+        books += f"- {paper.format()}\n\n"
+        book_counts += 1
+
+    for paper in BookChapter.from_authors(persons):
+        books += f"- {paper.format()}\n\n"
+        book_counts += 1
+
+    total += book_counts
+
+    lines.append(f"### 📚 Publicaciones ({total})")
+
+    lines.append(f"#### 📃 Artículos ({article_count})")
+    if article_count > 0:
+        lines.append(articles)
+
+    lines.append(f"#### 📢 Ponencias ({conf_count})")
+    if conf_count > 0:
+        lines.append(conferences)
+
+    lines.append(f"#### 📕 Libros y Capítulos de Libro ({book_counts})")
+    if book_counts > 0:
+        lines.append(books)
+
+    return lines
+
+
+def group_report(
+    group: ResearchGroup,
+    show_general_info=False,
+    show_papers=False,
+    show_awards=False,
+) -> Iterator[str]:
+    lines = []
+
+    # --------------------------------------------------------------------------
+    if show_general_info:
+        lines.append("### 👤 Información general")
+
+        general_info = ""
+
+        if group.head is not None:
+            general_info += _soft_bl(f"- **Líder**: {group.head}")
+
+        general_info += _soft_bl("- **Miembors:**")
+        for person in group.members:
+            general_info += _soft_bl(f"  - {person.name}")
+
+        if group.collaborators:
+            general_info += _soft_bl("- **Colaboradores:**")
+            for person in group.collaborators:
+                general_info += _soft_bl(f"  - {person.name}")
+
+        lines.append(general_info)
+
+    # --------------------------------------------------------------------------
+    if show_papers:
+        # WARNING: This shows all the papers of the group members, some of them
+        # might be not related to the group research field. Maybe this can be
+        # fixed using tags/keywords for each models and only show the tags
+        # intersection.
+        lines.extend(_papers_by(group.members))
+
+    # --------------------------------------------------------------------------
+    if show_awards:
+        awards = ""
+        entries = 0
+        for award in Award.from_persons(group.members):
+            awards += _soft_bl("- " + award.title)
+            entries += 1
+
+        lines.append(f"### 🏆 Premios ({entries})")
+        if entries > 0:
+            lines.append(awards)
+
+    # --------------------------------------------------------------------------
+
+    for line in lines:
+        yield line
 
 
 def personal_report(
@@ -53,54 +156,10 @@ def personal_report(
 
     # --------------------------------------------------------------------------
     if show_papers:
-        total = 0
-
-        articles = ""
-        article_count = 0
-        for paper in JournalPaper.from_authors([person]):
-            articles += f"- {paper.format()}\n\n"
-            article_count += 1
-
-        total += article_count
-
-        conferences = ""
-        conf_count = 0
-        for paper in ConferencePresentation.from_authors([person]):
-            conferences += f"- {paper.format()}\n\n"
-            conf_count += 1
-
-        total += conf_count
-
-        books = ""
-        book_counts = 0
-        for paper in Book.from_authors([person]):
-            books += f"- {paper.format()}\n\n"
-            book_counts += 1
-
-        chapters = ""
-        for paper in BookChapter.from_authors([person]):
-            chapters += f"- {paper.format()}\n\n"
-            book_counts += 1
-
-        total += book_counts
-
-        lines.append(f"### 📚 Publicaciones ({total})")
-
-        lines.append(f"#### 📃 Artículos ({article_count})")
-        if article_count > 0:
-            lines.append(articles)
-
-        lines.append(f"#### 📢 Ponencias ({conf_count})")
-        if conf_count > 0:
-            lines.append(conferences)
-
-        lines.append(f"#### 📕 Libros y Capítulos de Libro ({book_counts})")
-        if book_counts > 0:
-            lines.append(books)
+        lines.extend(_papers_by([person]))
 
     # --------------------------------------------------------------------------
     if show_projects:
-
         projects = ""
         entries = 0
         for project in Project.from_members([person]):

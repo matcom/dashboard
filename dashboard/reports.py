@@ -98,6 +98,11 @@ def group_report(
             for person in group.collaborators:
                 general_info += _soft_bl(f"  - {person.name}")
 
+        if group.keywords:
+            general_info += _soft_bl("- **Líneas de investigación:**")
+            for keyword in group.keywords:
+                general_info += _soft_bl(f"  - {keyword}")
+
         lines.append(general_info)
 
     # --------------------------------------------------------------------------

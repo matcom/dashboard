@@ -1,9 +1,9 @@
 import datetime
 
 import streamlit as st
-from streamlit.elements import select_slider
 from models import Person, ResearchGroup
 from reports import group_report, personal_report, research_balance
+from streamlit.elements import select_slider
 
 st.set_page_config(
     page_title="MatCom Dashboard - Reportes", page_icon="📈", layout="wide"
@@ -62,7 +62,7 @@ with personal:
                 st.write(line)
 
 with group:
-    selected_group = st.selectbox("Seleccione el grupo", groups)
+    selected_group = st.selectbox("Seleccione el grupo de investigación", groups)
 
     filters = {
         "Infromación general": "show_general_info",

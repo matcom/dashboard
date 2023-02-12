@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import date
 from pathlib import Path
-from typing import Iterator, List, NamedTuple, NewType, Tuple
+from typing import Iterator, List, NamedTuple, NewType, Optional, Tuple
 from uuid import UUID, uuid4
 
 import streamlit as st
@@ -366,10 +366,13 @@ class ResearchGroupPersonStatus(NamedTuple):
 
 class ResearchGroup(CustomModel):
     name: str
-    head: Person = None
+    head: Optional[Person] = None
     members: List[Person]
     collaborators: List[Person]
     keywords: List[str]
+
+    def __str__(self):
+        return self.name
 
     @classmethod
     def from_person(

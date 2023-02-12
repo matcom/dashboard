@@ -1,7 +1,8 @@
-import streamlit as st
 from uuid import uuid4
-from models import Award, Person
 
+import auth
+import streamlit as st
+from models import Award, Person
 
 st.set_page_config(
     page_title="MatCom Dashboard - Premios", page_icon="🏆", layout="wide"
@@ -30,7 +31,7 @@ def save_award(award: Award, prefix):
 
 
 with create_view:
-    if st.session_state.get("write_access", False):
+    if auth.is_user_logged():
         if "current_award" in st.session_state:
             key = st.session_state.current_award
         else:

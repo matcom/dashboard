@@ -1,0 +1,9 @@
+Autenticación para el dashboard de la faculta de $faculty
+
+Estimado usuario:
+
+Haga click en el siguiente link para registrarse:
+
+$link
+
+Si el link no funciona al hacer click, copiélo y péguelo directo en un navegador.

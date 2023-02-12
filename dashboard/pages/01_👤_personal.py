@@ -1,6 +1,7 @@
+import auth
+import Levenshtein
 import streamlit as st
 from models import Person
-import Levenshtein
 
 st.set_page_config(
     page_title="MatCom Dashboard - Personal", page_icon="👤", layout="wide"
@@ -9,16 +10,18 @@ st.set_page_config(
 people = Person.all()
 people.sort(key=lambda p: p.name)
 
-if st.session_state.get('write_access', False):
+if auth.is_user_logged():
     with st.expander("👤 Nueva entrada / Editar"):
         if (
-            st.radio("Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True)
+            st.radio(
+                "Tipo de entrada", ["⭐ Nueva entrada", "📝 Editar"], horizontal=True
+            )
             == "📝 Editar"
         ):
             person = st.selectbox(
                 "Seleccione una entrada a modificar",
                 people,
-                format_func=lambda p: f"{p.name} ({p.institution})"
+                format_func=lambda p: f"{p.name} ({p.institution})",
             )
         else:
             person = Person(
@@ -34,7 +37,9 @@ if st.session_state.get('write_access', False):
         ratio = Levenshtein.ratio(best.name, person.name)
 
         if ratio > 0.5:
-            st.warning(f"Verifique si la persona a agregar no es **{best.name}** que ya se encuentra la base de datos.")
+            st.warning(
+                f"Verifique si la persona a agregar no es **{best.name}** que ya se encuentra la base de datos."
+            )
 
         person.institution = st.text_input(
             "Institución", key="person_institution", value=person.institution or ""
@@ -60,8 +65,17 @@ if st.session_state.get('write_access', False):
             index=grades.index(person.academic_grade),
         )
 
-        person.emails = [s.strip() for s in st.text_input("Email(s) -- Separados por punto y coma (;)", key="person_email", value="; ".join(person.emails)).split(";")]
-        person.orcid = st.text_input("ORCID", key="person_orcid", value=person.orcid or "")
+        person.emails = [
+            s.strip()
+            for s in st.text_input(
+                "Email(s) -- Separados por punto y coma (;)",
+                key="person_email",
+                value="; ".join(person.emails),
+            ).split(";")
+        ]
+        person.orcid = st.text_input(
+            "ORCID", key="person_orcid", value=person.orcid or ""
+        )
 
         if st.button("💾 Salvar entrada"):
             person.save()

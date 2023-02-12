@@ -1,7 +1,6 @@
+import auth
 import streamlit as st
-
-from models import ResearchGroup, Person
-
+from models import Person, ResearchGroup
 
 st.set_page_config(
     page_title="MatCom Dashboard - Grupos de Investigación",
@@ -20,7 +19,7 @@ people.sort(key=lambda p: p.name)
 
 
 with create_view:
-    if st.session_state.get("write_access", False):
+    if auth.is_user_logged():
         if (
             st.radio(
                 "Tipo de entrada",
@@ -86,7 +85,8 @@ with list_view:
                 st.write(
                     "**Miembros:**\n"
                     + "\n".join(
-                        f"- {p.name}" for p in sorted(group.members, key=lambda p: p.name)
+                        f"- {p.name}"
+                        for p in sorted(group.members, key=lambda p: p.name)
                     )
                 )
 

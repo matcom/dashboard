@@ -1,4 +1,5 @@
 import altair
+import auth
 import pandas as pd
 import streamlit as st
 from models import Classes, Person, Subject
@@ -11,7 +12,7 @@ st.set_page_config(
 subjects_tab, classes_tab = st.tabs(["Asignaturas", "Clases"])
 
 with subjects_tab:
-    if st.session_state.get("write_access", False):
+    if auth.is_user_logged():
         with st.expander("⭐ Crear nueva asignatura"):
 
             cols = st.columns([2, 2, 1, 1])
@@ -19,12 +20,16 @@ with subjects_tab:
             career = cols[1].selectbox(
                 "Carrera", ["Matemática", "Ciencia de la Computación", "Externa"]
             )
-            year = cols[2].selectbox("Año", [1, 2, 3, 4], format_func=lambda a: f"Año {a}")
+            year = cols[2].selectbox(
+                "Año", [1, 2, 3, 4], format_func=lambda a: f"Año {a}"
+            )
             semester = cols[3].selectbox(
                 "Semestre", [1, 2], format_func=lambda s: f"Semestre {s}"
             )
 
-            subject = Subject(subject=subject, career=career, year=year, semester=semester)
+            subject = Subject(
+                subject=subject, career=career, year=year, semester=semester
+            )
 
             if st.button("💾 Salvar asignatura"):
                 subject.save()
@@ -40,7 +45,7 @@ with subjects_tab:
 
 
 with classes_tab:
-    if st.session_state.get("write_access", False):
+    if auth.is_user_logged():
         with st.expander("📝 Crear nueva entrada"):
             cols = st.columns([2, 2, 1, 1])
 

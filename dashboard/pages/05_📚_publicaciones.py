@@ -1,9 +1,17 @@
 from typing import Dict
-import streamlit as st
-import pandas as pd
-import altair
 
-from models import JournalPaper, Person, Journal, ConferencePresentation, Book, BookChapter
+import altair
+import auth
+import pandas as pd
+import streamlit as st
+from models import (
+    Book,
+    BookChapter,
+    ConferencePresentation,
+    Journal,
+    JournalPaper,
+    Person,
+)
 from modules.graph import build_publications_graph
 
 st.set_page_config(
@@ -21,10 +29,18 @@ journals.sort(key=lambda j: j.title)
 papers = [p for p in JournalPaper.all() if p.year == year]
 papers.sort(key=lambda p: p.title)
 
-papers_tab, presentations_tab, books_tab, journals_tab, create_tab = st.tabs(["📃 Artículos", "📢 Presentaciones", "📕 Libros y Capítulos de Libros", "🗞️ Revistas", "⭐ Nueva entrada / Editar"])
+papers_tab, presentations_tab, books_tab, journals_tab, create_tab = st.tabs(
+    [
+        "📃 Artículos",
+        "📢 Presentaciones",
+        "📕 Libros y Capítulos de Libros",
+        "🗞️ Revistas",
+        "⭐ Nueva entrada / Editar",
+    ]
+)
 
 with papers_tab:
-    if st.session_state.get('write_access', False):
+    if auth.is_user_logged():
         with st.expander("⭐ Nuevo artículo / 📝 Editar"):
             if (
                 st.radio(
@@ -46,23 +62,25 @@ with papers_tab:
             with author_name:
                 name = st.text_input("Nombre del autor", "", key="author_name")
             with author_institution:
-                institution = st.text_input("Institución del autor",value="", key="institution")
+                institution = st.text_input(
+                    "Institución del autor", value="", key="institution"
+                )
             if st.button("Añadir"):
-                #add to people if it does not exist
-                #exist the option that there are two people with the same name but different institutions
-                #in this case I consider it appropriate that the people with the institution they belong to are shown
-                #so that there is no confusion
-                #this is a change that could be done in the future
+                # add to people if it does not exist
+                # exist the option that there are two people with the same name but different institutions
+                # in this case I consider it appropriate that the people with the institution they belong to are shown
+                # so that there is no confusion
+                # this is a change that could be done in the future
                 person = next((p for p in people if p.name == name), None)
                 if person is None:
                     person = Person(name=name, institution=institution)
                     person.save()
                     people.append(person)
                     people.sort(key=lambda p: p.name)
-                
+
                 else:
-                    st.warning("Ya existe una persona con ese nombre")    
-               
+                    st.warning("Ya existe una persona con ese nombre")
+
             paper.title = st.text_input("Título", key="paper_title", value=paper.title)
             paper.authors = st.multiselect(
                 "Autores", key="paper_authors", options=people, default=paper.authors
@@ -99,7 +117,11 @@ with papers_tab:
                 "Número", key="paper_issue", min_value=1, value=paper.issue
             )
             paper.year = st.number_input(
-                "Año", key="paper_year", min_value=2020, max_value=2022, value=paper.year
+                "Año",
+                key="paper_year",
+                min_value=2020,
+                max_value=2022,
+                value=paper.year,
             )
             paper.url = st.text_input("URL", value=paper.url)
 
@@ -121,7 +143,7 @@ presentations.sort(key=lambda p: p.title)
 
 
 with presentations_tab:
-    if st.session_state.get('write_access', False):
+    if auth.is_user_logged():
         with st.expander("⭐ Nueva presentación / 📝 Editar"):
             if (
                 st.radio(
@@ -159,7 +181,9 @@ with presentations_tab:
                 "Lugar", key="presentation_location", value=presentation.location
             )
             types = ["Internacional", "Nacional", "Actividad Científica"]
-            presentation.event_type = st.selectbox("Tipo", types, index=types.index(presentation.event_type))
+            presentation.event_type = st.selectbox(
+                "Tipo", types, index=types.index(presentation.event_type)
+            )
             presentation.year = st.number_input(
                 "Año",
                 key="presentation_year",
@@ -192,7 +216,7 @@ chapters = [c for c in BookChapter.all() if c.year == year]
 chapters.sort(key=lambda b: b.chapter)
 
 with books_tab:
-    if st.session_state.get('write_access', False):
+    if auth.is_user_logged():
         with st.expander("⭐ Nuevo libro / 📝 Editar"):
             if (
                 st.radio(
@@ -233,9 +257,7 @@ with books_tab:
             book.publisher = st.text_input(
                 "Editorial", key="book_publisher", value=book.publisher
             )
-            book.isbn = st.text_input(
-                "ISBN", key="book_isbn", value=book.isbn
-            )
+            book.isbn = st.text_input("ISBN", key="book_isbn", value=book.isbn)
             book.year = st.number_input(
                 "Año",
                 key="book_year",
@@ -280,18 +302,36 @@ with journals_tab:
     with st.expander("Editar revista"):
         journal = st.selectbox("Revista", journals)
 
-        journal.title = st.text_input("Título", key=f"journal_title_{journal.uuid}", value=journal.title)
-        journal.publisher = st.text_input("Editorial", key=f"journal_publisher_{journal.uuid}", value=journal.publisher)
-        journal.issn = st.text_input("ISSN", key=f"journal_issn_{journal.uuid}", value=journal.issn)
-        journal.url = st.text_input("URL", key=f"journal_url_{journal.uuid}", value=journal.url or "") or None
-        journal.indices = st.multiselect("Indexado en", key=f"journal_indices_{journal.uuid}", options=[
-            "Web of Science",
-            "Scopus",
-            "RICYT",
-            "Scielo",
-            "Otro (Internacional)",
-            "Otro (Nacional)",
-        ], default=journal.indices)
+        journal.title = st.text_input(
+            "Título", key=f"journal_title_{journal.uuid}", value=journal.title
+        )
+        journal.publisher = st.text_input(
+            "Editorial",
+            key=f"journal_publisher_{journal.uuid}",
+            value=journal.publisher,
+        )
+        journal.issn = st.text_input(
+            "ISSN", key=f"journal_issn_{journal.uuid}", value=journal.issn
+        )
+        journal.url = (
+            st.text_input(
+                "URL", key=f"journal_url_{journal.uuid}", value=journal.url or ""
+            )
+            or None
+        )
+        journal.indices = st.multiselect(
+            "Indexado en",
+            key=f"journal_indices_{journal.uuid}",
+            options=[
+                "Web of Science",
+                "Scopus",
+                "RICYT",
+                "Scielo",
+                "Otro (Internacional)",
+                "Otro (Nacional)",
+            ],
+            default=journal.indices,
+        )
 
         if st.button("💾 Guardar"):
             journal.save()
@@ -300,51 +340,54 @@ with journals_tab:
     for journal in journals:
         st.write(journal.format())
 
-
         publications = {
-    "papers": {
-        "title": "Artículos",
-        "data": papers,   
-    },
-    "presentations": {
-        "title": "Presentaciones",
-        "data": presentations,   
-    },
-    "books": {
-        "title": "Libros",
-        "data": books,   
-    },
-    "chapters": {
-        "title": "Capítulos",
-        "data": chapters,   
-    }   
-}
+            "papers": {
+                "title": "Artículos",
+                "data": papers,
+            },
+            "presentations": {
+                "title": "Presentaciones",
+                "data": presentations,
+            },
+            "books": {
+                "title": "Libros",
+                "data": books,
+            },
+            "chapters": {
+                "title": "Capítulos",
+                "data": chapters,
+            },
+        }
 
-st.write('### 📊Gráfica de publicaciones')
+st.write("### 📊Gráfica de publicaciones")
 
-options = [ publication['title'] for publication in publications.values()]
-selection = st.multiselect( 'Seleccione las publicaciones que desea incluir en el gráfico', options, ['Libros', 'Capítulos'] )
+options = [publication["title"] for publication in publications.values()]
+selection = st.multiselect(
+    "Seleccione las publicaciones que desea incluir en el gráfico",
+    options,
+    ["Libros", "Capítulos"],
+)
 
 # show in the graph
 data = []
 for publication in publications.values():
-    if publication['title'] in selection:
-        for item in publication['data']:
-            data.append( item )
+    if publication["title"] in selection:
+        for item in publication["data"]:
+            data.append(item)
 
 
-sections = { 'Todas': True }
+sections = {"Todas": True}
 for publ in data:
     for author in publ.authors:
-        if author.department != '':
-            sections[ author.department ] = True
-        if author.department != '':
-            sections[ author.institution ] = True
-        if author.department != '':
-            sections[ author.faculty ] = True
+        if author.department != "":
+            sections[author.department] = True
+        if author.department != "":
+            sections[author.institution] = True
+        if author.department != "":
+            sections[author.faculty] = True
 
 
 section = st.selectbox("Seleccionar una sección", sections.keys(), index=0)
-color = st.color_picker('Color de la sección', '#ACDBC9', key=654)
+color = st.color_picker("Color de la sección", "#ACDBC9", key=654)
 
-_, _, graph = build_publications_graph( data, color=[section, color], height=1000 )
+_, _, graph = build_publications_graph(data, color=[section, color], height=1000)

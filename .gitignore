@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 secrets.toml
+
+mongo_data/

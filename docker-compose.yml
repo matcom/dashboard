@@ -10,6 +10,8 @@ services:
       - SECRET=${SECRET}
       - ADMIN=${ADMIN}
     user: ${USER}
+    depends_on:
+      - mongo
     ports:
       - "8501:8501"
     volumes:
@@ -29,6 +31,15 @@ services:
     depends_on:
       - app
 
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASS}
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo_data:/data/db
 
 volumes:
   caddy_config:

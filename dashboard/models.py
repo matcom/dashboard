@@ -21,6 +21,15 @@ ModelT = TypeVar("ModelT", bound="CustomModel")
 
 
 class Ref(Generic[ModelT]):
+    """
+    Represents a reference to a custom model.
+
+    A field of type Ref[T] should be treated as a T directly. It will load its
+    value in a lazy way. In case of setting a value, it must be also of type T,
+    the CustomModel setter will automatically create a Ref[T] using the T's
+    UUID.
+    """
+
     def __init__(self, uuid: UUID, model_type: ModelT, cache=None):
         self.uuid = uuid
         self.model_type = model_type
@@ -39,6 +48,15 @@ class Ref(Generic[ModelT]):
 
 
 class RefList(Generic[ModelT]):
+    """
+    Represents a reference to a list of custom models.
+
+    A field of type RefList[T] should be treated as a List[T] directly. It will
+    load its value in a lazy way. In case of setting a value, it must be also
+    of type List[T], the CustomModel setter will automatically create a
+    RefList[T] using the T's UUID.
+    """
+
     def __init__(self, uuids: List[UUID], model_type: ModelT, cache=None):
         self.uuids = uuids
         self.model_type = model_type
@@ -57,7 +75,7 @@ class RefList(Generic[ModelT]):
         cached = self.cache[idx]
         if cached is not None:
             return cached
-        val = self.cache[idx] = self.model_type.get(self.uuids[idx])
+        val = self.cache[idx] = self.model_type.get(str(self.uuids[idx]))
         return val
 
     def _load_yaml(self) -> List[ModelT]:
@@ -65,10 +83,15 @@ class RefList(Generic[ModelT]):
 
 
 def with_refs(model_class: ModelT) -> ModelT:
+    """
+    Decorator that adds pydantic validators for all the Ref[T] and RefList[T]
+    fields in a CustomModel.
+    """
     fields = model_class.__fields__
-    for n, field in fields.items():
+    for field_name, field in fields.items():
         if issubclass(field.type_, Ref):
 
+            # Function that returns a validator for a Ref[T] field
             def _ref_val_wrapper(field):
                 def ref_val(cls, value):
                     if value is None or isinstance(value, Ref):
@@ -77,12 +100,13 @@ def with_refs(model_class: ModelT) -> ModelT:
 
                 return ref_val
 
-            model_class.__fields__[n].class_validators[n] = Validator(
+            model_class.__fields__[field_name].class_validators[field_name] = Validator(
                 _ref_val_wrapper(field), pre=True
             )
 
         elif issubclass(field.type_, RefList):
 
+            # Function that returns a validator for a RefList[T] field
             def _reflist_val_wrapper(field):
                 def ref_list_val(cls, value):
                     if value is None or isinstance(value, RefList):
@@ -94,10 +118,10 @@ def with_refs(model_class: ModelT) -> ModelT:
 
                 return ref_list_val
 
-            model_class.__fields__[n].class_validators[n] = Validator(
+            model_class.__fields__[field_name].class_validators[field_name] = Validator(
                 _reflist_val_wrapper(field), pre=True
             )
-        model_class.__fields__[n].populate_validators()
+        model_class.__fields__[field_name].populate_validators()
     return model_class
 
 
@@ -107,40 +131,60 @@ class CustomModel(BaseModel):
 
     uuid: UUID = Field(default_factory=uuid4)
 
-    def __getattribute__(self, __name: str) -> Any:
-        if __name.startswith("__"):
-            return super().__getattribute__(__name)
-        use_ref = __name.endswith("_ref")
-        if use_ref:
-            __name = __name[:-4]
-        if __name in self.__class__.__fields__:
-            field = self.__class__.__fields__[__name]
-            if not use_ref and issubclass(field.type_, (Ref, RefList)):
-                ref = super().__getattribute__(__name)
+    def __getattribute__(self, name: str) -> Any:
+        # If dundler method return default
+        if name.startswith("__"):
+            return super().__getattribute__(name)
+
+        # Check is asking for value directly
+        load_ref = not name.endswith("_ref")
+        if not load_ref:
+            # If not, fix the attr name to the correct field name
+            name = name[:-4]
+
+        model_field = self.__class__.__fields__.get(name, None)
+        if model_field is not None:
+            is_ref_field = issubclass(model_field.type_, (Ref, RefList))
+            if is_ref_field and not load_ref:
+                ref = super().__getattribute__(name)
                 return None if ref is None else ref.load()
-        return super().__getattribute__(__name)
 
-    def __setattr__(self, __name, __value):
-        if __value is not None and __name in self.__class__.__fields__:
-            field = self.__class__.__fields__[__name]
-            if issubclass(field.type_, Ref):
-                assert isinstance(__value, CustomModel)
-                model_type = self.__getattribute__(__name + "_ref").model_type
+        return super().__getattribute__(name)
+
+    def __setattr__(self, name, value):
+        if value is None:
+            return super().__setattr__(name, value)
+
+        model_field = self.__class__.__fields__.get(name, None)
+        if model_field is not None:
+            # Create a Ref or a RefList if field is a ref.
+            if issubclass(model_field.type_, Ref):
+                assert isinstance(
+                    value, CustomModel
+                ), "Only custom models can be assigned to Ref fields"
+
+                model_type = model_field.annotation.__args__[0]
                 return super().__setattr__(
-                    __name,
-                    Ref(uuid=__value.uuid, model_type=model_type, cache=__value),
+                    name,
+                    Ref(uuid=value.uuid, model_type=model_type, cache=value),
                 )
-            if issubclass(field.type_, RefList):
-                assert isinstance(__value, list)
-                model_type = self.__getattribute__(__name + "_ref").model_type
-                ref = RefList(
-                    uuids=[val.uuid for val in __value],
-                    model_type=model_type,
-                    cache=__value,
-                )
-                return super().__setattr__(__name, ref)
+            if issubclass(model_field.type_, RefList):
+                assert isinstance(
+                    value, list
+                ), "Only lists can be assigned to RefList fields"
+                assert all(
+                    issubclass(val, CustomModel) for val in value
+                ), "All elements in the list must be custom models"
 
-        return super().__setattr__(__name, __value)
+                model_type = model_field.annotation.__args__[0]
+                ref = RefList(
+                    uuids=[val.uuid for val in value],
+                    model_type=model_type,
+                    cache=value,
+                )
+                return super().__setattr__(name, ref)
+
+        return super().__setattr__(name, value)
 
     def check(self):
         return True
@@ -151,13 +195,13 @@ class CustomModel(BaseModel):
     def encode(self) -> dict:
         _dict = self.dict()
 
+        # Check for ref fields and replace them by their id (or id list).
         result = {}
         for key, value in _dict.items():
             if isinstance(value, Ref):
                 result[key] = value.uuid
-            if isinstance(value, RefList):
+            elif isinstance(value, RefList):
                 result[key] = value.uuids
-
         _dict.update(result)
 
         data = jsonable_encoder(_dict)

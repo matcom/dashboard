@@ -1,19 +1,146 @@
 from __future__ import annotations
 
+import os
 from datetime import date
 from pathlib import Path
-from typing import Iterator, List, NamedTuple, NewType, Optional, Tuple
+from typing import Any, Generic, Iterator, List, NamedTuple, Optional, Tuple, TypeVar
 from uuid import UUID, uuid4
 
 import streamlit as st
 import yaml
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, EmailStr, Field, HttpUrl
+from pydantic.class_validators import Validator
+from pydantic.utils import lenient_isinstance, lenient_issubclass
 from typing_extensions import Self
+
+USING_MONGO = os.environ["USE_MONGO"] != ""
+
+
+ModelT = TypeVar("ModelT", bound="CustomModel")
+
+
+class Ref(Generic[ModelT]):
+    def __init__(self, uuid: UUID, model_type: ModelT, cache=None):
+        self.uuid = uuid
+        self.model_type = model_type
+        self.cache: Optional[ModelT] = cache
+
+    def _load_yaml(self) -> ModelT:
+        if self.cache is not None:
+            return self.cache
+        return self.model_type.get(str(self.uuid))
+
+    def load(self) -> ModelT:
+        return self._load_yaml()
+
+    def clear_cache(self):
+        self.cache = None
+
+
+class RefList(Generic[ModelT]):
+    def __init__(self, uuids: List[UUID], model_type: ModelT, cache=None):
+        self.uuids = uuids
+        self.model_type = model_type
+        self.cache: List[Optional[ModelT]] = (
+            [None] * len(uuids) if cache is None else cache
+        )
+
+    def clear_cache(self):
+        for i in range(len(self.cache)):
+            self.cache[i] = None
+
+    def load(self):
+        return self._load_yaml()
+
+    def _load_yaml_at(self, idx) -> ModelT:
+        cached = self.cache[idx]
+        if cached is not None:
+            return cached
+        val = self.cache[idx] = self.model_type.get(self.uuids[idx])
+        return val
+
+    def _load_yaml(self) -> List[ModelT]:
+        return [self._load_yaml_at(i) for i in range(len(self.uuids))]
+
+
+def with_refs(model_class: ModelT) -> ModelT:
+    fields = model_class.__fields__
+    for n, field in fields.items():
+        if issubclass(field.type_, Ref):
+
+            def _ref_val_wrapper(field):
+                def ref_val(cls, value):
+                    if value is None or isinstance(value, Ref):
+                        return value
+                    return Ref(uuid=value.uuid, model_type=field.annotation.__args__[0])
+
+                return ref_val
+
+            model_class.__fields__[n].class_validators[n] = Validator(
+                _ref_val_wrapper(field), pre=True
+            )
+
+        elif issubclass(field.type_, RefList):
+
+            def _reflist_val_wrapper(field):
+                def ref_list_val(cls, value):
+                    if value is None or isinstance(value, RefList):
+                        return value
+                    return RefList(
+                        uuids=[val.uuid for val in value],
+                        model_type=field.annotation.__args__[0],
+                    )
+
+                return ref_list_val
+
+            model_class.__fields__[n].class_validators[n] = Validator(
+                _reflist_val_wrapper(field), pre=True
+            )
+        model_class.__fields__[n].populate_validators()
+    return model_class
 
 
 class CustomModel(BaseModel):
+    class Config:
+        arbitrary_types_allowed = True
+
     uuid: UUID = Field(default_factory=uuid4)
+
+    def __getattribute__(self, __name: str) -> Any:
+        if __name.startswith("__"):
+            return super().__getattribute__(__name)
+        use_ref = __name.endswith("_ref")
+        if use_ref:
+            __name = __name[:-4]
+        if __name in self.__class__.__fields__:
+            field = self.__class__.__fields__[__name]
+            if not use_ref and issubclass(field.type_, (Ref, RefList)):
+                ref = super().__getattribute__(__name)
+                return None if ref is None else ref.load()
+        return super().__getattribute__(__name)
+
+    def __setattr__(self, __name, __value):
+        if __value is not None and __name in self.__class__.__fields__:
+            field = self.__class__.__fields__[__name]
+            if issubclass(field.type_, Ref):
+                assert isinstance(__value, CustomModel)
+                model_type = self.__getattribute__(__name + "_ref").model_type
+                return super().__setattr__(
+                    __name,
+                    Ref(uuid=__value.uuid, model_type=model_type, cache=__value),
+                )
+            if issubclass(field.type_, RefList):
+                assert isinstance(__value, list)
+                model_type = self.__getattribute__(__name + "_ref").model_type
+                ref = RefList(
+                    uuids=[val.uuid for val in __value],
+                    model_type=model_type,
+                    cache=__value,
+                )
+                return super().__setattr__(__name, ref)
+
+        return super().__setattr__(__name, __value)
 
     def check(self):
         return True
@@ -22,7 +149,18 @@ class CustomModel(BaseModel):
         return yaml.dump(self.encode(), allow_unicode=True)
 
     def encode(self) -> dict:
-        data = jsonable_encoder(self.dict())
+        _dict = self.dict()
+
+        result = {}
+        for key, value in _dict.items():
+            if isinstance(value, Ref):
+                result[key] = value.uuid
+            if isinstance(value, RefList):
+                result[key] = value.uuids
+
+        _dict.update(result)
+
+        data = jsonable_encoder(_dict)
         result = {}
 
         for key, value in data.items():
@@ -92,11 +230,15 @@ class CustomModel(BaseModel):
         for key, value in data.items():
             field = cls.__fields__[key]
 
-            if issubclass(field.type_, CustomModel):
-                if isinstance(value, list):
-                    value = [field.type_.get(v) for v in value]
-                else:
-                    value = field.type_.get(value)
+            if issubclass(field.type_, Ref):
+                value = Ref(uuid=UUID(value), model_type=field.annotation.__args__[0])
+
+            if issubclass(field.type_, RefList):
+                assert isinstance(value, list)
+                value = RefList(
+                    uuids=[UUID(val) for val in value],
+                    model_type=field.annotation.__args__[0],
+                )
 
             values[key] = value
 
@@ -205,9 +347,10 @@ class Person(CustomModel):
         ]
 
 
+@with_refs
 class Classes(CustomModel):
-    subject: Subject
-    professor: Person
+    subject: Ref[Subject]
+    professor: Ref[Person]
     lecture_hours: int
     practice_hours: int
 
@@ -258,8 +401,9 @@ class Journal(CustomModel):
         return f"{self.title} ({self.publisher})"
 
 
+@with_refs
 class Publication(CustomModel):
-    authors: List[Person]
+    authors: RefList[Person]
 
     @classmethod
     def from_authors(cls, authors: List[Person]):
@@ -270,11 +414,12 @@ class Publication(CustomModel):
                 yield item
 
 
+@with_refs
 class JournalPaper(Publication):
     title: str
-    corresponding_author: Person = None
+    corresponding_author: Ref[Person] = None
     url: HttpUrl = None
-    journal: Journal = None
+    journal: Ref[Journal] = None
     issue: int = 1
     volume: int = 1
     year: int = 2022
@@ -293,6 +438,7 @@ class JournalPaper(Publication):
         return " ".join(text)
 
 
+@with_refs
 class ConferencePresentation(Publication):
     title: str
     url: HttpUrl = None
@@ -320,6 +466,7 @@ class ConferencePresentation(Publication):
         return " ".join(text)
 
 
+@with_refs
 class Book(Publication):
     title: str
     publisher: str
@@ -342,6 +489,7 @@ class Book(Publication):
         return " ".join(text)
 
 
+@with_refs
 class BookChapter(Book):
     chapter: str
 
@@ -364,11 +512,12 @@ class ResearchGroupPersonStatus(NamedTuple):
     is_head: bool
 
 
+@with_refs
 class ResearchGroup(CustomModel):
     name: str
-    head: Optional[Person] = None
-    members: List[Person]
-    collaborators: List[Person]
+    head: Ref[Person] = None
+    members: RefList[Person]
+    collaborators: RefList[Person]
     keywords: List[str]
 
     def __str__(self):
@@ -388,13 +537,14 @@ class ResearchGroup(CustomModel):
                 )
 
 
+@with_refs
 class Project(CustomModel):
     code: str = ""
     title: str
     project_type: str
     program: str = ""
-    head: Person
-    members: List[Person]
+    head: Ref[Person]
+    members: RefList[Person]
     main_entity: str
     entities: List[str]
     funding: List[str]
@@ -545,19 +695,20 @@ class Project(CustomModel):
         )
 
 
+@with_refs
 class Award(CustomModel):
     name: str
     institution: str
     title: str = ""
-    participants: List[Person]
+    participants: RefList[Person]
     awarded: bool = False
     date: date = None
 
     @classmethod
     def from_persons(cls, people: List[Person]):
-        persons = set(people)
+        persons_ids = {p.uuid for p in people}
         for award in cls.all():
-            if award.awarded and set(award.participants) & persons:
+            if award.awarded and set(award.participants_ref.uuids) & persons_ids:
                 yield award
 
     @classmethod

@@ -1,20 +1,21 @@
 from __future__ import annotations
-import logging
 
+import logging
 import os
 from inspect import isclass
 from pathlib import Path
 from typing import Any, Generic, List, Optional, TypeVar
 from uuid import UUID, uuid4
 
-import yaml
 from fastapi.encoders import jsonable_encoder
+from models.db_clients.yaml_db_client import YamlDBClient
 from pydantic import BaseModel, EmailStr, Field, HttpUrl
 from pydantic.class_validators import Validator
 from typing_extensions import Self
 
 USING_MONGO = os.environ["USE_MONGO"] != ""
 
+DB_CLIENT = YamlDBClient(Path("/src/data/"))
 
 ModelT = TypeVar("ModelT", bound="CustomModel")
 
@@ -89,7 +90,6 @@ def with_refs(model_class: ModelT) -> ModelT:
     fields = model_class.__fields__
     for field_name, field in fields.items():
         if isclass(field.type_) and issubclass(field.type_, Ref):
-            logging.error(f"Validating {model_class} - {field}")
 
             # Function that returns a validator for a Ref[T] field
             def _ref_val_wrapper(field):
@@ -105,7 +105,6 @@ def with_refs(model_class: ModelT) -> ModelT:
             )
 
         elif isclass(field.type_) and issubclass(field.type_, RefList):
-            logging.error(f"Validating {model_class} - {field}")
 
             # Function that returns a validator for a RefList[T] field
             def _reflist_val_wrapper(field):
@@ -192,9 +191,6 @@ class CustomModel(BaseModel):
     def check(self):
         return True
 
-    def yaml(self) -> str:
-        return yaml.dump(self.encode(), allow_unicode=True)
-
     def encode(self) -> dict:
         _dict = self.dict()
 
@@ -214,7 +210,7 @@ class CustomModel(BaseModel):
             if isinstance(value, dict) and "uuid" in value:
                 result[key] = value["uuid"]
             elif isinstance(value, list) and all(
-                [isinstance(v, dict) and "uuid" in v for v in value]
+                isinstance(v, dict) and "uuid" in v for v in value
             ):
                 result[key] = [v["uuid"] for v in value]
             elif isinstance(value, HttpUrl):
@@ -234,25 +230,23 @@ class CustomModel(BaseModel):
 
         return str(v)
 
-    def save(self):
-        path: Path = (
-            Path("/src/data") / self.__class__.__name__ / (str(self.uuid) + ".yaml")
-        )
-        path.parent.mkdir(exist_ok=True, parents=True)
+    def coll_name(self) -> str:
+        return self.__class__.__name__
 
-        with path.open("w") as fp:
-            fp.write(self.yaml())
+    @classmethod
+    def cls_coll_name(cls) -> str:
+        return cls.__name__
+
+    def save(self):
+        coll_name = self.coll_name()
+        data = self.encode()
+        DB_CLIENT.save(coll_name, data)
 
     @classmethod
     def all(cls) -> List[Self]:
-        path: Path = Path("/src/data") / cls.__name__
-        items = []
-
-        for fname in path.glob("*.yaml"):
-            with open(fname, encoding="utf-8") as fp:
-                items.append(cls.load(fp))
-
-        return items
+        coll_name = cls.cls_coll_name()
+        entries = DB_CLIENT.all(coll_name)
+        return [cls.load(entry) for entry in entries]
 
     @classmethod
     def find(cls, **kwargs):
@@ -264,14 +258,12 @@ class CustomModel(BaseModel):
 
     @classmethod
     def get(cls, uuid: str) -> Self:
-        path: Path = Path("/src/data") / cls.__name__ / (str(uuid) + ".yaml")
-
-        with path.open() as fp:
-            return cls.load(fp)
+        coll_name = cls.cls_coll_name()
+        data = DB_CLIENT.get(coll_name, uuid)
+        return cls.load(data)
 
     @classmethod
-    def load(cls, fp) -> Self:
-        data = yaml.safe_load(fp)
+    def load(cls, data: dict) -> Self:
         values = {}
 
         for key, value in data.items():
@@ -289,7 +281,6 @@ class CustomModel(BaseModel):
 
             values[key] = value
 
-        logging.error(f"Loading {data}")
         return cls(**values)
 
     def __hash__(self):

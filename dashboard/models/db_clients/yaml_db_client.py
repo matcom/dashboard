@@ -23,6 +23,19 @@ class YamlDBClient(DBClient):
         with path.open() as data_file:
             return yaml.safe_load(data_file)
 
+    def find(self, coll_name: str, **kwargs) -> List[dict]:
+        entries = []
+        for item in self.all(coll_name):
+            if all(getattr(item, k, None) == v for k, v in kwargs.items()):
+                entries.append(item)
+        return entries
+
+    def find_one(self, coll_name: str, **kwargs) -> dict:
+        for item in self.all(coll_name):
+            if all(getattr(item, k, None) == v for k, v in kwargs.items()):
+                return item
+        raise KeyError(str(kwargs))
+
     def all(self, coll_name: str) -> List[dict]:
         path: Path = self.data_path / coll_name
         items = []

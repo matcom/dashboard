@@ -13,5 +13,13 @@ class DBClient(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def find(self, coll_name: str, **kwargs) -> List[dict]:
+        pass
+
+    @abc.abstractmethod
+    def find_one(self, coll_name: str, **kwargs) -> dict:
+        pass
+
+    @abc.abstractmethod
     def all(self, coll_name: str) -> List[dict]:
         pass

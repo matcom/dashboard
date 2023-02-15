@@ -8,14 +8,23 @@ from typing import Any, Generic, List, Optional, TypeVar
 from uuid import UUID, uuid4
 
 from fastapi.encoders import jsonable_encoder
+from models.db_clients.mongo_db_client import MongoDBClient
 from models.db_clients.yaml_db_client import YamlDBClient
 from pydantic import BaseModel, EmailStr, Field, HttpUrl
 from pydantic.class_validators import Validator
 from typing_extensions import Self
 
-USING_MONGO = os.environ["USE_MONGO"] != ""
+DB_ROOT_USER = os.environ["DB_ROOT_USER"]
+DB_ROOT_PASS = os.environ["DB_ROOT_PASS"]
+USING_MONGO = (
+    os.environ["USE_MONGO"] != "" and DB_ROOT_USER != "" and DB_ROOT_PASS != ""
+)
 
-DB_CLIENT = YamlDBClient(Path("/src/data/"))
+DB_CLIENT = (
+    MongoDBClient(DB_ROOT_USER, DB_ROOT_PASS)
+    if USING_MONGO
+    else YamlDBClient(Path("/src/data/"))
+)
 
 ModelT = TypeVar("ModelT", bound="CustomModel")
 
@@ -249,12 +258,16 @@ class CustomModel(BaseModel):
         return [cls.load(entry) for entry in entries]
 
     @classmethod
-    def find(cls, **kwargs):
-        for item in cls.all():
-            if all(getattr(item, k, None) == v for k, v in kwargs.items()):
-                return item
+    def find(cls, **kwargs) -> List[Self]:
+        coll_name = cls.cls_coll_name()
+        entries = DB_CLIENT.find(coll_name, **kwargs)
+        return [cls.load(entry) for entry in entries]
 
-        raise KeyError(str(kwargs))
+    @classmethod
+    def find_one(cls, **kwargs) -> Self:
+        coll_name = cls.cls_coll_name()
+        data = DB_CLIENT.find_one(coll_name, **kwargs)
+        return cls.load(data)
 
     @classmethod
     def get(cls, uuid: str) -> Self:

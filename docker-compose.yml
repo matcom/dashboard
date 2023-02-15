@@ -9,6 +9,9 @@ services:
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
       - SECRET=${SECRET}
       - ADMIN=${ADMIN}
+      - USE_MONGO=${USE_MONGO}
+      - DB_ROOT_USER=${DB_ROOT_USER}
+      - DB_ROOT_PASS=${DB_ROOT_PASS}
     user: ${USER}
     depends_on:
       - mongo

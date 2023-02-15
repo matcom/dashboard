@@ -6,6 +6,7 @@ from typing import List
 import auth
 import pandas as pd
 import streamlit as st
+import yaml
 from models import Thesis
 from modules.graph import build_advisors_graph
 from modules.utils import generate_widget_key
@@ -14,11 +15,7 @@ st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layo
 
 listing, create, details = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles"])
 
-theses: List[Thesis] = []
-
-for path in Path("/src/data/Thesis/").rglob("*.yaml"):
-    with open(path) as fp:
-        theses.append(Thesis.load(fp))
+theses: List[Thesis] = Thesis.all()
 
 with listing:
     st.write("##### 🏷️ Filtros")
@@ -127,7 +124,7 @@ with create:
             except ValueError as e:
                 st.error(e)
 
-            st.code(thesis.yaml(), "yaml")
+            st.code(yaml.dump(thesis.encode()), "yaml")
 
 with details:
     thesis = st.selectbox(

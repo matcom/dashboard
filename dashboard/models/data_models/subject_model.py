@@ -1,6 +1,7 @@
-from models.custom_model import CustomModel
+from models.custom_model import CustomModel, collection_name
 
 
+@collection_name("subjects")
 class Subject(CustomModel):
     subject: str
     career: str

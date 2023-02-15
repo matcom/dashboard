@@ -1,10 +1,11 @@
 from pydantic import HttpUrl
 
-from models.custom_model import with_refs
+from models.custom_model import collection_name, with_refs
 from models.data_models.publication_model import Publication
 
 
 @with_refs
+@collection_name("conferencePresentations")
 class ConferencePresentation(Publication):
     title: str
     url: HttpUrl = None

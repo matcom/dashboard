@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import os
 from inspect import isclass
 from pathlib import Path
@@ -22,6 +21,11 @@ USING_MONGO = (
     os.environ["USE_MONGO"] != "" and DB_ROOT_USER != "" and DB_ROOT_PASS != ""
 )
 
+# Contains the collection name for every custom model.
+# The names are filled using the `collection_name` decorator.
+collection_names = {}
+
+# All database clients
 clients: List[DBClient] = [
     YamlDBClient(Path("/src/data/")),
 ]
@@ -32,6 +36,61 @@ if USING_MONGO:
 DB_CLIENT = CombinedDBClient(clients, use=1 if USING_MONGO else 0)
 
 ModelT = TypeVar("ModelT", bound="CustomModel")
+
+
+def with_refs(model_class: ModelT) -> ModelT:
+    """
+    Decorator that adds pydantic validators for all the Ref[T] and RefList[T]
+    fields in a CustomModel.
+    """
+    fields = model_class.__fields__
+    for field_name, field in fields.items():
+        if isclass(field.type_) and issubclass(field.type_, Ref):
+
+            # Function that returns a validator for a Ref[T] field
+            def _ref_val_wrapper(field):
+                def ref_val(cls, value):
+                    if value is None or isinstance(value, Ref):
+                        return value
+                    return Ref(uuid=value.uuid, model_type=field.annotation.__args__[0])
+
+                return ref_val
+
+            model_class.__fields__[field_name].class_validators[field_name] = Validator(
+                _ref_val_wrapper(field), pre=True
+            )
+
+        elif isclass(field.type_) and issubclass(field.type_, RefList):
+
+            # Function that returns a validator for a RefList[T] field
+            def _reflist_val_wrapper(field):
+                def ref_list_val(cls, value):
+                    if value is None or isinstance(value, RefList):
+                        return value
+                    return RefList(
+                        uuids=[val.uuid for val in value],
+                        model_type=field.annotation.__args__[0],
+                    )
+
+                return ref_list_val
+
+            model_class.__fields__[field_name].class_validators[field_name] = Validator(
+                _reflist_val_wrapper(field), pre=True
+            )
+        model_class.__fields__[field_name].populate_validators()
+    return model_class
+
+
+def collection_name(coll_name: str):
+    """
+    Decorator that sets the model collection name.
+    """
+
+    def collection_name_deco(model_class: ModelT) -> ModelT:
+        collection_names[model_class] = coll_name
+        return model_class
+
+    return collection_name_deco
 
 
 class Ref(Generic[ModelT]):
@@ -94,49 +153,6 @@ class RefList(Generic[ModelT]):
 
     def _load_yaml(self) -> List[ModelT]:
         return [self._load_yaml_at(i) for i in range(len(self.uuids))]
-
-
-def with_refs(model_class: ModelT) -> ModelT:
-    """
-    Decorator that adds pydantic validators for all the Ref[T] and RefList[T]
-    fields in a CustomModel.
-    """
-    fields = model_class.__fields__
-    for field_name, field in fields.items():
-        if isclass(field.type_) and issubclass(field.type_, Ref):
-
-            # Function that returns a validator for a Ref[T] field
-            def _ref_val_wrapper(field):
-                def ref_val(cls, value):
-                    if value is None or isinstance(value, Ref):
-                        return value
-                    return Ref(uuid=value.uuid, model_type=field.annotation.__args__[0])
-
-                return ref_val
-
-            model_class.__fields__[field_name].class_validators[field_name] = Validator(
-                _ref_val_wrapper(field), pre=True
-            )
-
-        elif isclass(field.type_) and issubclass(field.type_, RefList):
-
-            # Function that returns a validator for a RefList[T] field
-            def _reflist_val_wrapper(field):
-                def ref_list_val(cls, value):
-                    if value is None or isinstance(value, RefList):
-                        return value
-                    return RefList(
-                        uuids=[val.uuid for val in value],
-                        model_type=field.annotation.__args__[0],
-                    )
-
-                return ref_list_val
-
-            model_class.__fields__[field_name].class_validators[field_name] = Validator(
-                _reflist_val_wrapper(field), pre=True
-            )
-        model_class.__fields__[field_name].populate_validators()
-    return model_class
 
 
 class CustomModel(BaseModel):
@@ -244,39 +260,41 @@ class CustomModel(BaseModel):
 
         return str(v)
 
-    def coll_name(self) -> str:
-        return self.__class__.__name__
-
     @classmethod
-    def cls_coll_name(cls) -> str:
-        return cls.__name__
+    def coll_name(cls) -> str:
+        coll_name = collection_names.get(cls, None)
+        if coll_name is None:
+            raise Exception(
+                f"Model {cls.__name__} does not have a collection name assigned."
+            )
+        return coll_name
 
     def save(self):
-        coll_name = self.coll_name()
+        coll_name = self.__class__.coll_name()
         data = self.encode()
         DB_CLIENT.save(coll_name, data)
 
     @classmethod
     def all(cls) -> List[Self]:
-        coll_name = cls.cls_coll_name()
+        coll_name = cls.coll_name()
         entries = DB_CLIENT.all(coll_name)
         return [cls.load(entry) for entry in entries]
 
     @classmethod
     def find(cls, **kwargs) -> List[Self]:
-        coll_name = cls.cls_coll_name()
+        coll_name = cls.coll_name()
         entries = DB_CLIENT.find(coll_name, **kwargs)
         return [cls.load(entry) for entry in entries]
 
     @classmethod
     def find_one(cls, **kwargs) -> Self:
-        coll_name = cls.cls_coll_name()
+        coll_name = cls.coll_name()
         data = DB_CLIENT.find_one(coll_name, **kwargs)
         return cls.load(data)
 
     @classmethod
     def get(cls, uuid: str) -> Self:
-        coll_name = cls.cls_coll_name()
+        coll_name = cls.coll_name()
         data = DB_CLIENT.get(coll_name, uuid)
         return cls.load(data)
 

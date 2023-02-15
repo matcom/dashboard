@@ -1,10 +1,12 @@
 from typing import List
-from models.custom_model import CustomModel, Ref, with_refs
+
+from models.custom_model import CustomModel, Ref, collection_name, with_refs
 from models.data_models.person_model import Person
 from models.data_models.subject_model import Subject
 
 
 @with_refs
+@collection_name("classes")
 class Classes(CustomModel):
     subject: Ref[Subject]
     professor: Ref[Person]

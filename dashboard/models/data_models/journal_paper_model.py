@@ -1,12 +1,13 @@
 from pydantic import HttpUrl
 
-from models.custom_model import Ref, with_refs
+from models.custom_model import Ref, collection_name, with_refs
 from models.data_models.journal_model import Journal
 from models.data_models.person_model import Person
 from models.data_models.publication_model import Publication
 
 
 @with_refs
+@collection_name("journalPapers")
 class JournalPaper(Publication):
     title: str
     corresponding_author: Ref[Person] = None

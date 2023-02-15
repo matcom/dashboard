@@ -15,7 +15,7 @@ class MongoDBClient(DBClient):
 
     def save(self, coll_name: str, data: dict):
         coll = self.main_db[coll_name]
-        coll.update_one({"uuid": data["uuid"]}, data, upsert=True)
+        coll.update_one({"uuid": data["uuid"]}, {"$set": data}, upsert=True)
 
     def get(self, coll_name: str, uuid: str) -> dict:
         coll = self.main_db[coll_name]
@@ -41,5 +41,4 @@ class MongoDBClient(DBClient):
         return data
 
     def all(self, coll_name: str) -> List[dict]:
-        coll = self.main_db[coll_name]
-        return list(coll.find())
+        return self.find(coll_name)

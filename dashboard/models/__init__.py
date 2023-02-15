@@ -13,3 +13,4 @@ from models.data_models.publication_model import Publication
 from models.data_models.research_group_model import ResearchGroup
 from models.data_models.subject_model import Subject
 from models.data_models.thesis_model import Thesis
+from models.custom_model import CustomModel

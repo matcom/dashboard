@@ -1,10 +1,11 @@
 from pathlib import Path
 from typing import List
 
-from models.custom_model import CustomModel
+from models.custom_model import CustomModel, collection_name
 from models.data_models.person_model import Person
 
 
+@collection_name("theses")
 class Thesis(CustomModel):
     title: str
     authors: List[str]

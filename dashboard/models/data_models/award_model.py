@@ -2,11 +2,12 @@ from datetime import date
 from typing import List
 
 import streamlit as st
-from models.custom_model import CustomModel, RefList, with_refs
+from models.custom_model import CustomModel, RefList, collection_name, with_refs
 from models.data_models.person_model import Person
 
 
 @with_refs
+@collection_name("awards")
 class Award(CustomModel):
     name: str
     institution: str

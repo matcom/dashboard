@@ -1,8 +1,9 @@
-from models.custom_model import with_refs
+from models.custom_model import collection_name, with_refs
 from models.data_models.book_model import Book
 
 
 @with_refs
+@collection_name("bookChapters")
 class BookChapter(Book):
     chapter: str
 

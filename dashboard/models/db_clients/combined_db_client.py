@@ -7,8 +7,8 @@ class CombinedDBClient(DBClient):
     def __init__(self, clients: List[DBClient], use: int = 0):
         if not clients:
             raise ValueError("There must be at least one client.")
-        if 0 <= use < len(clients):
-            raise ValueError("Invalid client index to use.")
+        if not 0 <= use < len(clients):
+            raise ValueError(f"Invalid client index ({use}) to use.")
 
         self.clients = clients
         self.use = use

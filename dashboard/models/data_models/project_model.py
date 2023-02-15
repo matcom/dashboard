@@ -3,11 +3,12 @@ from typing import List
 
 import streamlit as st
 
-from models.custom_model import CustomModel, Ref, RefList, with_refs
+from models.custom_model import CustomModel, Ref, RefList, collection_name, with_refs
 from models.data_models.person_model import Person
 
 
 @with_refs
+@collection_name("projects")
 class Project(CustomModel):
     code: str = ""
     title: str

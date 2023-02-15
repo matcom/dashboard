@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Iterator, List, NamedTuple, Tuple
 
-from models.custom_model import CustomModel, Ref, RefList, with_refs
+from models.custom_model import CustomModel, Ref, RefList, collection_name, with_refs
 from models.data_models.person_model import Person
 
 
@@ -13,6 +13,7 @@ class ResearchGroupPersonStatus(NamedTuple):
 
 
 @with_refs
+@collection_name("researchGroups")
 class ResearchGroup(CustomModel):
     name: str
     head: Ref[Person] = None

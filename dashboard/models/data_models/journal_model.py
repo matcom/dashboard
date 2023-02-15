@@ -2,9 +2,10 @@ from typing import List
 
 from pydantic import Field, HttpUrl
 
-from models.custom_model import CustomModel
+from models.custom_model import CustomModel, collection_name
 
 
+@collection_name("journals")
 class Journal(CustomModel):
     title: str
     publisher: str

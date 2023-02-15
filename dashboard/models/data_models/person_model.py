@@ -2,9 +2,10 @@ from typing import List
 
 from pydantic import Field
 
-from models.custom_model import CustomModel
+from models.custom_model import CustomModel, collection_name
 
 
+@collection_name("persons")
 class Person(CustomModel):
     name: str
     institution: str = None

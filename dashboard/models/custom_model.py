@@ -8,9 +8,11 @@ from typing import Any, Generic, List, Optional, TypeVar
 from uuid import UUID, uuid4
 
 from fastapi.encoders import jsonable_encoder
+from models.db_clients.combined_db_client import CombinedDBClient
+from models.db_clients.db_client import DBClient
 from models.db_clients.mongo_db_client import MongoDBClient
 from models.db_clients.yaml_db_client import YamlDBClient
-from pydantic import BaseModel, EmailStr, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl
 from pydantic.class_validators import Validator
 from typing_extensions import Self
 
@@ -20,11 +22,14 @@ USING_MONGO = (
     os.environ["USE_MONGO"] != "" and DB_ROOT_USER != "" and DB_ROOT_PASS != ""
 )
 
-DB_CLIENT = (
-    MongoDBClient(DB_ROOT_USER, DB_ROOT_PASS)
-    if USING_MONGO
-    else YamlDBClient(Path("/src/data/"))
-)
+clients: List[DBClient] = [
+    YamlDBClient(Path("/src/data/")),
+]
+
+if USING_MONGO:
+    clients.append(MongoDBClient(DB_ROOT_USER, DB_ROOT_PASS))
+
+DB_CLIENT = CombinedDBClient(clients, use=1 if USING_MONGO else 0)
 
 ModelT = TypeVar("ModelT", bound="CustomModel")
 

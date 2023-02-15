@@ -22,17 +22,22 @@ class MongoDBClient(DBClient):
         data = coll.find_one({"uuid": uuid})
         if data is None:
             raise Exception(f"Entry {uuid} not found in {coll_name}")
+        data.pop("_id")
         return data
 
     def find(self, coll_name: str, **kwargs) -> List[dict]:
         coll = self.main_db[coll_name]
-        return list(coll.find(**kwargs))
+        items = list(coll.find(**kwargs))
+        for item in items:
+            item.pop("_id")
+        return items
 
     def find_one(self, coll_name: str, **kwargs) -> dict:
         coll = self.main_db[coll_name]
         data = coll.find_one(**kwargs)
         if data is None:
             raise KeyError(str(kwargs))
+        data.pop("_id")
         return data
 
     def all(self, coll_name: str) -> List[dict]:

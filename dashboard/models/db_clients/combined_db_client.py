@@ -24,6 +24,9 @@ class CombinedDBClient(DBClient):
     def get(self, coll_name: str, uuid: str) -> dict:
         return self.client_in_use.get(coll_name, uuid)
 
+    def delete(self, coll_name: str, uuid: str):
+        self.client_in_use.delete(coll_name, uuid)
+
     def find(self, coll_name: str, **kwargs) -> List[dict]:
         return self.client_in_use.find(coll_name, **kwargs)
 
@@ -32,3 +35,6 @@ class CombinedDBClient(DBClient):
 
     def all(self, coll_name: str) -> List[dict]:
         return self.client_in_use.all(coll_name)
+
+    def stats(self, coll_name: str) -> dict:
+        return self.client_in_use.stats(coll_name)

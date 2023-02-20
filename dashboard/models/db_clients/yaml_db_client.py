@@ -23,6 +23,10 @@ class YamlDBClient(DBClient):
         with path.open() as data_file:
             return yaml.safe_load(data_file)
 
+    def delete(self, coll_name: str, uuid: str):
+        path: Path = self.data_path / coll_name / (uuid + ".yaml")
+        path.unlink()
+
     def find(self, coll_name: str, **kwargs) -> List[dict]:
         entries = []
         for item in self.all(coll_name):
@@ -46,3 +50,6 @@ class YamlDBClient(DBClient):
                 items.append(data)
 
         return items
+
+    def stats(self, coll_name: str) -> dict:
+        return {}

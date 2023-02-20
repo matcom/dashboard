@@ -25,6 +25,10 @@ class MongoDBClient(DBClient):
         data.pop("_id")
         return data
 
+    def delete(self, coll_name: str, uuid: str):
+        coll = self.main_db[coll_name]
+        coll.delete_one({"uuid": uuid})
+
     def find(self, coll_name: str, **kwargs) -> List[dict]:
         coll = self.main_db[coll_name]
         items = list(coll.find(**kwargs))
@@ -42,3 +46,6 @@ class MongoDBClient(DBClient):
 
     def all(self, coll_name: str) -> List[dict]:
         return self.find(coll_name)
+
+    def stats(self, coll_name: str) -> dict:
+        return self.main_db.command("collstats", coll_name)

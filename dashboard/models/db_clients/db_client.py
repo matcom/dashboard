@@ -1,6 +1,5 @@
 import abc
 from typing import List
-from uuid import UUID
 
 
 class DBClient(abc.ABC):
@@ -13,6 +12,10 @@ class DBClient(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def delete(self, coll_name: str, uuid: str) -> dict:
+        pass
+
+    @abc.abstractmethod
     def find(self, coll_name: str, **kwargs) -> List[dict]:
         pass
 
@@ -22,4 +25,8 @@ class DBClient(abc.ABC):
 
     @abc.abstractmethod
     def all(self, coll_name: str) -> List[dict]:
+        pass
+
+    @abc.abstractmethod
+    def stats(self, coll_name: str) -> dict:
         pass

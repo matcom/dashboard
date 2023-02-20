@@ -275,6 +275,11 @@ class CustomModel(BaseModel):
         DB_CLIENT.save(coll_name, data)
 
     @classmethod
+    def stats(cls) -> dict:
+        coll_name = cls.coll_name()
+        return DB_CLIENT.stats(coll_name)
+
+    @classmethod
     def all(cls) -> List[Self]:
         coll_name = cls.coll_name()
         entries = DB_CLIENT.all(coll_name)

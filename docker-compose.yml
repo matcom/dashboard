@@ -9,7 +9,12 @@ services:
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
       - SECRET=${SECRET}
       - ADMIN=${ADMIN}
+      - USE_MONGO=${USE_MONGO}
+      - DB_ROOT_USER=${DB_ROOT_USER}
+      - DB_ROOT_PASS=${DB_ROOT_PASS}
     user: ${USER}
+    depends_on:
+      - mongo
     ports:
       - "8501:8501"
     volumes:
@@ -29,6 +34,15 @@ services:
     depends_on:
       - app
 
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASS}
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo_data:/data/db
 
 volumes:
   caddy_config:

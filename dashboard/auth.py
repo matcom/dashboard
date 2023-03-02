@@ -9,6 +9,12 @@ from tools import send_from_template
 COOKIE = "Dashboard-AuthToken"
 
 
+def in_admin_session() -> bool:
+    if st.secrets.get("skip_auth", False):
+        return True
+    return is_user_logged() and st.session_state["user"] == os.environ["ADMIN"]
+
+
 def is_user_logged() -> bool:
     if st.secrets.get("skip_auth", False):
         return True

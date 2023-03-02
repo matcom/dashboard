@@ -13,13 +13,10 @@ def save_project(project: Project, prefix):
     project.save()
 
     for key in st.session_state.keys():
-        print(key, flush=True)
         if key.startswith(prefix):
             del st.session_state[key]
 
     del st.session_state.current_project
-    print(st.session_state, flush=True)
-
     st.success("Proyecto guardado con éxito")
 
 

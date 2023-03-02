@@ -7,3 +7,4 @@ streamlit-agraph
 levenshtein
 itsdangerous
 extra_streamlit_components
+pymongo

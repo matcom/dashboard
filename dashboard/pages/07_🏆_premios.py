@@ -20,13 +20,10 @@ def save_award(award: Award, prefix):
     award.save()
 
     for key in st.session_state.keys():
-        print(key, flush=True)
         if key.startswith(prefix):
             del st.session_state[key]
 
     del st.session_state.current_award
-    print(st.session_state, flush=True)
-
     st.success("Premio guardado con éxito")
 
 

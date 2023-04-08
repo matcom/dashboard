@@ -1,8 +1,7 @@
 from typing import List
 
-from pydantic import Field
-
 from models.custom_model import CustomModel, collection_name
+from pydantic import Field
 
 
 @collection_name("persons")

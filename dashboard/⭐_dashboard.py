@@ -3,6 +3,7 @@ import os
 import auth
 import streamlit as st
 from page_router import PageRouter, Route
+from pages.dashboard_pages.registration import registration_page, user_is_registered
 
 
 def dashboard(router: PageRouter, **params):
@@ -29,12 +30,24 @@ def dashboard(router: PageRouter, **params):
         with open("/src/dashboard/main.md", encoding="utf-8") as fp:
             st.write(fp.read())
 
+
 page_router = PageRouter(
     "dashboard",
     Route(
         url="home",
         builder=dashboard,
-    )
+        subroutes=[
+            Route(
+                url="signup",
+                builder=registration_page,
+                redirect=lambda **_: (
+                    "home"
+                    if auth.is_user_logged()
+                    else None
+                ),
+            )
+        ],
+    ),
 )
 
 page_router.start()

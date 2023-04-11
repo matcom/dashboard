@@ -11,10 +11,12 @@ class Route:
         url: str,
         builder: Callable,
         name: Optional[str] = None,
+        redirect: Optional[Callable] = None,
         subroutes: Optional[List[Route]] = None,
     ):
         self.url = url
         self.builder = builder
+        self.redirect = redirect
         self.parent: Optional[Route] = None
         self.page_name = url if name is None else name
 
@@ -52,13 +54,14 @@ class PageRouter:
         route = self.routes.get(url, None)
         if not route:
             raise Exception(f"Invalid route '{url}'")
+
         st.experimental_set_query_params(page=url, **params)
         st.experimental_rerun()
 
-    def go_named(self, page_name: str, **params):
-        route = self.routes_by_name.get(page_name, None)
+    def go_named(self, page: str, **params):
+        route = self.routes_by_name.get(page, None)
         if not route:
-            raise Exception(f"There is no page named: '{page_name}'")
+            raise Exception(f"There is no page named: '{page}'")
         self.go(route.url, **params)
 
     def go_back(self, **params):
@@ -69,8 +72,13 @@ class PageRouter:
         if show_back_button and st.button("⬅️ Atrás"):
             self.go_back()
 
+    def _page_not_found(self, url):
+        st.title('Esta página no existe')
+
     def start(self):
-        if st.session_state.get("root_page", None) != self.root_name:
+        # To detect change of base page
+        current_root = st.session_state.get("root_page", None)
+        if current_root is not None and current_root != self.root_name:
             st.session_state["root_page"] = self.root_name
             st.experimental_set_query_params()
 
@@ -86,9 +94,15 @@ class PageRouter:
         st.experimental_set_query_params(**query)
         url = st.experimental_get_query_params()["page"][0]
 
-        route = self.routes.get(url, None)
-        if not route:
-            raise Exception(f"Invalid route '{url}'")
+        route = self.routes[url]
+
+        if route.redirect is not None:
+            new_url = route.redirect(**query)
+            if new_url is not None:
+                del query["page"]
+                self.go(new_url, **query)
+                return
+
         self.current_page = route
         query = {k: (v[0] if v and len(v) == 1 else v) for k, v in query.items()}
 

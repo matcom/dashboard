@@ -31,14 +31,14 @@ class MongoDBClient(DBClient):
 
     def find(self, coll_name: str, **kwargs) -> List[dict]:
         coll = self.main_db[coll_name]
-        items = list(coll.find(**kwargs))
+        items = list(coll.find(filter=kwargs))
         for item in items:
             item.pop("_id")
         return items
 
     def find_one(self, coll_name: str, **kwargs) -> dict:
         coll = self.main_db[coll_name]
-        data = coll.find_one(**kwargs)
+        data = coll.find_one(filter=kwargs)
         if data is None:
             raise KeyError(str(kwargs))
         data.pop("_id")

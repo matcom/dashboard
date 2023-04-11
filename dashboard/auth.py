@@ -88,7 +88,7 @@ def authenticate():
                     "login",
                     email,
                     faculty="Matcom",  # Change in the future for allowing any faculty
-                    link=f"http://localhost:8501?token={token}",
+                    link=f"http://localhost:8501?page=home/signup&token={token}",
                 )
                 st.success(
                     "El enlace de autenticación ha sido enviado. Verifique su correo."

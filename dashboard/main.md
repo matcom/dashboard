@@ -1,5 +1,3 @@
-Para comenzar, si desea modificar datos tendrá que loguearse. De lo contrario puede utilizar este sistema como solo lectura.
-
 Las funcionalidades que encontrará en cada página son las siguientes:
 
 - **👥 personal**: información sobre el personal interno y externo.

@@ -1,9 +1,10 @@
 import auth
 import streamlit as st
 from models import Journal, JournalPaper, Person
+from page_router import PageRouter
 
 
-def papers_page(router, from_year=None, to_year=None, **params):
+def papers_page(router: PageRouter, from_year=None, to_year=None, **params):
     st.set_page_config(page_title="MatCom Dashboard - Artículos", layout="wide")
     router.page_header("📃 Artículos")
 
@@ -18,7 +19,7 @@ def papers_page(router, from_year=None, to_year=None, **params):
     papers = [p for p in JournalPaper.all() if p.year in years]
     papers.sort(key=lambda p: p.title)
 
-    if auth.is_user_logged():
+    if router.user_can_write:
         with st.expander("⭐ Nuevo artículo / 📝 Editar"):
             if (
                 st.radio(

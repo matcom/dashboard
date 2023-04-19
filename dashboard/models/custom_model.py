@@ -11,6 +11,7 @@ from models.db_clients.combined_db_client import CombinedDBClient
 from models.db_clients.db_client import DBClient
 from models.db_clients.mongo_db_client import MongoDBClient
 from models.db_clients.yaml_db_client import YamlDBClient
+from numpy import delete
 from pydantic import BaseModel, Field, HttpUrl
 from pydantic.class_validators import Validator
 from typing_extensions import Self
@@ -302,6 +303,10 @@ class CustomModel(BaseModel):
         coll_name = cls.coll_name()
         data = DB_CLIENT.get(coll_name, uuid)
         return cls.load(data)
+
+    def delete(self):
+        coll_name = self.__class__.coll_name()
+        DB_CLIENT.delete(coll_name, str(self.uuid))
 
     @classmethod
     def load(cls, data: dict) -> Self:

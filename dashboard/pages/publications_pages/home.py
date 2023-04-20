@@ -11,14 +11,15 @@ from models import (
     Person,
 )
 from modules.graph import build_publications_graph
+from page_router import PageRouter
 
 
-def home_page(router, **params):
+def home_page(router: PageRouter, **params):
     st.set_page_config(
         page_title="MatCom Dashboard - Publicaciones", page_icon="📚", layout="wide"
     )
 
-    st.title("Publicaciones")
+    router.page_header("Publicaciones")
     st.markdown("#### *Todo lo relacionado con artículos, revistas, libros, etc*")
 
     with st.expander("Índice"):

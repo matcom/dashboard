@@ -1,9 +1,10 @@
 import auth
 import streamlit as st
 from models.data_models.person_model import Person
+from page_router import PageRouter
 
 
-def profile_page(router, **params):
+def profile_page(router: PageRouter, **params):
     st.set_page_config(page_title="MatCom Dashboard - Perfil")
     st.title("👤 Perfil")
 

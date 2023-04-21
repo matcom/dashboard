@@ -7,6 +7,7 @@ from page_router import PageRouter
 
 def proyectos_page(router: PageRouter, **params):
     st.set_page_config(page_title="MatCom Dashboard - Proyectos", page_icon="⚗️", layout="wide")
+    router.page_header("Proyectos")
 
 
     def save_project(project: Project, prefix):

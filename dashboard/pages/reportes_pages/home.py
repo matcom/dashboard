@@ -9,6 +9,7 @@ from page_router import PageRouter
 
 def reportes_page(router: PageRouter, **params):
     st.set_page_config(page_title="MatCom Dashboard - Reportes", page_icon="📈", layout="wide")
+    router.page_header("Reportes")
 
 
     balance, posgrado, personal, group = st.tabs(

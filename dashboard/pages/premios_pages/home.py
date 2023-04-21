@@ -8,7 +8,7 @@ from page_router import PageRouter
 
 def premios_page(router: PageRouter, **params):
     st.set_page_config(page_title="MatCom Dashboard - Premios", page_icon="🏆", layout="wide")
-    st.title("🏆 Premios")
+    router.page_header("Premios")
 
     list_view, create_view, edit_view = st.tabs(
         ["🏆 Listado de premios", "⭐ Crear nuevo premio", "📝 Editar premio"]

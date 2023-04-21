@@ -7,6 +7,10 @@ from page_router import PageRouter
 
 def personal_page(router: PageRouter, **params):
     st.set_page_config(page_title="MatCom Dashboard - Personal", page_icon="👤", layout="wide")
+
+    router.page_header("Personal")
+    
+
     people = Person.all()
     people.sort(key=lambda p: p.name)
 

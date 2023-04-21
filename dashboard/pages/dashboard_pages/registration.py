@@ -11,6 +11,9 @@ def user_is_registered(email: str):
 def registration_page(router: PageRouter, token: str = None, **params):
     st.set_page_config(page_title="MatCom Dashboard - Registro")
 
+    router.page_header("Registro")
+
+
     # Verify token
     email = auth.verify_token(token)
     if email is None:

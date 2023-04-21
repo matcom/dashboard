@@ -15,6 +15,8 @@ from page_router import PageRouter
 
 def tesis_page(router: PageRouter, **params):
     st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide")
+    router.page_header("Tesis")
+
 
     listing, create, details = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles"])
 

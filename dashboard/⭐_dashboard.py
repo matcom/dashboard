@@ -9,7 +9,7 @@ from pages.dashboard_pages.registration import registration_page, user_is_regist
 
 def dashboard(router: PageRouter, **params):
     st.set_page_config(page_title="MatCom Dashboard", layout="wide")
-    st.title("⭐ Bienvenido al Dashboard de MatCom")
+    router.page_header("⭐ Bienvenido al Dashboard de MatCom")
 
     left, right = st.columns(2)
 

@@ -18,7 +18,8 @@ def admin_page(router: PageRouter, **params):
         page_title="MatCom Dashboard - Administración", page_icon="🛠", layout="wide"
     )
 
-    st.title("🛠 Administración")
+    router.page_header("Administracion")
+
     (database,) = st.tabs(["🗄️ Base de datos"])
 
 

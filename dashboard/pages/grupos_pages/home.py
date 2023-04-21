@@ -6,7 +6,8 @@ from page_router import PageRouter
 
 def grupos_page(router: PageRouter, **params):
     st.set_page_config(page_title="MatCom Dashboard - Grupos de Investigación",page_icon="👥",layout="wide",)
-    st.title("👥 Grupos de Investigación")
+
+    router.page_header("Grupos de Investigación")
 
     list_view, create_view = st.tabs(["👥 Listado de grupos", "📝 Crear o editar"])
 

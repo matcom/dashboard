@@ -9,6 +9,9 @@ from page_router import PageRouter
 def docencia_page(router: PageRouter, **params):
 
     st.set_page_config(page_title="MatCom Dashboard - Docencia", page_icon="📝", layout="wide")
+
+    router.page_header("Docencia")
+
     subjects_tab, classes_tab = st.tabs(["Asignaturas", "Clases"])
 
     with subjects_tab:

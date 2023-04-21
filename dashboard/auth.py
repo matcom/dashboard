@@ -4,6 +4,7 @@ import extra_streamlit_components as stx
 import streamlit as st
 from itsdangerous.exc import BadData
 from itsdangerous.url_safe import URLSafeTimedSerializer
+from models.data_models.person_model import Person
 from tools import send_from_template
 
 COOKIE = "Dashboard-AuthToken"
@@ -16,18 +17,33 @@ def in_admin_session() -> bool:
 
 
 def is_user_logged() -> bool:
-    if st.secrets.get("skip_auth", False):
-        return True
     return st.session_state.get("user", None) is not None
 
 
 def login(user):
     st.session_state.user = user
+    _load_user_model()
     st.experimental_set_query_params()
-    st.info(f"Bienvenido **{user}**")
     set_token_in_cookies(generate_signin_token(user))
-    st.button("🚪 Cerrar sesión", on_click=logout)
     return user
+
+
+def _load_user_model():
+    email = st.session_state.user
+    st.session_state.user_model = Person.find_one(emails=email)
+
+
+def current_user_model() -> Person:
+    assert is_user_logged()
+
+    if "user_model" in st.session_state:
+        user: Person = st.session_state.user_model
+        if user.emails[0] != st.session_state.user:
+            _load_user_model()
+    else:
+        _load_user_model()
+
+    return st.session_state.user_model
 
 
 def logout():
@@ -35,13 +51,16 @@ def logout():
     delete_token_in_cookies()
 
 
+def try_login_using_cookies():
+    token = get_token_from_cookies()
+    credentials = verify_token(token)
+    if credentials is not None:
+        return login(*credentials)
+    return None
+
 def authenticate():
     if st.secrets.get("skip_auth", False):
-        st.info(
-            "Bienvenido developer.\n\n_NOTA: el botón de cerrar sesión existe solo "
-            "para mostrar un layout similar al de un user loggeado_"
-        )
-        st.button("🚪 Cerrar sesión")
+        login(os.environ["ADMIN"])
         return True
 
     token = st.experimental_get_query_params().get("token")
@@ -56,11 +75,9 @@ def authenticate():
         user = st.session_state.user
         return login(user)
     else:
-        token = get_token_from_cookies()
-        credentials = verify_token(token)
-
-        if credentials is not None:
-            return login(*credentials)
+        user = try_login_using_cookies()
+        if user is not None:
+            return user
 
     email = st.text_input("Introduza su dirección correo electrónico")
 

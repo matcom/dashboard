@@ -1,8 +1,9 @@
 import streamlit as st
 from models import Book, BookChapter, ConferencePresentation, Journal, JournalPaper
+from page_router import PageRouter
 
 
-def journals_page(router, **params):
+def journals_page(router: PageRouter, **params):
     st.set_page_config(page_title="MatCom Dashboard - Revistas", layout="wide")
     router.page_header("🗞️ Revistas")
 

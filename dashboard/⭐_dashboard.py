@@ -46,11 +46,7 @@ page_router = PageRouter(
             Route(
                 url="signup",
                 builder=registration_page,
-                redirect=lambda **_: (
-                    "home"
-                    if auth.is_user_logged()
-                    else None
-                ),
+                redirect=lambda **_: ("home" if auth.is_user_logged() else None),
             )
         ],
     ),

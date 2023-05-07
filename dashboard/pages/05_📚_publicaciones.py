@@ -11,7 +11,8 @@ from pages.publications_pages.papers import papers_page
 from pages.publications_pages.presentations import presentations_page
 
 
-class ControlledSectionModel: ...
+class ControlledSectionModel:
+    ...
 
 
 class Page(abc.ABC):
@@ -21,7 +22,7 @@ class Page(abc.ABC):
 
         # This is modified when the router is composed
         self.full_url = url
-    
+
     @property
     def user_can_open(self):
         if auth.in_admin_session or self.section_model is None:

@@ -58,6 +58,7 @@ def try_login_using_cookies():
         return login(*credentials)
     return None
 
+
 def authenticate():
     if st.secrets.get("skip_auth", False):
         login(os.environ["ADMIN"])

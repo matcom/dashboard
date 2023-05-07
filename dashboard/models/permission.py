@@ -9,11 +9,7 @@ READ = 1
 WRITE = 2
 ADMIN = 4
 
-PERMISSIONS = {
-    READ: "Lectura",
-    WRITE: "Escritura",
-    ADMIN: "Administrador"
-}
+PERMISSIONS = {READ: "Lectura", WRITE: "Escritura", ADMIN: "Administrador"}
 
 PERMISSIONS_BY_NAME = {v: k for k, v in PERMISSIONS.items()}
 ALL_PERMISSIONS = reduce(lambda p1, p2: p1 | p2, PERMISSIONS.keys())

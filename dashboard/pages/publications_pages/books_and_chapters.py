@@ -6,7 +6,9 @@ from models import Book, BookChapter, Person
 
 
 def books_and_chapters_page(router, **params):
-    st.set_page_config(page_title="MatCom Dashboard - Libros y Capítulos de Libros", layout="wide")
+    st.set_page_config(
+        page_title="MatCom Dashboard - Libros y Capítulos de Libros", layout="wide"
+    )
     router.page_header("📕 Libros y Capítulos de Libros")
 
     year = st.sidebar.selectbox("Año", [2020, 2021, 2022], index=2)

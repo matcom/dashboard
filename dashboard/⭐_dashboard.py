@@ -14,17 +14,6 @@ def dashboard(router: PageRouter, **params):
     left, right = st.columns(2)
 
     with right:
-        # if not auth.is_user_logged():
-        #     st.info(
-        #         """
-        #         Si usted es claustro de la facultad y desea modificar los datos,
-        #         introduzca la contraseña correspondiente. De lo contrario, puede leer
-        #         los datos pero no modificar.
-
-        #         Si usted cree que debería tener acceso, contacte con
-        #         [@apiad](https://t.me/apiad) en Telegram."""
-        #     )
-
         auth.authenticate()
 
         if auth.is_user_logged():
@@ -46,11 +35,7 @@ page_router = PageRouter(
             Route(
                 url="signup",
                 builder=registration_page,
-                redirect=lambda **_: (
-                    "home"
-                    if auth.is_user_logged()
-                    else None
-                ),
+                redirect=lambda **_: ("home" if auth.is_user_logged() else None),
             )
         ],
     ),

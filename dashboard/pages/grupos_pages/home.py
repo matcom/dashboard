@@ -5,17 +5,19 @@ from page_router import PageRouter
 
 
 def grupos_page(router: PageRouter, **params):
-    st.set_page_config(page_title="MatCom Dashboard - Grupos de Investigación",page_icon="👥",layout="wide",)
+    st.set_page_config(
+        page_title="MatCom Dashboard - Grupos de Investigación",
+        page_icon="👥",
+        layout="wide",
+    )
 
     router.page_header("Grupos de Investigación")
 
     list_view, create_view = st.tabs(["👥 Listado de grupos", "📝 Crear o editar"])
 
-
     groups = ResearchGroup.all()
     people = Person.all()
     people.sort(key=lambda p: p.name)
-
 
     with create_view:
         if auth.is_user_logged():
@@ -34,7 +36,9 @@ def grupos_page(router: PageRouter, **params):
                     format_func=lambda t: t.name,
                 )
             else:
-                group = ResearchGroup(name="", members=[], collaborators=[], keywords=[])
+                group = ResearchGroup(
+                    name="", members=[], collaborators=[], keywords=[]
+                )
 
             if group:
                 group.name = st.text_input("Nombre", key="group_name", value=group.name)
@@ -68,7 +72,9 @@ def grupos_page(router: PageRouter, **params):
                     group.save()
                     st.success("Información guardad con éxito")
         else:
-            st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")
+            st.error(
+                "Acceso de solo lectura. Vaya a la página principal para loguearse."
+            )
 
     with list_view:
         for group in groups:
@@ -77,7 +83,9 @@ def grupos_page(router: PageRouter, **params):
 
                 with left:
                     st.write(f"#### {group.name}")
-                    st.write("**Líneas de investigación:** " + "; ".join(group.keywords))
+                    st.write(
+                        "**Líneas de investigación:** " + "; ".join(group.keywords)
+                    )
                     st.write(f"**Coordinador**: {group.head.name}")
 
                 with mid:
@@ -95,6 +103,8 @@ def grupos_page(router: PageRouter, **params):
                             "**Colaboradores:**\n"
                             + "\n".join(
                                 f"- {p.name}"
-                                for p in sorted(group.collaborators, key=lambda p: p.name)
+                                for p in sorted(
+                                    group.collaborators, key=lambda p: p.name
+                                )
                             )
                         )

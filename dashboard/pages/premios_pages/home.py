@@ -7,13 +7,14 @@ from page_router import PageRouter
 
 
 def premios_page(router: PageRouter, **params):
-    st.set_page_config(page_title="MatCom Dashboard - Premios", page_icon="🏆", layout="wide")
+    st.set_page_config(
+        page_title="MatCom Dashboard - Premios", page_icon="🏆", layout="wide"
+    )
     router.page_header("Premios")
 
     list_view, create_view, edit_view = st.tabs(
         ["🏆 Listado de premios", "⭐ Crear nuevo premio", "📝 Editar premio"]
     )
-
 
     def save_award(award: Award, prefix):
         award.save()
@@ -24,7 +25,6 @@ def premios_page(router: PageRouter, **params):
 
         del st.session_state.current_award
         st.success("Premio guardado con éxito")
-
 
     with create_view:
         if auth.is_user_logged():
@@ -41,8 +41,9 @@ def premios_page(router: PageRouter, **params):
             else:
                 st.warning("⚠️ Complete la información obligatoria, marcada con 🔹")
         else:
-            st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")
-
+            st.error(
+                "Acceso de solo lectura. Vaya a la página principal para loguearse."
+            )
 
     with list_view:
         awards = Award.all()

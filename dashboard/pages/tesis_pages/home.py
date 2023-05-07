@@ -14,11 +14,14 @@ from page_router import PageRouter
 
 
 def tesis_page(router: PageRouter, **params):
-    st.set_page_config(page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide")
+    st.set_page_config(
+        page_title="MatCom Dashboard - Tesis", page_icon="🎓", layout="wide"
+    )
     router.page_header("Tesis")
 
-
-    listing, create, details = st.tabs(["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles"])
+    listing, create, details = st.tabs(
+        ["📃 Listado", "➕ Crear nueva Tesis", "📄 Detalles"]
+    )
 
     theses: List[Thesis] = Thesis.all()
 
@@ -112,7 +115,9 @@ def tesis_page(router: PageRouter, **params):
                 if "file_uploader_key" not in st.session_state:
                     st.session_state["file_uploader_key"] = generate_widget_key()
                 pdf = st.file_uploader(
-                    "📤 Subir Tesis", type="pdf", key=st.session_state["file_uploader_key"]
+                    "📤 Subir Tesis",
+                    type="pdf",
+                    key=st.session_state["file_uploader_key"],
                 )
 
             with right:

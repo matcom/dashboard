@@ -47,7 +47,6 @@ def with_refs(model_class: ModelT) -> ModelT:
     fields = model_class.__fields__
     for field_name, field in fields.items():
         if isclass(field.type_) and issubclass(field.type_, Ref):
-
             # Function that returns a validator for a Ref[T] field
             def _ref_val_wrapper(field):
                 def ref_val(cls, value):
@@ -62,7 +61,6 @@ def with_refs(model_class: ModelT) -> ModelT:
             )
 
         elif isclass(field.type_) and issubclass(field.type_, RefList):
-
             # Function that returns a validator for a RefList[T] field
             def _reflist_val_wrapper(field):
                 def ref_list_val(cls, value):

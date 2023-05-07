@@ -10,28 +10,6 @@ from pages.publications_pages.journals import journals_page
 from pages.publications_pages.papers import papers_page
 from pages.publications_pages.presentations import presentations_page
 
-
-class ControlledSectionModel: ...
-
-
-class Page(abc.ABC):
-    def __init__(self, url: str, section_model: ControlledSectionModel):
-        self.url = url
-        self.section_model: Optional[ControlledSectionModel] = section_model
-
-        # This is modified when the router is composed
-        self.full_url = url
-    
-    @property
-    def user_can_open(self):
-        if auth.in_admin_session or self.section_model is None:
-            return True
-
-    @abc.abstractmethod
-    def build(self, router: PageRouter, **params):
-        pass
-
-
 # TODO: Only build router if it is not stored in session
 router = PageRouter(
     "publications",

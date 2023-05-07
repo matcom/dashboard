@@ -18,7 +18,7 @@ def profile_page(router: PageRouter, **params):
     if not persons:
         st.error("Tu cuenta no está registrada")
         st.stop()
-    
+
     person = persons[0]
 
     c1, c2 = st.columns([1, 5])

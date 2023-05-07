@@ -11,9 +11,7 @@ COOKIE = "Dashboard-AuthToken"
 
 
 def in_admin_session() -> bool:
-    if st.secrets.get("skip_auth", False):
-        return True
-    return is_user_logged() and st.session_state["user"] == os.environ["ADMIN"]
+    return st.session_state.get("is_admin", False)
 
 
 def is_user_logged() -> bool:
@@ -30,7 +28,17 @@ def login(user):
 
 def _load_user_model():
     email = st.session_state.user
-    st.session_state.user_model = Person.find_one(emails=email)
+    user = Person.find(email=email)
+    is_admin = email == os.environ["ADMIN"]
+    st.session_state.user_model = Person(name='ADMIN', emails=[email])
+    if user:
+        print('is user', flush=True)
+        st.session_state.user_model = user[0]
+    if is_admin:
+        print('is admin', flush=True)
+        st.session_state.is_admin = True
+
+    assert user or is_admin, "If the user is not admin it must be registered"
 
 
 def current_user_model() -> Person:
@@ -48,6 +56,8 @@ def current_user_model() -> Person:
 
 def logout():
     del st.session_state["user"]
+    del st.session_state["user_model"]
+    del st.session_state["is_admin"]
     delete_token_in_cookies()
 
 

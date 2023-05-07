@@ -3,7 +3,7 @@ import datetime
 import streamlit as st
 from models import Person, ResearchGroup
 from page_router import PageRouter
-from reports import group_report, personal_report, research_balance
+from pages.reportes_pages.reports import group_report, personal_report, research_balance
 from streamlit.elements import select_slider
 
 

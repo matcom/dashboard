@@ -32,10 +32,8 @@ def _load_user_model():
     is_admin = email == os.environ["ADMIN"]
     st.session_state.user_model = Person(name='ADMIN', emails=[email])
     if user:
-        print('is user', flush=True)
         st.session_state.user_model = user[0]
     if is_admin:
-        print('is admin', flush=True)
         st.session_state.is_admin = True
 
     assert user or is_admin, "If the user is not admin it must be registered"

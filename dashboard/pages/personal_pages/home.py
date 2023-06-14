@@ -13,8 +13,9 @@ def personal_page(router: PageRouter, **params):
 
     people = Person.all()
     people.sort(key=lambda p: p.name)
-
-    if auth.is_user_logged():
+    
+    
+    if auth.is_user_logged() and router.user_can_write:
         with st.expander("👤 Nueva entrada / Editar"):
             if (
                 st.radio(

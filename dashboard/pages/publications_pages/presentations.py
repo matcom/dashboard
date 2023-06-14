@@ -15,7 +15,7 @@ def presentations_page(router, **params):
     presentations = [p for p in ConferencePresentation.all() if p.year == year]
     presentations.sort(key=lambda p: p.title)
 
-    if auth.is_user_logged():
+    if auth.is_user_logged() and router.user_can_write:
         with st.expander("⭐ Nueva presentación / 📝 Editar"):
             if (
                 st.radio(

@@ -28,44 +28,44 @@ def journals_page(router: PageRouter, **params):
     presentations.sort(key=lambda p: p.title)
 
     st.write(f"#### 🗞️ Revistas `{len(journals)}`")
+    if router.user_can_write:
+        with st.expander("Editar revista"):
+            journal = st.selectbox("Revista", journals)
 
-    with st.expander("Editar revista"):
-        journal = st.selectbox("Revista", journals)
-
-        journal.title = st.text_input(
-            "Título", key=f"journal_title_{journal.uuid}", value=journal.title
-        )
-        journal.publisher = st.text_input(
-            "Editorial",
-            key=f"journal_publisher_{journal.uuid}",
-            value=journal.publisher,
-        )
-        journal.issn = st.text_input(
-            "ISSN", key=f"journal_issn_{journal.uuid}", value=journal.issn
-        )
-        journal.url = (
-            st.text_input(
-                "URL", key=f"journal_url_{journal.uuid}", value=journal.url or ""
+            journal.title = st.text_input(
+                "Título", key=f"journal_title_{journal.uuid}", value=journal.title
             )
-            or None
-        )
-        journal.indices = st.multiselect(
-            "Indexado en",
-            key=f"journal_indices_{journal.uuid}",
-            options=[
-                "Web of Science",
-                "Scopus",
-                "RICYT",
-                "Scielo",
-                "Otro (Internacional)",
-                "Otro (Nacional)",
-            ],
-            default=journal.indices,
-        )
+            journal.publisher = st.text_input(
+                "Editorial",
+                key=f"journal_publisher_{journal.uuid}",
+                value=journal.publisher,
+            )
+            journal.issn = st.text_input(
+                "ISSN", key=f"journal_issn_{journal.uuid}", value=journal.issn
+            )
+            journal.url = (
+                st.text_input(
+                    "URL", key=f"journal_url_{journal.uuid}", value=journal.url or ""
+                )
+                or None
+            )
+            journal.indices = st.multiselect(
+                "Indexado en",
+                key=f"journal_indices_{journal.uuid}",
+                options=[
+                    "Web of Science",
+                    "Scopus",
+                    "RICYT",
+                    "Scielo",
+                    "Otro (Internacional)",
+                    "Otro (Nacional)",
+                ],
+                default=journal.indices,
+            )
 
-        if st.button("💾 Guardar"):
-            journal.save()
-            st.success("Cambios guardados")
+            if st.button("💾 Guardar"):
+                journal.save()
+                st.success("Cambios guardados")
 
     for journal in journals:
         st.write(journal.format())

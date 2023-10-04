@@ -20,7 +20,7 @@ def books_and_chapters_page(router, **params):
     chapters = [c for c in BookChapter.all() if c.year == year]
     chapters.sort(key=lambda b: b.chapter)
 
-    if auth.is_user_logged():
+    if auth.is_user_logged() and router.user_can_write:
         with st.expander("⭐ Nuevo libro / 📝 Editar"):
             if (
                 st.radio(

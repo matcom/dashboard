@@ -1,5 +1,12 @@
-import streamlit as st
+from page_router import PageRouter, Route
+from pages.expertos_pages.home import expertos_page
 
-st.set_page_config(
-    page_title="MatCom Dashboard - Consejos Expertos", page_icon="🪑", layout="wide"
+router = PageRouter(
+    "expertos",
+    Route(
+        url="home",
+        builder=expertos_page,
+    ),
 )
+
+router.start()

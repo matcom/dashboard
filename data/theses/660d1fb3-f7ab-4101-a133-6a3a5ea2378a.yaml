@@ -1,0 +1,16 @@
+advisors:
+- Alejandro Piad Morffis
+- Frank Sadan Naranjo Noda
+authors:
+- Omar Alejandro Hernández Ramírez
+balance: 2022
+keywords:
+- grafos
+- lenguaje natural
+- bases de conocimiento
+- cypher
+- compilacion
+- t5
+title: Búsqueda Semántica en Grafos de Conocimiento con Lenguaje Natural
+uuid: 660d1fb3-f7ab-4101-a133-6a3a5ea2378a
+version: 1

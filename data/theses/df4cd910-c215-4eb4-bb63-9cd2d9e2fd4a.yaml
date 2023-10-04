@@ -1,0 +1,13 @@
+advisors:
+- Yaidir Mustelier Ruiz
+authors:
+- Andy Ledesma García
+balance: 2022
+keywords:
+- sistema electoral
+- votación representativa
+- Quorum
+- blockchain
+title: Implementación de un Sistema de Votación Representativa sobre Quorum
+uuid: df4cd910-c215-4eb4-bb63-9cd2d9e2fd4a
+version: 2

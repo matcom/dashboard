@@ -1,0 +1,15 @@
+advisors:
+- Camilo Denis González
+- Daniel Mena Frias
+- Miguel Katrib Mora
+authors:
+- José Alejandro Labourdette Lartigue Soto
+balance: 2022
+keywords:
+- dapp
+- Hyperledger Fabric
+- chaincode
+- certiﬁcados académicos
+title: Lógica para un Gestor de Certificados Académicos
+uuid: 80d491ac-37a0-41d2-af2a-215295a872f4
+version: 0

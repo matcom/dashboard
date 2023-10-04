@@ -1,0 +1,13 @@
+advisors:
+- Fernando Rodríguez Flores
+authors:
+- Sheila Artiles Fagundo
+balance: 2022
+keywords:
+- Modelo de Optimización
+- Common LISP
+- VRP
+title: Una propuesta para la modelación automática de problemas de enrutamiento de
+  vehículos
+uuid: 9fd70da0-ab57-4766-988b-09f285cd0d62
+version: 1

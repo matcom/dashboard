@@ -1,0 +1,14 @@
+advisors:
+- Fernando Raul Rodriguez Flores
+authors:
+- Olivia González Peña
+balance: 2022
+keywords:
+- ajuste de parámetros
+- ecuaciones diferenciales ordinarias
+- splines de suavizado
+title: Eliminación del ruido de los datos con splines de suavizado. Ajuste de parámetros
+  en  Ecuaciones Diferenciales Ordinarias lineales con respecto a los mismos a partir
+  de datos suavizados.
+uuid: f4a21787-5740-482f-9707-f5cb2e3ff223
+version: 1

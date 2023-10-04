@@ -1,0 +1,13 @@
+advisors:
+- Marta Lourdes Díaz Baguer-Romañach
+- Merly Puig Pérez
+authors:
+- Claudia Olavarrieta Martínez
+balance: 2022
+keywords:
+- Redes convolucionales
+- Ensembles
+- Cáncer de piel
+title: Ensemble de redes neuronales para clasificar lesiones de cáncer de piel
+uuid: 4cbd4aea-c495-4434-8a4a-9a3a50162a19
+version: 1

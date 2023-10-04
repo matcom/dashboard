@@ -1,0 +1,15 @@
+advisors:
+- Suilan Estévez Velarde
+- Yudivián Almeida Cruz
+authors:
+- Manuel Antonio Vilas Valiente
+balance: 2022
+keywords:
+- AutoML
+- Learning to Rank
+- AutoGOAL
+- Information Retrieval
+- Recommender Systems
+title: AutoML para Sistemas de Recomendación
+uuid: d6c185e2-6c34-4313-8bd4-e6e0882051d5
+version: 1

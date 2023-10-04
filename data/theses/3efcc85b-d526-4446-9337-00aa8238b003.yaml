@@ -1,0 +1,15 @@
+advisors:
+- Juan Pablo Consuegra Ayala
+- Yudivián Almeida Cruz
+authors:
+- Ana Paula Argüelles Terrón
+balance: 2022
+keywords:
+- Sesgo
+- justicia
+- detección
+- análisis
+- atributos
+title: Análisis de Sesgos mediante la Extracción Automática de Atributos Protegidos
+uuid: 3efcc85b-d526-4446-9337-00aa8238b003
+version: 1

@@ -1,0 +1,13 @@
+advisors:
+- Roberto Marti Cedeño
+- Alejandro Piad Morffis
+authors:
+- Javier Rodríguez  Rodríguez
+balance: 2022
+keywords:
+- AutoGoal
+- MLOps
+- drift
+title: Model drifting para Autogoal MLOps
+uuid: 90337a73-41c0-4007-b2ca-9d256becd0e7
+version: 1

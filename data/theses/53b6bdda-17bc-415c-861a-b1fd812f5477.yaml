@@ -1,0 +1,15 @@
+advisors:
+- Alejandro Piad Morffis
+- Frank Sadán Naranjo Noda
+authors:
+- Daniel Orlando Ortiz Pacheco
+balance: 2022
+keywords:
+- AutoGOAL
+- DSL
+- search space
+- descriptions
+- samplers
+title: DSL en Python para la descripción de espacios de búsqueda y generación de muestras
+uuid: 53b6bdda-17bc-415c-861a-b1fd812f5477
+version: 1

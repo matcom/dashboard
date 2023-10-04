@@ -64,7 +64,7 @@ for i, row in df.iterrows():
     academic_grade = row["Grado"]
 
     if name in matches:
-        person = Person.find(name=matches[name])
+        person = Person.find_one(name=matches[name])
     else:
         person = Person(name=name)
 

@@ -1,0 +1,13 @@
+advisors:
+- Damian Valdés Santiago
+authors:
+- Richard García De la Osa
+balance: 2022
+keywords:
+- diseño de filtros wavelet
+- transformada wavelet discreta
+- transformada shapelet discreta
+title: Construcción de bases wavelet discretas para la detección de patrones en señales
+  biomédicas unidimensionales
+uuid: 5cb1d6d4-e35b-4768-a333-c779ac8a9fbc
+version: 3

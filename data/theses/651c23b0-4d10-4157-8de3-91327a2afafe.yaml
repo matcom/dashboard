@@ -1,0 +1,15 @@
+advisors:
+- Katy Castillo Rosado
+- Flavio Reyes Díaz
+authors:
+- Sandra Martos Llanes
+balance: 2022
+keywords:
+- texto a voz
+- Tacotron2
+- VITS
+- síntesis de voz
+- fine-tuning
+title: Sintetizador de Voz en Español con Voces Cubanas
+uuid: 651c23b0-4d10-4157-8de3-91327a2afafe
+version: 1

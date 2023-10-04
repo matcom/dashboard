@@ -1,0 +1,13 @@
+advisors:
+- Damian Valdés Santiago
+authors:
+- Adrian Rodriguez Portales
+balance: 2022
+keywords:
+- diseño de filtros wavelet
+- imágenes digitales
+- transformada shapelet discreta
+title: Construcción de una base wavelet biortogonal y discreta que permita la detección
+  de patrones en imágenes de mamografía digital
+uuid: 3ca1eb5b-4ffb-420f-bf9b-7c8c858b4fdb
+version: 2

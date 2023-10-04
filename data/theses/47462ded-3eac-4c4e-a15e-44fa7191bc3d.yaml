@@ -1,0 +1,14 @@
+advisors:
+- Jesús Armando López Borges
+authors:
+- Henri Daniel Peña Dequero
+balance: 2022
+keywords:
+- Cadena de suministros
+- modelo SCOR
+- Blockchain
+- Hyperledger Fabric
+- Chaincode
+title: Chaincode para la Supply Chain
+uuid: 47462ded-3eac-4c4e-a15e-44fa7191bc3d
+version: 2

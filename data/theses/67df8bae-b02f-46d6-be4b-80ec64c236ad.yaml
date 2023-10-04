@@ -1,0 +1,14 @@
+advisors:
+- MSc Evaristo José Madarro Capó
+authors:
+- Henry Estévez Gómez
+balance: 2022
+keywords:
+- Aleatoriedad
+- Entropía
+- Estimadores
+- b-spline
+- contenedores
+title: Implementación del estimador B-spline de la entropía
+uuid: 67df8bae-b02f-46d6-be4b-80ec64c236ad
+version: 1

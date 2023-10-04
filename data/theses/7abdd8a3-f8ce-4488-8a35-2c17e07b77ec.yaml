@@ -1,0 +1,16 @@
+advisors:
+- Aymée Marrero Severo
+- Daniela González Beltrán
+authors:
+- Airelys Collazo Perez
+balance: 2022
+keywords:
+- Modelos epidemiológicos
+- estimación de parámetros
+- metaheurísticas
+- Ecuaciones Diferenciales Ordinarias(EDOs)
+- Angular
+- python
+title: 'Eagle: Interfaz visual para la resolución de modelos epidemiológicos'
+uuid: 7abdd8a3-f8ce-4488-8a35-2c17e07b77ec
+version: 1

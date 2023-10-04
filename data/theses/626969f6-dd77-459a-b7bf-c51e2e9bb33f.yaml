@@ -1,0 +1,15 @@
+advisors:
+- Dr. Yudivián Almeida Cruz
+- Lic. Leynier Gutiérrez González
+- ''
+authors:
+- Luis Enrique Dalmau Coopat
+balance: 2022
+keywords:
+- Generación secuencial de señas
+- Generación de avatares
+- Interpolación númerica
+- Lengua de Señas Cubana
+title: 'Generación gráfica de señas de la Lengua de Señas Cubana: una primera aproximación'
+uuid: 626969f6-dd77-459a-b7bf-c51e2e9bb33f
+version: 1

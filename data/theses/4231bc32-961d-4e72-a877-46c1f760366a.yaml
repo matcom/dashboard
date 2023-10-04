@@ -1,0 +1,14 @@
+advisors:
+- Yudivián Almeida Cruz
+- Alfredo Reyes González
+authors:
+- Jorge Junior Morgado Vega
+balance: 2022
+keywords:
+- análisis de trayectorias
+- visión por computadoras
+- física estadística
+- ingienería de features
+title: 'yupi: Plataforma para la generación, seguimiento y análisis de trayectorias'
+uuid: 4231bc32-961d-4e72-a877-46c1f760366a
+version: 3

@@ -1,5 +1,5 @@
 dev:
-	USER=`id -u` docker compose up app
+	USER=`id -u` docker-compose up app
 
 app:
 	USER=`id -u` docker-compose up --force-recreate -d

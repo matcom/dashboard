@@ -1,0 +1,16 @@
+advisors:
+- Dr. Luciano García Garrido
+- ''
+authors:
+- Gelin Eguinosa Rosique
+balance: 2022
+keywords:
+- recuperación de información
+- modelo de tópicos
+- Top2Vec
+- BERT
+- SPECTER
+- Sentence-BERT
+title: 'SRI-TOP: Sistema de Recuperación de Información basado en Tópicos'
+uuid: 7d8edffb-40a5-45aa-9395-a78dc3ac86eb
+version: 2

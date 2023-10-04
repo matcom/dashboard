@@ -1,0 +1,15 @@
+advisors:
+- Magdiel Vicet Morejón
+authors:
+- Nelson R. Mendoza Alvarez
+balance: 2022
+keywords:
+- multiplicación
+- Strassen
+- números grandes
+- overflow
+- criptografía
+title: Método de representación para la multiplicación de números enteros grandes
+  utilizando el algoritmo de Strassen
+uuid: b151f2b8-3c16-41af-87a0-68fe97c71f88
+version: 0

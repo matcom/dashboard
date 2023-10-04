@@ -1,0 +1,13 @@
+advisors:
+- Juan Pablo Consuegra Ayala
+- Alejandro Piad Morffis
+authors:
+- Jorge Mederos Alvarado
+balance: 2022
+keywords:
+- Multiobjetivo
+- Ensemble
+- Sesgos
+title: Resolución Automática de Problemas Arbitrarios de Clasificación de Forma Justa
+uuid: 1f0d6ccc-d086-4a55-bd26-37992613a5fb
+version: 1

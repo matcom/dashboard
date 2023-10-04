@@ -1,0 +1,14 @@
+advisors:
+- Evaristo José Madarro Capó
+authors:
+- Damian O'Hallorans Toledo
+balance: 2022
+keywords:
+- Malware
+- Entropía
+- Opcode
+- Regresión Logística
+- Umbral
+title: Detección de malware usando la entropía
+uuid: 01e118cf-a7ff-459c-8fb2-f69bdd5ad91e
+version: 1

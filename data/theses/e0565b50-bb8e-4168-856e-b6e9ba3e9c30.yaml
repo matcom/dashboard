@@ -1,0 +1,14 @@
+advisors:
+- Evaristo José Madarro Capó
+authors:
+- Eziel Christians Ramos Piñón
+balance: 2022
+keywords:
+- cifradores de flujo
+- programación en paralelo
+- SAC
+- BIC
+title: Implementación en paralelo de los algoritmos que especifican las pruebas SAC
+  y BIC
+uuid: e0565b50-bb8e-4168-856e-b6e9ba3e9c30
+version: 1

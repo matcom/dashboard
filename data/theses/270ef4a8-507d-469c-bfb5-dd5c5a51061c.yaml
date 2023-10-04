@@ -1,0 +1,20 @@
+advisors:
+- Dr. Cs. Roberto Rodríguez Morales
+- ''
+authors:
+- Laura Brito Guerrero
+- ''
+balance: 2022
+keywords:
+- Inteligencia Artificial
+- Aprendizaje automático
+- Aprendizaje Profundo
+- Redes Neuronales Convolucionales
+- Métodos Kernel
+- Máquinas de Soporte Vectorial
+- clasificación.
+title: Clasificación de epidemias a través de imágenes microscópicas utilizando Aprendizaje
+  Profundo. Comparación de los resultados obtenidos mediante el uso de Máquinas de
+  Soporte Vectorial.
+uuid: 270ef4a8-507d-469c-bfb5-dd5c5a51061c
+version: 1

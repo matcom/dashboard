@@ -9,66 +9,73 @@ def grupos_page(router: PageRouter, **params):
 
     router.page_header("Grupos de Investigación")
 
-    list_view, create_view = st.tabs(["👥 Listado de grupos", "📝 Crear o editar"])
+    tabs = ["👥 Listado de grupos"]
+    if router.user_can_write:
+        tabs.append("📝 Crear o editar")
+    tab_views = st.tabs(tabs)
 
+    if router.user_can_write:
+        list_view, create_view = tab_views
+    else:
+        list_view = tab_views[0]
 
     groups = ResearchGroup.all()
     people = Person.all()
     people.sort(key=lambda p: p.name)
 
+    if router.user_can_write:
+        with create_view:
+            if auth.is_user_logged():
+                if (
+                    st.radio(
+                        "Tipo de entrada",
+                        ["⭐ Nueva entrada", "📝 Editar"],
+                        horizontal=True,
+                        label_visibility="collapsed",
+                    )
+                    == "📝 Editar"
+                ):
+                    group = st.selectbox(
+                        "Seleccione un grupo a modificar",
+                        sorted(groups, key=lambda t: t.name),
+                        format_func=lambda t: t.name,
+                    )
+                else:
+                    group = ResearchGroup(name="", members=[], collaborators=[], keywords=[])
 
-    with create_view:
-        if auth.is_user_logged():
-            if (
-                st.radio(
-                    "Tipo de entrada",
-                    ["⭐ Nueva entrada", "📝 Editar"],
-                    horizontal=True,
-                    label_visibility="collapsed",
-                )
-                == "📝 Editar"
-            ):
-                group = st.selectbox(
-                    "Seleccione un grupo a modificar",
-                    sorted(groups, key=lambda t: t.name),
-                    format_func=lambda t: t.name,
-                )
+                if group:
+                    group.name = st.text_input("Nombre", key="group_name", value=group.name)
+                    group.members = st.multiselect(
+                        "Miembros (permanentes)",
+                        key="group_members",
+                        options=people,
+                        default=group.members,
+                    )
+                    group.head = st.selectbox(
+                        "Coordinador",
+                        options=group.members,
+                        key="group_head",
+                        index=group.members.index(group.head) if group.head else 0,
+                    )
+                    group.collaborators = st.multiselect(
+                        "Colaboradores (internos o externos)",
+                        key="group_collaborators",
+                        options=people,
+                        default=group.collaborators,
+                    )
+                    group.keywords = [
+                        s.strip()
+                        for s in st.text_input(
+                            "Líneas de investigación (separadas por ;)",
+                            value="; ".join(group.keywords),
+                        ).split(";")
+                    ]
+
+                    if st.button("💾 Guardar"):
+                        group.save()
+                        st.success("Información guardad con éxito")
             else:
-                group = ResearchGroup(name="", members=[], collaborators=[], keywords=[])
-
-            if group:
-                group.name = st.text_input("Nombre", key="group_name", value=group.name)
-                group.members = st.multiselect(
-                    "Miembros (permanentes)",
-                    key="group_members",
-                    options=people,
-                    default=group.members,
-                )
-                group.head = st.selectbox(
-                    "Coordinador",
-                    options=group.members,
-                    key="group_head",
-                    index=group.members.index(group.head) if group.head else 0,
-                )
-                group.collaborators = st.multiselect(
-                    "Colaboradores (internos o externos)",
-                    key="group_collaborators",
-                    options=people,
-                    default=group.collaborators,
-                )
-                group.keywords = [
-                    s.strip()
-                    for s in st.text_input(
-                        "Líneas de investigación (separadas por ;)",
-                        value="; ".join(group.keywords),
-                    ).split(";")
-                ]
-
-                if st.button("💾 Guardar"):
-                    group.save()
-                    st.success("Información guardad con éxito")
-        else:
-            st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")
+                st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")
 
     with list_view:
         for group in groups:

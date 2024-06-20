@@ -1,7 +1,6 @@
-from pydantic import HttpUrl
-
 from models.custom_model import collection_name, with_refs
 from models.data_models.publication_model import Publication
+from pydantic import HttpUrl
 
 
 @with_refs

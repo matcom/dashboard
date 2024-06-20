@@ -7,8 +7,9 @@ from page_router import PageRouter
 
 
 def docencia_page(router: PageRouter, **params):
-
-    st.set_page_config(page_title="MatCom Dashboard - Docencia", page_icon="📝", layout="wide")
+    st.set_page_config(
+        page_title="MatCom Dashboard - Docencia", page_icon="📝", layout="wide"
+    )
 
     router.page_header("Docencia")
 
@@ -17,7 +18,6 @@ def docencia_page(router: PageRouter, **params):
     with subjects_tab:
         if auth.is_user_logged():
             with st.expander("⭐ Crear nueva asignatura"):
-
                 cols = st.columns([2, 2, 1, 1])
                 subject = cols[0].text_input("Nombre de la asignatura")
                 career = cols[1].selectbox(
@@ -41,11 +41,12 @@ def docencia_page(router: PageRouter, **params):
 
         subjects = []
 
-        for subject in sorted(Subject.all(), key=lambda s: (s.year, s.semester, s.subject)):
+        for subject in sorted(
+            Subject.all(), key=lambda s: (s.year, s.semester, s.subject)
+        ):
             subjects.append(subject.encode())
 
         st.dataframe(subjects)
-
 
     with classes_tab:
         if auth.is_user_logged():

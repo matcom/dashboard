@@ -22,14 +22,12 @@ def admin_page(router: PageRouter, **params):
 
     (database,) = st.tabs(["🗄️ Base de datos"])
 
-
     def format_bytes(n_bytes: int) -> str:
         if n_bytes > 1e6:
             return f"{round(n_bytes * 1e-6, 2)} MB"
         if n_bytes > 1e3:
             return f"{round(n_bytes * 1e-3, 2)} kB"
         return f"{n_bytes} B"
-
 
     with database:
         general_stats, tools_exp, tools_imp, tools_del = st.columns([2, 1, 1, 1])

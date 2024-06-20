@@ -1,8 +1,7 @@
 from typing import List
 
-from pydantic import Field, HttpUrl
-
 from models.custom_model import CustomModel, collection_name
+from pydantic import Field, HttpUrl
 
 
 @collection_name("journals")

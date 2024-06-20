@@ -2,15 +2,16 @@ import datetime
 
 import streamlit as st
 from models import Person, ResearchGroup
-from reports import group_report, personal_report, research_balance
-from streamlit.elements import select_slider
 from page_router import PageRouter
+from pages.reportes_pages.reports import group_report, personal_report, research_balance
+from streamlit.elements import select_slider
 
 
 def reportes_page(router: PageRouter, **params):
-    st.set_page_config(page_title="MatCom Dashboard - Reportes", page_icon="📈", layout="wide")
+    st.set_page_config(
+        page_title="MatCom Dashboard - Reportes", page_icon="📈", layout="wide"
+    )
     router.page_header("Reportes")
-
 
     balance, posgrado, personal, group = st.tabs(
         [
@@ -27,7 +28,6 @@ def reportes_page(router: PageRouter, **params):
     groups = ResearchGroup.all()
     groups.sort(key=lambda g: g.name)
 
-
     with balance:
         today = datetime.date.today()
 
@@ -40,7 +40,6 @@ def reportes_page(router: PageRouter, **params):
         with st.spinner("Generando balance..."):
             for line in research_balance(start_date, end_date):
                 st.write(line)
-
 
     with personal:
         person = st.selectbox("Seleccione la persona", people)

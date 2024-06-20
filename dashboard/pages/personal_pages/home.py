@@ -6,10 +6,11 @@ from page_router import PageRouter
 
 
 def personal_page(router: PageRouter, **params):
-    st.set_page_config(page_title="MatCom Dashboard - Personal", page_icon="👤", layout="wide")
+    st.set_page_config(
+        page_title="MatCom Dashboard - Personal", page_icon="👤", layout="wide"
+    )
 
     router.page_header("Personal")
-    
 
     people = Person.all()
     people.sort(key=lambda p: p.name)
@@ -54,7 +55,12 @@ def personal_page(router: PageRouter, **params):
             person.department = st.text_input(
                 "Departamento", key="person_department", value=person.department or ""
             )
-            grades = ["Licenciado", "Ingeniero", "Máster en Ciencias", "Doctor en Ciencias"]
+            grades = [
+                "Licenciado",
+                "Ingeniero",
+                "Máster en Ciencias",
+                "Doctor en Ciencias",
+            ]
             person.scientific_grade = st.selectbox(
                 "Grado científico",
                 grades,
@@ -84,7 +90,6 @@ def personal_page(router: PageRouter, **params):
             if st.button("💾 Salvar entrada"):
                 person.save()
                 st.success("Entrada salvada con éxito.")
-
 
     people_comp = []
     people_appl = []

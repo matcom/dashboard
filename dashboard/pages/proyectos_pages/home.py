@@ -1,14 +1,16 @@
-import streamlit as st
-import auth
 from uuid import uuid4
+
+import auth
+import streamlit as st
 from models import Project
 from page_router import PageRouter
 
 
 def proyectos_page(router: PageRouter, **params):
-    st.set_page_config(page_title="MatCom Dashboard - Proyectos", page_icon="⚗️", layout="wide")
+    st.set_page_config(
+        page_title="MatCom Dashboard - Proyectos", page_icon="⚗️", layout="wide"
+    )
     router.page_header("Proyectos")
-
 
     def save_project(project: Project, prefix):
         project.save()
@@ -20,13 +22,11 @@ def proyectos_page(router: PageRouter, **params):
         del st.session_state.current_project
         st.success("Proyecto guardado con éxito")
 
-
     st.title("⚗️ Proyectos")
 
     list_view, create_view, edit_view = st.tabs(
         ["⚗️ Listado de proyectos", "⭐ Crear nuevo proyecto", "📝 Editar proyecto"]
     )
-
 
     with create_view:
         if auth.is_user_logged():
@@ -43,19 +43,20 @@ def proyectos_page(router: PageRouter, **params):
             else:
                 st.warning("⚠️ Complete la información obligatoria, marcada con 🔹")
         else:
-            st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")
-
+            st.error(
+                "Acceso de solo lectura. Vaya a la página principal para loguearse."
+            )
 
     with edit_view:
         if auth.is_user_logged():
             pass
         else:
-            st.error("Acceso de solo lectura. Vaya a la página principal para loguearse.")
-
+            st.error(
+                "Acceso de solo lectura. Vaya a la página principal para loguearse."
+            )
 
     projects = Project.all()
     projects.sort(key=lambda p: p.title)
-
 
     with list_view:
         for project in projects:
@@ -81,7 +82,9 @@ def proyectos_page(router: PageRouter, **params):
                     )
 
                 with right:
-                    st.write(f"##### Entidad ejecutora principal:\n" + project.main_entity)
+                    st.write(
+                        f"##### Entidad ejecutora principal:\n" + project.main_entity
+                    )
                     st.write("---")
                     st.write(
                         f"##### Entidades participantes adicionales:\n"

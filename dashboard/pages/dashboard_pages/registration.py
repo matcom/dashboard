@@ -13,7 +13,6 @@ def registration_page(router: PageRouter, token: str = None, **params):
 
     router.page_header("Registro")
 
-
     # Verify token
     email = auth.verify_token(token)
     if email is None:
